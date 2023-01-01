@@ -133,7 +133,7 @@ class _PlayerButtonsState extends State<PlayerButtons> {
 
   Widget _previousButton() {
     return IconButton(
-      icon: Icon(Icons.skip_previous,color: widget._audioPlayer.hasNext ? Colors.white:Colors.black54,),
+      icon: Icon(Icons.skip_previous,color: widget._audioPlayer.hasPrevious ? Colors.white:Colors.black54,),
       onPressed: widget._audioPlayer.hasPrevious ? widget._audioPlayer.seekToPrevious : null,
     );
   }

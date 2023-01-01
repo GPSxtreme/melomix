@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:proto_music_player/components/songResultTile.dart';
-import 'package:proto_music_player/services/helperFunctions.dart';
+import '../components/songResultTile.dart';
+import '../services/helperFunctions.dart';
 import '../components/playerButtons.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class ProtoHome extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static String id = "proto_home";
-  static Map presentSong = {};
-  static List<AudioSource> audioQueueItemsList = [];
-  static ConcatenatingAudioSource audioQueue = ConcatenatingAudioSource(children: audioQueueItemsList,useLazyPreparation: true,shuffleOrder: DefaultShuffleOrder());
-  const ProtoHome({Key? key}) : super(key: key);
+  static ConcatenatingAudioSource queue = ConcatenatingAudioSource(children: [],useLazyPreparation: true);
+  static List audioQueueSongData = [];
+  const HomeScreen({Key? key}) : super(key: key);
   @override
-  State<ProtoHome> createState() => _ProtoHomeState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ProtoHomeState extends State<ProtoHome> {
+class _HomeScreenState extends State<HomeScreen> {
   late AudioPlayer _audioPlayer;
   Map searchResults = {};
   List<SongResultTile> allResults = [];
   int selectedIndex = 0;
+  HelperFunctions helperFunctions = HelperFunctions();
   @override
   void initState() {
     super.initState();
@@ -27,8 +27,8 @@ class _ProtoHomeState extends State<ProtoHome> {
   }
   @override
   void dispose() {
-    _audioPlayer.dispose();
     super.dispose();
+    _audioPlayer.dispose();
   }
   searchFunction(String query)async{
     if(allResults.length > 20){
@@ -56,11 +56,11 @@ class _ProtoHomeState extends State<ProtoHome> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset : false,
-      appBar: AppBar(
-        title: const Text(" "),
-        backgroundColor: Colors.black87,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   title: const Text(" "),
+      //   backgroundColor: Colors.black87,
+      //   elevation: 0,
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black87,
         elevation: 1,
@@ -113,19 +113,19 @@ class _ProtoHomeState extends State<ProtoHome> {
                     int sensitivity = 8;
                     if (details.delta.dy > sensitivity) {
                       // Down Swipe
-                    } else if(details.delta.dy < -sensitivity && ProtoHome.presentSong.isNotEmpty){
+                    } else if(details.delta.dy < -sensitivity && HomeScreen.audioQueueSongData.isNotEmpty){
                       // Up Swipe
                       showModalBottomSheet(
                           context: context,
                           elevation: 0,
                           barrierColor: Colors.transparent,
                           isScrollControlled: true,
-                          builder: (context) => showFullPlayer()
+                          builder: (context) => showFullPlayer(context)
                       );
                     }
                   },
                   child: Container(
-                    height: ProtoHome.presentSong.isNotEmpty ? 99:70,
+                    height: HomeScreen.audioQueueSongData.isNotEmpty ? 99:70,
                     padding: null,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -136,17 +136,17 @@ class _ProtoHomeState extends State<ProtoHome> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if(ProtoHome.presentSong.isNotEmpty)
+                          if(HomeScreen.audioQueueSongData.isNotEmpty)
                           SizedBox(
                             height: 30,
                             child: IconButton(onPressed: (){
-                              if(ProtoHome.presentSong.isNotEmpty){
+                              if(HomeScreen.audioQueueSongData.isNotEmpty){
                                 showModalBottomSheet(
                                     context: context,
                                     elevation: 0,
                                     barrierColor: Colors.transparent,
                                     isScrollControlled: true,
-                                    builder: (context) => showFullPlayer()
+                                    builder: (context) => showFullPlayer(context)
                                 );
                               }
                             },
@@ -164,10 +164,11 @@ class _ProtoHomeState extends State<ProtoHome> {
       ),
     );
   }
-
+  //search page
   Widget searchPage() {
     return Column(
             children: [
+              const SizedBox(height: 20,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                 child: TextField(
@@ -176,6 +177,7 @@ class _ProtoHomeState extends State<ProtoHome> {
                   cursorHeight: 20,
                   keyboardType: TextInputType.name,
                   onSubmitted: (query){
+                    FocusManager.instance.primaryFocus?.unfocus();
                     searchFunction(query);
                   },
                   onChanged:(query){
@@ -198,11 +200,11 @@ class _ProtoHomeState extends State<ProtoHome> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10,),
               queriesTileContainer(),
             ],
           );
   }
+  //search page queries
   Widget queriesTileContainer(){
     if(allResults.isNotEmpty){
       return Expanded(
@@ -222,89 +224,119 @@ class _ProtoHomeState extends State<ProtoHome> {
       );
     }
   }
-
-  Widget showFullPlayer() {
-    String hasLyrics = ProtoHome.presentSong["hasLyrics"];
-    return DraggableScrollableSheet(
-      initialChildSize: 1,
-      minChildSize: 0.5,
-      maxChildSize: 1,
-      builder: (_,controller) => Container(
-        color: HexColor("212121"),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width*0.85,
-              height: MediaQuery.of(context).size.width*0.85,
-              decoration:BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    ProtoHome.presentSong["image"][2]["link"],
-                    scale: 1.6,
+  //Draggable Full screen player
+  Widget showFullPlayer(BuildContext context) {
+    return StreamBuilder(
+      stream: _audioPlayer.currentIndexStream,
+      builder:(context,snapshot){
+        if(snapshot.data != null){
+          String hasLyrics = HomeScreen.audioQueueSongData[snapshot.data!]["hasLyrics"];
+          return GestureDetector(
+            onPanUpdate: (details){
+              int sensitivity = 17;
+              // print(details.delta.dx);
+              if(details.delta.dx > sensitivity){
+                if(_audioPlayer.hasPrevious){
+                  _audioPlayer.seekToPrevious();
+                }
+              } else if (details.delta.dx < -sensitivity){
+                if(_audioPlayer.hasNext){
+                  _audioPlayer.seekToNext();
+                }
+              }
+            },
+            child: DraggableScrollableSheet(
+              initialChildSize: 1,
+              minChildSize: 0.5,
+              maxChildSize: 1,
+              builder: (_,controller) => Container(
+                color: HexColor("212121"),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width*0.85,
+                        height: MediaQuery.of(context).size.width*0.85,
+                        decoration:BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
+                                scale: 1.6,
+                              ),
+                              fit: BoxFit.cover
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 25,),
+                      Text(HomeScreen.audioQueueSongData[snapshot.data!]["name"],style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                      const SizedBox(height: 10,),
+                      Text(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis),
+                      const SizedBox(height: 20,),
+                      if(hasLyrics == "true")
+                        SizedBox(
+                          width: 100,
+                          child: Center(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue
+                                ),
+                                onPressed: (){
+                                  showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (context) => showLyrics(snapshot.data!)
+                                  );
+                                },
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.lyrics,color: Colors.white,),
+                                    SizedBox(width: 5,),
+                                    Text("Lyrics",style: TextStyle(color: Colors.white,))
+                                  ],
+                                )),
+                          ),
+                        ),
+                      const SizedBox(height: 20,),
+                      Text(HomeScreen.audioQueueSongData[snapshot.data!]["copyright"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w300),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis),
+                      const SizedBox(height: 20,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
+                        child: Row(
+                          children: [
+                            StreamBuilder(
+                              stream: _audioPlayer.createPositionStream(),
+                              builder: (context,snapshot){
+                                if(snapshot.data != null){
+                                  return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
+                                } else {
+                                  return const Text("");
+                                }
+                              },
+                            ),
+                            const Spacer(),
+                            if(_audioPlayer.duration != null)
+                              Text(HelperFunctions.printDuration(_audioPlayer.duration!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,)
+                          ],
+                        ),
+                      ),
+                      PlayerButtons(_audioPlayer),
+                    ],
                   ),
-                  fit: BoxFit.cover
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: HexColor("#d5e0f2"),
-                    offset: const Offset(
-                      1.0,
-                      -2.0,
-                    ),
-                    blurRadius: 10.0,
-                    spreadRadius: 0.5,
-                  ), //BoxShadow
-                  const BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(0.0, 0.0),
-                    blurRadius: 0.0,
-                    spreadRadius: 0.0,
-                  ), //BoxShadow
-                ],
               ),
             ),
-            const SizedBox(height: 25,),
-            Text(ProtoHome.presentSong["name"],style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,),
-            const SizedBox(height: 10,),
-            Text(ProtoHome.presentSong["primaryArtists"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis),
-            const SizedBox(height: 20,),
-            if(hasLyrics == "true")
-              SizedBox(
-                width: 100,
-                child: Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue
-                    ),
-                      onPressed: (){
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => showLyrics()
-                        );
-                      },
-                      child: Row(
-                      children: const [
-                        Icon(Icons.lyrics,color: Colors.white,),
-                        SizedBox(width: 5,),
-                        Text("Lyrics",style: TextStyle(color: Colors.white,))
-                    ],
-                  )),
-                ),
-              ),
-            const SizedBox(height: 20,),
-            Text(ProtoHome.presentSong["copyright"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w300),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis),
-            const SizedBox(height: 20,),
-            PlayerButtons(_audioPlayer),
-          ],
-        ),
-      ),
+          );
+        }else{
+          return const SizedBox(height: 0,);
+        }
+      }
     );
   }
-
-  showLyrics() {
+  //Draggable lyrics sheet
+  showLyrics(int index) {
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
       builder:(_,controller) => Container(
@@ -318,26 +350,23 @@ class _ProtoHomeState extends State<ProtoHome> {
           child: ListView(
             controller: controller,
             children: [
-              Text(ProtoHome.presentSong["lyrics"],
+              Text(HomeScreen.audioQueueSongData[index]["lyrics"],
                 style: const TextStyle(
                   wordSpacing: 3.0,
                   color: Colors.white,
                   fontWeight: FontWeight.w400,
                   fontSize: 22,
                   height: 1.8,
-
                 ),
                 textAlign: TextAlign.center,
-
               ),
               const SizedBox(height: 20,),
-              Text(ProtoHome.presentSong["lyricsCopyRight"].toString().replaceAll("<br>", '\n'),style: const TextStyle( wordSpacing: 1.2,color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),textAlign: TextAlign.center,)
+              Text(HomeScreen.audioQueueSongData[index]["lyricsCopyRight"].toString().replaceAll("<br>", '\n'),style: const TextStyle( wordSpacing: 1.2,color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),textAlign: TextAlign.center,)
             ],
           )
       ),
     );
   }
-
 }
 
 

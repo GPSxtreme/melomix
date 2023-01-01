@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proto_music_player/screens/proto_home.dart';
+import 'package:proto_music_player/screens/home_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: ProtoHome.id,
+      initialRoute: HomeScreen.id,
       routes: {
-        ProtoHome.id:(context) => const ProtoHome(),
+        HomeScreen.id:(context) => const HomeScreen(),
       },
     );
   }
