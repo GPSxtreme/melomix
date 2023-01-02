@@ -15,29 +15,32 @@ class HelperFunctions{
     final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
     return data;
   }
-  static void playHttpSong(Map song,AudioPlayer player){
+  static Future<void> playHttpSong(Map song,AudioPlayer player)async{
+    await HomeScreen.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
     HomeScreen.audioQueueSongData.insert(0,song);
-    HomeScreen.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
-    if(!player.playing && HomeScreen.queue.length == 1){
-      player.setAudioSource(HomeScreen.queue , initialIndex: 0,initialPosition: Duration.zero);
+    await HelperFunctions.writeSongLyrics(song,false);
+    if(!player.playing){
+      await player.setAudioSource(HomeScreen.queue , initialIndex: 0,initialPosition: Duration.zero);
     }else {
-      player.seek(Duration.zero, index: 0);
+      await player.stop();
+      await player.seek(Duration.zero, index: 0);
     }
-    player.play();
+    await player.play();
   }
-  static void addSongToQueue(Map song,AudioPlayer player)async{
-    HomeScreen.queue.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
+  static Future<void> addSongToQueue(Map song,AudioPlayer player)async{
+    await HomeScreen.queue.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
     HomeScreen.audioQueueSongData.add(song);
+    await HelperFunctions.writeSongLyrics(song,true);
     if(HomeScreen.queue.length == 1){
-      player.setAudioSource(HomeScreen.queue , initialIndex: 0);
-      player.play();
+      await player.setAudioSource(HomeScreen.queue , initialIndex: 0);
+      await player.play();
     }
   }
-  static void writeSongLyrics(Map song,bool isLast)async{
-    int index = isLast ? HomeScreen.queue.length-1 : 0;
+  static Future<void> writeSongLyrics(Map song,bool isLast)async{
+    int index = isLast ? HomeScreen.queue.length - 1 : 0;
     if(song["hasLyrics"] == "true"){
       Map lyrics = await HelperFunctions.fetchLyrics(song["id"]);
-      if(lyrics["data"] != null){
+      if(lyrics["data"] != null && lyrics["message"] == null){
         HomeScreen.audioQueueSongData[index]["lyrics"] = lyrics["data"]["lyrics"];
         HomeScreen.audioQueueSongData[index]["lyricsCopyRight"] = lyrics["data"]["copyright"];
       }

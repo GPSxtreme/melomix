@@ -152,6 +152,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "line_icons",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/line_icons-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "lints",
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.0.1",
       "packageUri": "lib/",
@@ -374,7 +380,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2022-12-31T14:26:41.580541Z",
+  "generated": "2023-01-02T16:52:48.563687Z",
   "generator": "pub",
   "generatorVersion": "2.19.0-406.0.dev"
 }

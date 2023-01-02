@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:proto_music_player/services/helperFunctions.dart';
-
-import '../screens/home_screen.dart';
+// import 'package:line_icons/line_icons.dart';
 
 class SongResultTile extends StatefulWidget {
   const SongResultTile({Key? key, required this.player, required this.song}) : super(key: key);
@@ -25,25 +24,22 @@ class _SongResultTileState extends State<SongResultTile> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: ()async{
-        HelperFunctions.playHttpSong(widget.song, widget.player);
-        HelperFunctions.writeSongLyrics(widget.song,false);
+        await HelperFunctions.playHttpSong(widget.song, widget.player);
       },
-      title: Text(widget.song["name"],style: const TextStyle(color: Colors.black,fontSize: 17),),
-      subtitle:Text(widget.song["primaryArtists"],style: const TextStyle(color: Colors.black,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,),
+      title: Text(widget.song["name"],style: const TextStyle(color: Colors.white,fontSize: 17),),
+      subtitle:Text(widget.song["primaryArtists"],style: const TextStyle(color: Colors.white,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,),
       leading: CircleAvatar(
         radius: 30,
         backgroundColor: Colors.indigo,
         backgroundImage: NetworkImage(widget.song["image"][1]["link"]),
       ),
-      trailing: IconButton(icon: !addedToQueue ?  const Icon(Icons.add): const Icon(Icons.check) ,
+      trailing: IconButton(icon: !addedToQueue ?  const Icon(Icons.add_to_queue,color: Colors.white,): const Icon(Icons.check,color: Colors.white,) ,
         onPressed: () async{
           if(!addedToQueue){
             setState(() {
               addedToQueue = true;
             });
-            HelperFunctions.addSongToQueue(widget.song, widget.player);
-            HelperFunctions.writeSongLyrics(widget.song,true);
-            HelperFunctions.showSnackBar(context, "Added ${widget.song["name"]} to Queue", 500,bgColor: Colors.indigo);
+            await HelperFunctions.addSongToQueue(widget.song, widget.player);
           }else{
             setState(() {
               addedToQueue = false;

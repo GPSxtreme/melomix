@@ -54,18 +54,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       resizeToAvoidBottomInset : false,
-      // appBar: AppBar(
-      //   title: const Text(" "),
-      //   backgroundColor: Colors.black87,
-      //   elevation: 0,
-      // ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black87,
         elevation: 1,
         type : BottomNavigationBarType.fixed,
         showUnselectedLabels: false,
+        showSelectedLabels: false,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home,color: Colors.white,),
@@ -79,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search,color: Colors.white,),
-            activeIcon: Icon(Icons.search,color: Colors.blue,),
+            activeIcon: Icon(Icons.search_rounded,color: Colors.blue,),
             label: 'Search',
           ),
           BottomNavigationBarItem(
@@ -97,70 +93,96 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: Colors.blue,
         onTap: onItemTapped
       ),
-      body: Center(
-        child: Stack(
-          children: [
-            if(selectedIndex == 0) ...[
+      body: Stack(
+        children: [
+          if(selectedIndex == 0) ...[
 
-            ],
-            if(selectedIndex == 2) ...[
-              searchPage(),
-            ],
-            Positioned(
-                bottom: 0,
-                child: GestureDetector(
-                  onPanUpdate:  (details) {
-                    int sensitivity = 8;
-                    if (details.delta.dy > sensitivity) {
-                      // Down Swipe
-                    } else if(details.delta.dy < -sensitivity && HomeScreen.audioQueueSongData.isNotEmpty){
-                      // Up Swipe
-                      showModalBottomSheet(
-                          context: context,
-                          elevation: 0,
-                          barrierColor: Colors.transparent,
-                          isScrollControlled: true,
-                          builder: (context) => showFullPlayer(context)
-                      );
-                    }
-                  },
-                  child: Container(
-                    height: HomeScreen.audioQueueSongData.isNotEmpty ? 99:70,
-                    padding: null,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(18),topRight: Radius.circular(18)),
-                      color: HexColor("#212121").withOpacity(0.99),
-                    ),
-                      child:Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if(HomeScreen.audioQueueSongData.isNotEmpty)
-                          SizedBox(
-                            height: 30,
-                            child: IconButton(onPressed: (){
-                              if(HomeScreen.audioQueueSongData.isNotEmpty){
-                                showModalBottomSheet(
-                                    context: context,
-                                    elevation: 0,
-                                    barrierColor: Colors.transparent,
-                                    isScrollControlled: true,
-                                    builder: (context) => showFullPlayer(context)
-                                );
-                              }
-                            },
-                                icon: const Icon(Icons.arrow_drop_up,color: Colors.white,)),
-                          ),
-                          PlayerButtons(_audioPlayer)
-                        ],
-                      )
-                  ),
-                )
-            )
           ],
-        ),
-
+          if(selectedIndex == 2) ...[
+            searchPage(),
+          ],
+          Positioned(
+              bottom: 0,
+              child: StreamBuilder(
+                stream: _audioPlayer.currentIndexStream,
+                builder:(context,snapshot){
+                  if(snapshot.data != null && HomeScreen.queue.length != 0){
+                    return GestureDetector(
+                      onPanUpdate:  (details) {
+                        int sensitivity = 8;
+                        if (details.delta.dy > sensitivity) {
+                          // Down Swipe
+                        } else if(details.delta.dy < -sensitivity && HomeScreen.audioQueueSongData.isNotEmpty){
+                          // Up Swipe
+                          showModalBottomSheet(
+                              context: context,
+                              elevation: 0,
+                              barrierColor: Colors.transparent,
+                              isScrollControlled: true,
+                              builder: (context) => showFullPlayer(context)
+                          );
+                        }
+                      },
+                      child :Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(18),topRight: Radius.circular(18)),
+                            color: HexColor("111111").withOpacity(1),
+                          ),
+                          child:Column(
+                            children: [
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap:(){
+                                      showModalBottomSheet(
+                                          context: context,
+                                          elevation: 0,
+                                          barrierColor: Colors.transparent,
+                                          isScrollControlled: true,
+                                          builder: (context) => showFullPlayer(context)
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          child: Image.network(HomeScreen.audioQueueSongData[snapshot.data!]["image"][1]["link"],height: 50,width: 50,),
+                                        ),
+                                        const SizedBox(width: 15,),
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width*0.30: MediaQuery.of(context).size.width*0.7
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(HomeScreen.audioQueueSongData[snapshot.data!]["name"],style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                              Text(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"],style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w300,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  PlayerController(_audioPlayer, isFullScreen: false,nextBtnSize: 20,playPauseBtnSize: 30,prevBtnSize: 20,repeatBtnSize: 20,shuffleBtnSize: 20,),
+                                  if(!_audioPlayer.hasNext)
+                                    const Spacer()
+                                ],
+                              )
+                            ],
+                          )
+                      )
+                    );
+                  } else {
+                    return const SizedBox(height: 0,);
+                  }
+                },
+              ),
+          )
+        ],
       ),
     );
   }
@@ -168,12 +190,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget searchPage() {
     return Column(
             children: [
-              const SizedBox(height: 20,),
+              const SizedBox(height: 30,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                 child: TextField(
                   textAlign: TextAlign.start,
-                  cursorColor: Colors.black,
+                  cursorColor: Colors.white,
+                  style: const TextStyle(color: Colors.white),
                   cursorHeight: 20,
                   keyboardType: TextInputType.name,
                   onSubmitted: (query){
@@ -185,17 +208,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.transparent,
+                    fillColor: HexColor("111111"),
                     hintText: 'What do you want to listen to?',
-                    prefixIcon: const Icon(Icons.search,color: Colors.black,),
-                    border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: HexColor("111111"), width: 1)
+                    hintStyle: const TextStyle(color: Colors.white24),
+                    prefixIcon: const Icon(Icons.search,color: Colors.white,),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                        borderRadius: BorderRadius.circular(100)
                     ),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: HexColor("111111"), width: 1)
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                        borderRadius: BorderRadius.circular(100)
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: HexColor("111111"), width: 2),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                        borderRadius: BorderRadius.circular(100)
                     ),
                   ),
                 ),
@@ -231,6 +258,124 @@ class _HomeScreenState extends State<HomeScreen> {
       builder:(context,snapshot){
         if(snapshot.data != null){
           String hasLyrics = HomeScreen.audioQueueSongData[snapshot.data!]["hasLyrics"];
+          Widget songCover(){
+            return Container(
+              width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.75 : MediaQuery.of(context).size.height*0.75 ,
+              height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.75 : MediaQuery.of(context).size.height*0.75 ,
+              decoration:BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                      HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
+                    ),
+                    fit: BoxFit.cover
+                ),
+              ),
+            );
+          }
+          Widget songName(){
+            return Text(HomeScreen.audioQueueSongData[snapshot.data!]["name"],style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,);
+          }
+          Widget songArtists(){
+            return Text(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
+          }
+          Widget songLyrics(){
+            if(hasLyrics == "true") {
+              return SizedBox(
+              width: 100,
+              child: Center(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue
+                    ),
+                    onPressed: (){
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => showLyrics(snapshot.data!)
+                      );
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(Icons.lyrics,color: Colors.white,),
+                        SizedBox(width: 5,),
+                        Text("Lyrics",style: TextStyle(color: Colors.white,))
+                      ],
+                    )),
+              ),
+            );
+            } else {
+              return const SizedBox(height: 0,);
+            }
+          }
+          Widget songLyricsCopyright(){
+            return SizedBox(
+              width: 100,
+              child: Center(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue
+                    ),
+                    onPressed: (){
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => showLyrics(snapshot.data!)
+                      );
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(Icons.lyrics,color: Colors.white,),
+                        SizedBox(width: 5,),
+                        Text("Lyrics",style: TextStyle(color: Colors.white,))
+                      ],
+                    )),
+              ),
+            );
+          }
+          Widget songTimers(){
+            return Row(
+              children: [
+                StreamBuilder(
+                  stream: _audioPlayer.createPositionStream(),
+                  builder: (context,snapshot){
+                    if(snapshot.data != null){
+                      return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
+                    } else {
+                      return const Text("");
+                    }
+                  },
+                ),
+                const Spacer(),
+                if(_audioPlayer.duration != null)
+                  Text(HelperFunctions.printDuration(_audioPlayer.duration!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,)
+              ],
+            );
+          }
+          Widget cprAndPlayer(){
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height*0.4 : MediaQuery.of(context).size.width*0.6,
+                maxHeight: MediaQuery.of(context).size.height*0.4,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    songLyrics(),
+                    const SizedBox(height: 20,),
+                    Text(HomeScreen.audioQueueSongData[snapshot.data!]["copyright"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w300),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
+                    songLyricsCopyright(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
+                      child: songTimers(),
+                    ),
+                    PlayerController(_audioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,)
+                  ],
+                ),
+              ),
+            );
+          }
           return GestureDetector(
             onPanUpdate: (details){
               int sensitivity = 17;
@@ -250,79 +395,50 @@ class _HomeScreenState extends State<HomeScreen> {
               minChildSize: 0.5,
               maxChildSize: 1,
               builder: (_,controller) => Container(
-                color: HexColor("212121"),
+                decoration: BoxDecoration(
+                    color: HexColor("111111"),
+                  //   image: DecorationImage(
+                  //     fit: BoxFit.fill,
+                  //   opacity: 0.5,
+                  //   image: NetworkImage(
+                  //     HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
+                  //   )
+                  // )
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-                  child: Column(
+                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
+                  child: MediaQuery.of(context).orientation == Orientation.portrait ?  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width*0.85,
-                        height: MediaQuery.of(context).size.width*0.85,
-                        decoration:BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
-                                scale: 1.6,
-                              ),
-                              fit: BoxFit.cover
-                          ),
-                        ),
-                      ),
+                      const Spacer(),
+                      songCover(),
                       const SizedBox(height: 25,),
-                      Text(HomeScreen.audioQueueSongData[snapshot.data!]["name"],style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,),
-                      const SizedBox(height: 10,),
-                      Text(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis),
-                      const SizedBox(height: 20,),
-                      if(hasLyrics == "true")
-                        SizedBox(
-                          width: 100,
-                          child: Center(
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue
-                                ),
-                                onPressed: (){
-                                  showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (context) => showLyrics(snapshot.data!)
-                                  );
-                                },
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.lyrics,color: Colors.white,),
-                                    SizedBox(width: 5,),
-                                    Text("Lyrics",style: TextStyle(color: Colors.white,))
-                                  ],
-                                )),
-                          ),
-                        ),
-                      const SizedBox(height: 20,),
-                      Text(HomeScreen.audioQueueSongData[snapshot.data!]["copyright"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w300),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis),
-                      const SizedBox(height: 20,),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
-                        child: Row(
-                          children: [
-                            StreamBuilder(
-                              stream: _audioPlayer.createPositionStream(),
-                              builder: (context,snapshot){
-                                if(snapshot.data != null){
-                                  return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
-                                } else {
-                                  return const Text("");
-                                }
-                              },
-                            ),
-                            const Spacer(),
-                            if(_audioPlayer.duration != null)
-                              Text(HelperFunctions.printDuration(_audioPlayer.duration!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,)
-                          ],
-                        ),
+                      songName(),
+                      const SizedBox(height: 5,),
+                      songArtists(),
+                      const Spacer(),
+                      cprAndPlayer(),
+                      const Spacer(),
+                    ],
+                  ) : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // const Spacer(),
+                      songCover(),
+                      const Spacer(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // const SizedBox(height: 25,),
+                          songName(),
+                          // const SizedBox(height: 5,),
+                          songArtists(),
+                          // const Spacer(),
+                          // cprAndPlayer(),
+                          // const Spacer(),
+                        ],
                       ),
-                      PlayerButtons(_audioPlayer),
+                      const Spacer(),
                     ],
                   ),
                 ),
