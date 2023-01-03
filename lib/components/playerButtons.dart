@@ -89,15 +89,18 @@ class _PlayerControllerState extends State<PlayerController> {
                 );
               },
             ),
-            if(widget.audioPlayer.hasPrevious || widget.isFullScreen)
             StreamBuilder<SequenceState?>(
               stream: widget.audioPlayer.sequenceStateStream,
               builder: (_, __) {
-                return PlayerButtons.previousButton(widget.audioPlayer,widget.prevBtnSize,
+                if(widget.audioPlayer.hasPrevious || widget.isFullScreen) {
+                  return PlayerButtons.previousButton(widget.audioPlayer,widget.prevBtnSize,
                 hexDisableColor: widget.prevBtnHexDisableColor,
                   hexActiveColor: widget.prevBtnHexActiveColor,
                     prevIcon: widget.prevBtnIcon
                 );
+                } else {
+                  return const SizedBox(height: 0,);
+                }
               },
             ),
             StreamBuilder<PlayerState>(
@@ -116,15 +119,18 @@ class _PlayerControllerState extends State<PlayerController> {
                   }
               },
             ),
-            if(widget.audioPlayer.hasNext || widget.isFullScreen)
               StreamBuilder<SequenceState?>(
               stream: widget.audioPlayer.sequenceStateStream,
               builder: (_, __) {
-                return PlayerButtons.nextButton(widget.audioPlayer,widget.nextBtnSize,
+                if(widget.audioPlayer.hasNext || widget.isFullScreen) {
+                  return PlayerButtons.nextButton(widget.audioPlayer,widget.nextBtnSize,
                 hexActiveColor: widget.nextBtnHexActiveColor,
                   hexDisableColor: widget.nextBtnHexDisableColor,
                   nextIcon: widget.nextBtnIcon
                 );
+                } else {
+                  return const SizedBox(height: 0,);
+                }
               },
             ),
             if(widget.isFullScreen)
