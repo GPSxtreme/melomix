@@ -62,6 +62,9 @@ class _PlayerControllerState extends State<PlayerController> {
                 return SizedBox(
                   height: 10,
                   child: Slider(
+                    // thumbColor:Colors.black,
+                    // activeColor: HexColor("111111"),
+                    // inactiveColor: HexColor("7a7a7a"),
                     min: 0.0,
                     max: streamDuration + 2,
                     value: snapshot.data!.inSeconds.toDouble(),

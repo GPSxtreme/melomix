@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import '../components/songResultTile.dart';
-import '../services/helperFunctions.dart';
+import 'package:proto_music_player/screens/search_page_screen.dart';
 import '../components/playerButtons.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import 'full_player_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = "proto_home";
@@ -16,10 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late AudioPlayer _audioPlayer;
-  Map searchResults = {};
-  List<SongResultTile> allResults = [];
   int selectedIndex = 0;
-  HelperFunctions helperFunctions = HelperFunctions();
   @override
   void initState() {
     super.initState();
@@ -29,21 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     super.dispose();
     _audioPlayer.dispose();
-  }
-  searchFunction(String query)async{
-    if(allResults.length > 20){
-      setState(() {
-        allResults.clear();
-      });
-    }
-    searchResults = await HelperFunctions.querySong(query.trim(), 10);
-    if(searchResults["status"] == "SUCCESS" && searchResults["data"]["results"].isNotEmpty){
-      for(Map song in searchResults["data"]["results"]){
-        setState(() {
-          allResults.add(SongResultTile(song: song,player: _audioPlayer,));
-        });
-      }
-    }
   }
   void onItemTapped(int index) {
     setState(() {
@@ -99,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //home page
           ],
           if(selectedIndex == 2) ...[
-            searchPage(),
+            SearchPage(player: _audioPlayer,),
           ],
           Positioned(
               bottom: 0,
@@ -119,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               elevation: 0,
                               barrierColor: Colors.transparent,
                               isScrollControlled: true,
-                              builder: (context) => showFullPlayer(context)
+                              builder: (context) => ShowFullPlayer(player: _audioPlayer,)
                           );
                         }
                       },
@@ -141,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           elevation: 0,
                                           barrierColor: Colors.transparent,
                                           isScrollControlled: true,
-                                          builder: (context) => showFullPlayer(context)
+                                          builder: (context) => ShowFullPlayer(player: _audioPlayer,)
                                       );
                                     },
                                     child: Row(
@@ -183,289 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
           )
         ],
-      ),
-    );
-  }
-  //search page
-  Widget searchPage() {
-    return Column(
-            children: [
-              const SizedBox(height: 30,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                child: TextField(
-                  textAlign: TextAlign.start,
-                  cursorColor: Colors.white,
-                  style: const TextStyle(color: Colors.white),
-                  cursorHeight: 20,
-                  keyboardType: TextInputType.name,
-                  onSubmitted: (query){
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    searchFunction(query);
-                  },
-                  onChanged:(query){
-                    searchFunction(query);
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: HexColor("111111"),
-                    hintText: 'What do you want to listen to?',
-                    hintStyle: const TextStyle(color: Colors.white24),
-                    prefixIcon: const Icon(Icons.search,color: Colors.white,),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                        borderRadius: BorderRadius.circular(100)
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                        borderRadius: BorderRadius.circular(100)
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                        borderRadius: BorderRadius.circular(100)
-                    ),
-                  ),
-                ),
-              ),
-              queriesTileContainer(),
-            ],
-          );
-  }
-  //search page queries
-  Widget queriesTileContainer(){
-    if(allResults.isNotEmpty){
-      return Expanded(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: allResults.length,
-          itemBuilder: (context,index){
-            return allResults[index];
-          },
-        ),
-      );
-    }else{
-      return const Center(
-        heightFactor: 15,
-        child:Text("No results",style: TextStyle(fontSize: 16),),
-
-      );
-    }
-  }
-  //Draggable Full screen player
-  Widget showFullPlayer(BuildContext context) {
-    return StreamBuilder(
-      stream: _audioPlayer.currentIndexStream,
-      builder:(context,snapshot){
-        if(snapshot.data != null){
-          String hasLyrics = HomeScreen.audioQueueSongData[snapshot.data!]["hasLyrics"];
-          Widget songCover(){
-            return Container(
-              width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.75 : MediaQuery.of(context).size.height*0.75 ,
-              height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.75 : MediaQuery.of(context).size.height*0.75 ,
-              decoration:BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(
-                      HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
-                    ),
-                    fit: BoxFit.cover
-                ),
-              ),
-            );
-          }
-          Widget songName(){
-            return Text(HomeScreen.audioQueueSongData[snapshot.data!]["name"],style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,);
-          }
-          Widget songArtists(){
-            return Text(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
-          }
-          Widget songLyricsBtn(){
-            if(hasLyrics == "true") {
-              return SizedBox(
-                width: 100,
-                child: Center(
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue
-                      ),
-                      onPressed: (){
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => showLyrics(snapshot.data!)
-                        );
-                      },
-                      child: Row(
-                        children: const [
-                          Icon(Icons.lyrics,color: Colors.white,),
-                          SizedBox(width: 5,),
-                          Text("Lyrics",style: TextStyle(color: Colors.white,)),
-                        ],
-                      )),
-                ),
-              );
-            } else {
-              return const SizedBox(height: 0,);
-            }
-          }
-          Widget songTimers(){
-            return Row(
-              children: [
-                StreamBuilder(
-                  stream: _audioPlayer.createPositionStream(),
-                  builder: (context,snapshot){
-                    if(snapshot.data != null){
-                      return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
-                    } else {
-                      return const Text("");
-                    }
-                  },
-                ),
-                const Spacer(),
-                if(_audioPlayer.duration != null)
-                  Text(HelperFunctions.printDuration(_audioPlayer.duration!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,)
-              ],
-            );
-          }
-          Widget cprAndPlayer(){
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height*0.4 : MediaQuery.of(context).size.width*0.6,
-                maxHeight: MediaQuery.of(context).size.height*0.4,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    if(hasLyrics == "true") ...[
-                      songLyricsBtn(),
-                      const SizedBox(height: 20,),
-                    ],
-                    Text(HomeScreen.audioQueueSongData[snapshot.data!]["copyright"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w300),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
-                    const SizedBox(height: 10,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
-                      child: songTimers(),
-                    ),
-                    PlayerController(_audioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,)
-                  ],
-                ),
-              ),
-            );
-          }
-          return GestureDetector(
-            onPanUpdate: (details){
-              int sensitivity = 17;
-              // print(details.delta.dx);
-              if(details.delta.dx > sensitivity){
-                if(_audioPlayer.hasPrevious){
-                  _audioPlayer.seekToPrevious();
-                }
-              } else if (details.delta.dx < -sensitivity){
-                if(_audioPlayer.hasNext){
-                  _audioPlayer.seekToNext();
-                }
-              }
-            },
-            child: DraggableScrollableSheet(
-              initialChildSize: 1,
-              minChildSize: 0.5,
-              maxChildSize: 1,
-              builder: (_,controller) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: HexColor("111111"),
-                    //   image: DecorationImage(
-                    //     fit: BoxFit.fill,
-                    //   opacity: 0.5,
-                    //   image: NetworkImage(
-                    //     HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
-                    //   )
-                    // )
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                    child: MediaQuery.of(context).orientation == Orientation.portrait ?  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Spacer(),
-                        songCover(),
-                        const SizedBox(height: 25,),
-                        songName(),
-                        const SizedBox(height: 5,),
-                        songArtists(),
-                        const Spacer(),
-                        cprAndPlayer(),
-                        const Spacer(),
-                      ],
-                    ) : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Spacer(),
-                        songCover(),
-                        const Spacer(),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width*0.5,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Spacer(),
-                              songName(),
-                              const SizedBox(height: 5,),
-                              songArtists(),
-                              const Spacer(),
-                              songLyricsBtn(),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 5),
-                                child: songTimers(),
-                              ),
-                              PlayerController(_audioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,),
-                              const Spacer(),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                );
-              } ,
-            ),
-          );
-        }else{
-          return const SizedBox(height: 0,);
-        }
-      }
-    );
-  }
-  //Draggable lyrics sheet
-  showLyrics(int index) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.6,
-      builder:(_,controller) => Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: HexColor("#363636"),
-              borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(28)
-              )
-          ),
-          child: ListView(
-            controller: controller,
-            children: [
-              Text(HomeScreen.audioQueueSongData[index]["lyrics"],
-                style: const TextStyle(
-                  wordSpacing: 3.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 22,
-                  height: 1.8,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20,),
-              Text(HomeScreen.audioQueueSongData[index]["lyricsCopyRight"].toString().replaceAll("<br>", '\n'),style: const TextStyle( wordSpacing: 1.2,color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),textAlign: TextAlign.center,)
-            ],
-          )
       ),
     );
   }
