@@ -2,10 +2,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:just_audio/just_audio.dart';
-import '../components/playerButtons.dart';
-import '../services/helperFunctions.dart';
+import '../components/player_buttons.dart';
+import '../services/helper_functions.dart';
 import 'home_screen.dart';
 import 'lyrics_screen.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 class ShowFullPlayer extends StatefulWidget {
   const ShowFullPlayer({Key? key, required this.player}) : super(key: key);
@@ -15,6 +16,7 @@ class ShowFullPlayer extends StatefulWidget {
 }
 
 class _ShowFullPlayerState extends State<ShowFullPlayer> {
+  HtmlUnescape htmlDecode = HtmlUnescape();
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -37,10 +39,10 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
               );
             }
             Widget songName(){
-              return Text(HomeScreen.audioQueueSongData[snapshot.data!]["name"],style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
+              return Text(htmlDecode.convert(HomeScreen.audioQueueSongData[snapshot.data!]["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
             }
             Widget songArtists(){
-              return Text(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
+              return Text(htmlDecode.convert(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"]),style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
             }
             Widget songLyricsBtn(){
               if(hasLyrics == "true") {

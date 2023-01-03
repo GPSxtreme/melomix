@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:proto_music_player/screens/search_page_screen.dart';
-import '../components/playerButtons.dart';
+import '../components/player_buttons.dart';
 import 'package:hexcolor/hexcolor.dart';
-
 import 'full_player_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,23 +16,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AudioPlayer _audioPlayer;
+  late AudioPlayer audioPlayer;
   int selectedIndex = 0;
+  HtmlUnescape htmlDecode = HtmlUnescape();
+  // List<Widget> pageList = [
+  //   SearchPage(player: audioPlayer),
+  //
+  // ]
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
+    audioPlayer = AudioPlayer();
   }
   @override
   void dispose() {
     super.dispose();
-    _audioPlayer.dispose();
+    audioPlayer.dispose();
   }
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,13 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
           if(selectedIndex == 0) ...[
           //home page
           ],
-          if(selectedIndex == 2) ...[
-            SearchPage(player: _audioPlayer,),
-          ],
+          if(selectedIndex == 2)
+            SearchPage(player: audioPlayer,),
           Positioned(
               bottom: 0,
               child: StreamBuilder(
-                stream: _audioPlayer.currentIndexStream,
+                stream: audioPlayer.currentIndexStream,
                 builder:(context,snapshot){
                   if(snapshot.data != null && HomeScreen.queue.length != 0){
                     return GestureDetector(
@@ -102,59 +107,56 @@ class _HomeScreenState extends State<HomeScreen> {
                               elevation: 0,
                               barrierColor: Colors.transparent,
                               isScrollControlled: true,
-                              builder: (context) => ShowFullPlayer(player: _audioPlayer,)
+                              builder: (context) => ShowFullPlayer(player: audioPlayer,)
                           );
                         }
                       },
-                      child :Container(
+                      child : Container(
                           padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(18),topRight: Radius.circular(18)),
                             color: HexColor("111111").withOpacity(1),
                           ),
-                          child:Column(
+                          child:Row(
                             children: [
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap:(){
-                                      showModalBottomSheet(
-                                          context: context,
-                                          elevation: 0,
-                                          barrierColor: Colors.transparent,
-                                          isScrollControlled: true,
-                                          builder: (context) => ShowFullPlayer(player: _audioPlayer,)
-                                      );
-                                    },
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                          child: Image.network(HomeScreen.audioQueueSongData[snapshot.data!]["image"][1]["link"],height: 50,width: 50,),
-                                        ),
-                                        const SizedBox(width: 15,),
-                                        ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                            maxWidth: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width*0.30: MediaQuery.of(context).size.width*0.7
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(HomeScreen.audioQueueSongData[snapshot.data!]["name"],style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
-                                              Text(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"],style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w300,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                              GestureDetector(
+                                onTap:(){
+                                  showModalBottomSheet(
+                                      context: context,
+                                      elevation: 0,
+                                      barrierColor: Colors.transparent,
+                                      isScrollControlled: true,
+                                      builder: (context) => ShowFullPlayer(player: audioPlayer,)
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: Image.network(HomeScreen.audioQueueSongData[snapshot.data!]["image"][1]["link"],height: 55,width: 55,),
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  PlayerController(_audioPlayer, isFullScreen: false,nextBtnSize: 20,playPauseBtnSize: 30,prevBtnSize: 20,repeatBtnSize: 20,shuffleBtnSize: 20,),
-                                  if(!_audioPlayer.hasNext)
-                                    const Spacer()
-                                ],
-                              )
+                                    const SizedBox(width: 15,),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxWidth: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width*0.35: MediaQuery.of(context).size.width*0.6
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(htmlDecode.convert(HomeScreen.audioQueueSongData[snapshot.data!]["name"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                          const SizedBox(height: 5,),
+                                          Text(htmlDecode.convert(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w300,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              PlayerController(audioPlayer, isFullScreen: false,nextBtnSize: 20,playPauseBtnSize: 30,prevBtnSize: 20,repeatBtnSize: 20,shuffleBtnSize: 20,),
+                              if(!audioPlayer.hasNext)
+                                const Spacer()
                             ],
                           )
                       )

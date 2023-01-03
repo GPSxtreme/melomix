@@ -43,6 +43,9 @@ dependencies:
   google_fonts: ^3.0.1
   shared_preferences: ^2.0.15
   line_icons: ^2.0.1
+  cached_network_image: ^3.2.3
+  html: ^0.15.1
+  html_unescape: ^2.0.0
 
 dev_dependencies:
   flutter_test:
