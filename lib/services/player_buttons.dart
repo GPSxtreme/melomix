@@ -21,23 +21,30 @@ class PlayerButtons{
         size: iconSize + 16.5,
       );
     } else if (player.playing != true) {
-      return IconButton(
-        icon: Icon(playIcon ?? Icons.play_arrow,color:iconColorHex ?? Colors.white,),
-        iconSize: iconSize,
-        onPressed: player.play,
+      return GestureDetector(
+        onTap:player.play,
+        child: Icon(
+          playIcon ?? Icons.play_arrow,color:iconColorHex ?? Colors.white,
+          size: iconSize,
+        ),
       );
+
     } else if (processingState != ProcessingState.completed) {
-      return IconButton(
-        icon: Icon(pauseIcon ?? Icons.pause,color: iconColorHex ?? Colors.white,),
-        iconSize: iconSize,
-        onPressed: player.pause,
+      return GestureDetector(
+        onTap:player.pause,
+        child: Icon(
+          pauseIcon ?? Icons.pause,color: iconColorHex ?? Colors.white,
+          size: iconSize,
+        ),
       );
     } else {
-      return IconButton(
-        icon: Icon(replayIcon ??  Icons.replay,color: iconColorHex ?? Colors.white,),
-        iconSize: iconSize,
-        onPressed: () =>player.seek(Duration.zero,
+      return GestureDetector(
+        onTap:() =>player.seek(Duration.zero,
             index: player.effectiveIndices?.first),
+        child: Icon(
+          replayIcon ??  Icons.replay,color: iconColorHex ?? Colors.white,
+          size: iconSize,
+        ),
       );
     }
   }
@@ -50,18 +57,21 @@ class PlayerButtons{
     }
   )
 {
-    return IconButton(
-      icon: isEnabled
-          ? Icon(shuffleIcon ??  Icons.shuffle, color: hexDisableColor ?? Colors.blue , size: iconSize,)
-          : Icon(shuffleIcon ??  Icons.shuffle , color: hexActiveColor ??  Colors.white),
-      onPressed: () async {
+    return GestureDetector(
+      onTap:() async{
         final enable = !isEnabled;
         if (enable) {
           await player.shuffle();
         }
         await player.setShuffleModeEnabled(enable);
       },
+      child: Icon(
+        isEnabled ? (shuffleIcon ??  Icons.shuffle):(shuffleIcon ??  Icons.shuffle ),
+        color: isEnabled ? hexDisableColor ?? Colors.blue : hexActiveColor ??  Colors.white,
+        size: iconSize,
+      ),
     );
+
   }
 
   static Widget previousButton(AudioPlayer player , double iconSize,
@@ -72,23 +82,27 @@ class PlayerButtons{
       }
     )
   {
-    return IconButton(
-      icon: Icon(prevIcon ?? Icons.skip_previous,color: player.hasPrevious ? hexActiveColor ??  Colors.white : hexDisableColor ?? HexColor("#8c8c8c"),size: iconSize,),
-      onPressed: player.hasPrevious ? player.seekToPrevious : null,
+    return GestureDetector(
+      onTap:() {
+        player.hasPrevious ? player.seekToPrevious() : null;
+      },
+      child: Icon(prevIcon ?? Icons.skip_previous,color: player.hasPrevious ? hexActiveColor ??  Colors.white : hexDisableColor ?? HexColor("#8c8c8c"),size: iconSize,),
     );
   }
 
   static Widget nextButton(AudioPlayer player , double iconSize,
-            {
-              IconData? nextIcon,
-              HexColor? hexActiveColor,
-              HexColor? hexDisableColor,
-            }
-          )
+       {
+          IconData? nextIcon,
+          HexColor? hexActiveColor,
+          HexColor? hexDisableColor,
+       }
+      )
   {
-    return IconButton(
-      icon: Icon(nextIcon ??  Icons.skip_next,color: player.hasNext ? hexActiveColor ??  Colors.white: hexDisableColor ?? HexColor("#8c8c8c"), size: iconSize,),
-      onPressed: player.hasNext ? player.seekToNext : null,
+    return GestureDetector(
+      onTap:() {
+        player.hasNext ? player.seekToNext() : null;
+      },
+      child: Icon(nextIcon ??  Icons.skip_next,color: player.hasNext ? hexActiveColor ??  Colors.white: hexDisableColor ?? HexColor("#8c8c8c"), size: iconSize,),
     );
   }
 
@@ -111,12 +125,13 @@ class PlayerButtons{
       LoopMode.one,
     ];
     final index = cycleModes.indexOf(loopMode);
-    return IconButton(
-      icon: icons[index],
-      onPressed: () {
-        player.setLoopMode(
-            cycleModes[(cycleModes.indexOf(loopMode) + 1) % cycleModes.length]);
-      },
+    return GestureDetector(
+        onTap: (){
+          player.setLoopMode(
+              cycleModes[(cycleModes.indexOf(loopMode) + 1) % cycleModes.length]);
+        },
+        child: icons[index]
     );
+
   }
 }

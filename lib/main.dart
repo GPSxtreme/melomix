@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:proto_music_player/screens/home_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:proto_music_player/screens/app_router_screen.dart';
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //change according to app themes
+    // systemNavigationBarColor: Colors.transparent, // navigation bar color
+    statusBarColor: Colors.black.withOpacity(0.3), // status bar color
+  ));
   runApp(const MyApp());
 }
 
@@ -11,9 +17,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: HomeScreen.id,
+      initialRoute: AppRouter.id,
       routes: {
-        HomeScreen.id:(context) => const HomeScreen(),
+        AppRouter.id:(context) => const AppRouter(),
       },
     );
   }

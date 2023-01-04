@@ -290,6 +290,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "persistent_bottom_nav_bar",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/persistent_bottom_nav_bar-5.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/platform-3.1.0",
       "packageUri": "lib/",
@@ -458,7 +464,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-01-03T19:21:05.184252Z",
+  "generated": "2023-01-04T05:27:58.337170Z",
   "generator": "pub",
   "generatorVersion": "2.19.0-406.0.dev"
 }

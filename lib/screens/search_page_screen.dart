@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:proto_music_player/components/album_tile.dart';
-import 'package:proto_music_player/components/artist_tile.dart';
-import 'package:proto_music_player/components/playlist_tile.dart';
+import 'package:proto_music_player/components/results_common_tile.dart';
+import 'package:proto_music_player/components/top_result_common_tile.dart';
+import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/song_tile.dart';
 import '../services/helper_functions.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key, required this.player}) : super(key: key);
-  final AudioPlayer player;
+class SearchPageScreen extends StatefulWidget {
+  const SearchPageScreen({Key? key,}) : super(key: key);
+  static String id = "search_screen";
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<SearchPageScreen> createState() => _SearchPageScreenState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageScreenState extends State<SearchPageScreen> {
   Map allSongResultsData = {};
   List<SongResultTile> allSongResultsList = [];
   Map allDataResultsData = {};
   List<SongResultTile> topSongsResultsList = [];
-  List<PlaylistTile> playlistsResultsList = [];
-  List<AlbumTile> albumsResultsList = [];
-  List<ArtistTile> artistsResultsList = [];
+  List<CommonResultTile> playlistsResultsList = [];
+  List<CommonResultTile> albumsResultsList = [];
+  List<CommonResultTile> artistsResultsList = [];
   bool userSearched = false;
+  bool noResults = false;
   dynamic topResult;
-
+  String lastSavedQuery = "";
 
   resetData(){
     setState(() {
@@ -33,20 +33,16 @@ class _SearchPageState extends State<SearchPage> {
       playlistsResultsList.clear();
       albumsResultsList.clear();
       artistsResultsList.clear();
+      allSongResultsList.clear();
     });
   }
 
   getAllSongResults(String query)async{
-    // if(allResults.length > 10){
-      setState(() {
-        allSongResultsList.clear();
-      });
-    // }
     allSongResultsData = await HelperFunctions.getSongByName(query.trim(), 10);
     if(allSongResultsData["status"] == "SUCCESS" && allSongResultsData["data"]["results"].isNotEmpty){
       for(Map song in allSongResultsData["data"]["results"]){
         setState(() {
-          allSongResultsList.add(SongResultTile(song: song,player: widget.player,));
+          allSongResultsList.add(SongResultTile(song: song,player: mainAudioPlayer,));
         });
       }
     }
@@ -54,26 +50,25 @@ class _SearchPageState extends State<SearchPage> {
 
   assignTopResult(Map data)async{
     topResult = null;
-    switch(data["type"]){
-      case "artist" :
-        topResult = ArtistTile(artUrl: data["image"][2]["link"], artistId: data["id"]);
-        break;
-      case "album" :
-        topResult = AlbumTile(artUrl: data["image"][2]["link"], albumId: data["id"]);
-        break;
-      case "song" :
-        Map fetchedSong = await HelperFunctions.getSongById(data["id"]);
-        topResult = SongResultTile(player: widget.player, song: fetchedSong["data"][0]);
-        break;
-      case "playlist" :
-        topResult = PlaylistTile(artUrl: data["image"][2]["link"], playlistId: data["id"]);
+    if(data["type"] == "song"){
+      Map fetchedSong = await HelperFunctions.getSongById(data["id"]);
+      topResult = SongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0]);
+    }else {
+      topResult = TopCommonResultTile(data: data);
     }
+
   }
 
   getAllDataResults(String query)async{
     resetData();
     allDataResultsData = await HelperFunctions.searchAll(query.trim());
-    if(allDataResultsData["status"] == "SUCCESS" && allDataResultsData["data"] != null){
+    if(allDataResultsData["data"]["songs"]["results"].isEmpty){
+      setState(() {
+        noResults = true;
+      });
+      return;
+    }
+    else if(allDataResultsData["status"] == "SUCCESS" && allDataResultsData["data"] != null){
       if(allDataResultsData["data"]["topQuery"]["results"].isNotEmpty){
         for(Map topQuery in allDataResultsData["data"]["topQuery"]["results"]){
           assignTopResult(topQuery);
@@ -82,65 +77,31 @@ class _SearchPageState extends State<SearchPage> {
       if(allDataResultsData["data"]["songs"]["results"].isNotEmpty){
         for(Map song in allDataResultsData["data"]["songs"]["results"]){
           Map fetchedSong = await HelperFunctions.getSongById(song["id"]);
-          topSongsResultsList.add(SongResultTile(player: widget.player, song: fetchedSong["data"][0] ));
+          topSongsResultsList.add(SongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0] ));
         }
       }
       if(allDataResultsData["data"]["albums"]["results"].isNotEmpty){
         for(Map album in allDataResultsData["data"]["albums"]["results"]){
-          albumsResultsList.add(AlbumTile(albumId: album["id"],artUrl: album["image"][2]["link"],));
+          albumsResultsList.add(CommonResultTile(data: album,));
         }
       }
       if(allDataResultsData["data"]["artists"]["results"].isNotEmpty){
         for(Map artist in allDataResultsData["data"]["artists"]["results"]){
-          artistsResultsList.add(ArtistTile(artistId: artist["id"],artUrl: artist["image"][2]["link"],));
+          artistsResultsList.add(CommonResultTile(data: artist,));
         }
       }
       if(allDataResultsData["data"]["playlists"]["results"].isNotEmpty){
         for(Map playlist in allDataResultsData["data"]["playlists"]["results"]){
-          playlistsResultsList.add(PlaylistTile(playlistId: playlist["id"],artUrl: playlist["image"][2]["link"],));
+          playlistsResultsList.add(CommonResultTile(data: playlist,));
         }
       }
     }
+    getAllSongResults(query);
   }
   
-  Widget listViewRenderer(List<SongResultTile> list){
-    if(list.isNotEmpty){
-      return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: list.length,
-        itemBuilder: (context,index){
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            child: list[index],
-          );
-        },
-      );
-    }else{
-      return const Text("no results",style: TextStyle(color: Colors.white),);
-    }
-  }
 
-  Widget gridViewRenderer(List list){
-    if(list.isNotEmpty){
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: list.length,
-          itemBuilder: (context,index){
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: list[index],
-            );
-          }, gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,mainAxisSpacing: 10,crossAxisSpacing: 10),
-        ),
-      );
-    }else{
-      return const Text("no results",style: TextStyle(color: Colors.white),);
-    }
-  }
+
+
 
   Widget label(String name) =>  Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 18),
@@ -159,108 +120,117 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView(
-        children: [
-          Column(
+      child: Scaffold(
+        appBar: null,
+        backgroundColor: Colors.black,
+        body: Stack(
           children: [
-            //Search bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-              child: TextField(
-                textAlign: TextAlign.start,
-                cursorColor: Colors.white,
-                style: const TextStyle(color: Colors.white),
-                cursorHeight: 20,
-                keyboardType: TextInputType.name,
-                onSubmitted: (query)async{
-                  if(query.trim().isNotEmpty){
-                    setState(() {
-                      userSearched = true;
-                    });
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    await getAllDataResults(query);
-                    await getAllSongResults(query);
-                  }
-                },
-                onChanged:(query){
-                  if(query.trim().isEmpty){
-                    setState(() {
-                      userSearched = false;
-                    });
-                  }
-                },
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(icon: const Icon(Icons.sort,color: Colors.white,), onPressed: () {},),
-                  filled: true,
-                  fillColor: HexColor("111111"),
-                  hintText: 'What do you want to listen to?',
-                  hintStyle: const TextStyle(color: Colors.white24),
-                  prefixIcon: const Icon(Icons.search,color: Colors.white,),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                      borderRadius: BorderRadius.circular(100)
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                      borderRadius: BorderRadius.circular(100)
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                      borderRadius: BorderRadius.circular(100)
-                  ),
-                ),
-              ),
+            ListView(
+              children: [
+                Column(
+                  children: [
+                    const SizedBox(height: 10,),
+                    //Search bar
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                      child: TextField(
+                        textAlign: TextAlign.start,
+                        cursorColor: Colors.white,
+                        style: const TextStyle(color: Colors.white),
+                        cursorHeight: 20,
+                        keyboardType: TextInputType.name,
+                        onSubmitted: (query)async{
+                          if(query.trim().isNotEmpty && query != lastSavedQuery){
+                            setState(() {
+                              userSearched = true;
+                              noResults = false;
+                              lastSavedQuery = query;
+                            });
+                            await getAllDataResults(query);
+                          }
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        onChanged:(query){
+                          if(query.trim().isEmpty){
+                            setState(() {
+                              lastSavedQuery = "";
+                              userSearched = false;
+                              noResults = false;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(icon: const Icon(Icons.sort,color: Colors.white,), onPressed: () {},),
+                          filled: true,
+                          fillColor: HexColor("111111"),
+                          hintText: 'What do you want to listen to?',
+                          hintStyle: const TextStyle(color: Colors.white24),
+                          prefixIcon: const Icon(Icons.search,color: Colors.white,),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                        ),
+                      ),
+                    ),
+                    if(allSongResultsList.isEmpty && userSearched && !noResults)
+                      const Center(
+                          heightFactor: 15,
+                          child: CircularProgressIndicator(color: Colors.white,)
+                      ),
+                    if(userSearched) ...[
+                      if(topResult != null) ...[
+                        label("Top result"),
+                        topResult
+                      ],
+                      if(topSongsResultsList.isNotEmpty) ...[
+                        label("Top songs"),
+                        HelperFunctions.listViewRenderer(topSongsResultsList,verticalGap: 5),
+                      ],
+                      if(albumsResultsList.isNotEmpty) ...[
+                        label("Albums"),
+                        HelperFunctions.gridViewRenderer(albumsResultsList, horizontalPadding: 13, verticalPadding: 5, crossAxisCount: 3, crossAxisSpacing: 10),
+                      ],
+                      if(artistsResultsList.isNotEmpty) ...[
+                        label("Artists"),
+                        HelperFunctions.gridViewRenderer(artistsResultsList, horizontalPadding: 13, verticalPadding: 5, crossAxisCount: 3, crossAxisSpacing: 10),
+                      ],
+                      if(playlistsResultsList.isNotEmpty) ...[
+                        label("Playlists"),
+                        HelperFunctions.gridViewRenderer(playlistsResultsList, horizontalPadding: 13, verticalPadding: 5, crossAxisCount: 3, crossAxisSpacing: 10),
+                      ],
+                      if(allSongResultsList.isNotEmpty) ...[
+                        label("All song results"),
+                        HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
+                      ],
+                      if(mainAudioPlayer.playing)
+                        const SizedBox(height: 60,),
+                    ],
+                    if(!userSearched) ...[
+                      const Center(
+                        heightFactor: 20,
+                        child: Text("Search for a song to show results.",style: TextStyle(color: Colors.white,fontSize: 15),),
+                      ),
+                    ],
+                    if(noResults)
+                      const Center(
+                        heightFactor: 20,
+                        child: Text("No results found!",style: TextStyle(color: Colors.white,fontSize: 16)),
+                      )
+                  ],
+                )],
             ),
-            if(allSongResultsList.isEmpty && userSearched)
-              const Center(
-                  heightFactor: 15,
-                  child: CircularProgressIndicator(color: Colors.white,)
-              ),
-            if(userSearched) ...[
-              if(topResult != null) ...[
-                label("Top result"),
-                if(topResult.runtimeType == SongResultTile)
-                topResult,
-                if(topResult.runtimeType != SongResultTile)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,children: [
-                    topResult
-                  ],),
-                ),
-              ],
-              if(topSongsResultsList.isNotEmpty) ...[
-                label("Top songs"),
-                listViewRenderer(topSongsResultsList),
-              ],
-              if(albumsResultsList.isNotEmpty) ...[
-                label("Albums"),
-                gridViewRenderer(albumsResultsList),
-              ],
-              if(artistsResultsList.isNotEmpty) ...[
-                label("Artists"),
-                gridViewRenderer(artistsResultsList),
-              ],
-              if(playlistsResultsList.isNotEmpty) ...[
-                label("Playlists"),
-                gridViewRenderer(playlistsResultsList),
-              ],
-              if(allSongResultsList.isNotEmpty) ...[
-                label("All song results"),
-                listViewRenderer(allSongResultsList),
-              ],
-              if(widget.player.playing)
-                const SizedBox(height: 60,),
-            ],
-            if(!userSearched) ...[
-              const Center(
-                heightFactor: 20,
-                child: Text("Search for a song to show results.",style: TextStyle(color: Colors.white,fontSize: 15),),
-              )
-            ]
-          ],
-        )],
+            HelperFunctions.collapsedPlayer()
+          ] ,
+        ),
       ),
     );
   }

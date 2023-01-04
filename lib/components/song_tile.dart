@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:line_icons/line_icons.dart';
 
 class SongResultTile extends StatefulWidget {
   const SongResultTile({Key? key, required this.player, required this.song}) : super(key: key);
@@ -28,13 +29,13 @@ class _SongResultTileState extends State<SongResultTile> {
         await HelperFunctions.playHttpSong(widget.song, widget.player);
       },
       title: Text(htmlDecode.convert(widget.song["name"]),style: const TextStyle(color: Colors.white,fontSize: 17),maxLines: 2,overflow: TextOverflow.ellipsis,),
-      subtitle:Text(htmlDecode.convert(widget.song["primaryArtists"]),style: const TextStyle(color: Colors.white,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,),
+      subtitle:Text(htmlDecode.convert(widget.song["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,),
       leading: CircleAvatar(
         radius: 30,
         backgroundColor: Colors.indigo,
         backgroundImage: NetworkImage(widget.song["image"][1]["link"]),
       ),
-      trailing: IconButton(icon: !addedToQueue ?  const Icon(Icons.add_to_queue,color: Colors.white,): const Icon(Icons.check,color: Colors.white,) ,
+      trailing: IconButton(icon: !addedToQueue ?  const Icon(LineIcons.verticalEllipsis,color: Colors.white,): const Icon(Icons.check,color: Colors.white,) ,
         onPressed: () async{
           if(!addedToQueue){
             setState(() {
@@ -42,10 +43,10 @@ class _SongResultTileState extends State<SongResultTile> {
             });
             await HelperFunctions.addSongToQueue(widget.song, widget.player);
           }else{
+            await HelperFunctions.removeFromQueue(widget.song);
             setState(() {
               addedToQueue = false;
             });
-            await HelperFunctions.removeFromQueue(widget.song);
           }
         },
       ),

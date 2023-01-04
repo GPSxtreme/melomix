@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'home_screen.dart';
+import 'app_router_screen.dart';
 
 class ShowLyrics extends StatefulWidget {
   const ShowLyrics({Key? key, required this.index,}) : super(key: key);
@@ -25,7 +25,7 @@ class _ShowLyricsState extends State<ShowLyrics> {
           child: ListView(
             controller: controller,
             children: [
-              Text(HomeScreen.audioQueueSongData[widget.index]["lyrics"],
+              Text(AppRouter.audioQueueSongData[widget.index]["lyrics"],
                 style: const TextStyle(
                   wordSpacing: 2.0,
                   color: Colors.white,
@@ -36,7 +36,7 @@ class _ShowLyricsState extends State<ShowLyrics> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20,),
-              Text(HomeScreen.audioQueueSongData[widget.index]["lyricsCopyRight"].toString().replaceAll("<br>", '\n'),style: const TextStyle( wordSpacing: 1.2,color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),textAlign: TextAlign.center,)
+              Text(AppRouter.audioQueueSongData[widget.index]["lyricsCopyRight"].toString().replaceAll("<br>", '\n'),style: const TextStyle( wordSpacing: 1.2,color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),textAlign: TextAlign.center,)
             ],
           )
       ),

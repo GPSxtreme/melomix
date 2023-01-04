@@ -46,6 +46,7 @@ dependencies:
   cached_network_image: ^3.2.3
   html: ^0.15.1
   html_unescape: ^2.0.0
+  persistent_bottom_nav_bar: ^5.0.2
 
 dev_dependencies:
   flutter_test:

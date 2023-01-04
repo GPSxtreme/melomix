@@ -81,17 +81,19 @@ class _PlayerControllerState extends State<PlayerController> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if(widget.isFullScreen)
-            StreamBuilder<bool>(
-              stream: widget.audioPlayer.shuffleModeEnabledStream,
-              builder: (context, snapshot) {
-                return PlayerButtons.shuffleButton(context, snapshot.data ?? false , widget.audioPlayer, widget.shuffleBtnSize,
-                    hexActiveColor: widget.shuffleBtnActiveColor,
-                  hexDisableColor: widget.shuffleBtnDisableColor,
-                  shuffleIcon: widget.shuffleBtnIcon
-                );
-              },
-            ),
+            if(widget.isFullScreen) ...[
+              StreamBuilder<bool>(
+                stream: widget.audioPlayer.shuffleModeEnabledStream,
+                builder: (context, snapshot) {
+                  return PlayerButtons.shuffleButton(context, snapshot.data ?? false , widget.audioPlayer, widget.shuffleBtnSize,
+                      hexActiveColor: widget.shuffleBtnActiveColor,
+                      hexDisableColor: widget.shuffleBtnDisableColor,
+                      shuffleIcon: widget.shuffleBtnIcon
+                  );
+                },
+              ),
+              const SizedBox(width: 15,),
+            ],
             StreamBuilder<SequenceState?>(
               stream: widget.audioPlayer.sequenceStateStream,
               builder: (_, __) {
@@ -106,6 +108,7 @@ class _PlayerControllerState extends State<PlayerController> {
                 }
               },
             ),
+            SizedBox(width: widget.isFullScreen ? 10 : 5,),
             StreamBuilder<PlayerState>(
               stream: widget.audioPlayer.playerStateStream,
               builder: (_, snapshot) {
@@ -122,7 +125,8 @@ class _PlayerControllerState extends State<PlayerController> {
                   }
               },
             ),
-              StreamBuilder<SequenceState?>(
+            SizedBox(width: widget.isFullScreen ? 10 : 5,),
+            StreamBuilder<SequenceState?>(
               stream: widget.audioPlayer.sequenceStateStream,
               builder: (_, __) {
                 if(widget.audioPlayer.hasNext || widget.isFullScreen) {
@@ -136,19 +140,21 @@ class _PlayerControllerState extends State<PlayerController> {
                 }
               },
             ),
-            if(widget.isFullScreen)
-            StreamBuilder<LoopMode>(
-              stream: widget.audioPlayer.loopModeStream,
-              builder: (context, snapshot) {
-                return PlayerButtons.repeatButton(context, snapshot.data ?? LoopMode.off,widget.audioPlayer,widget.repeatBtnSize,
-                hexColor: widget.repeatBtnHexColor,
-                  hexRepeatColor: widget.repeatBtnHexRepeatColor,
-                  hexRepeatOneColor: widget.repeatBtnHexRepeatOneColor,
-                  repeatIcon: widget.repeatBtnIcon,
-                  repeatOneIcon: widget.repeatBtnOneIcon
-                );
-              },
-            ),
+            if(widget.isFullScreen) ...[
+              const SizedBox(width: 15,),
+              StreamBuilder<LoopMode>(
+                stream: widget.audioPlayer.loopModeStream,
+                builder: (context, snapshot) {
+                  return PlayerButtons.repeatButton(context, snapshot.data ?? LoopMode.off,widget.audioPlayer,widget.repeatBtnSize,
+                      hexColor: widget.repeatBtnHexColor,
+                      hexRepeatColor: widget.repeatBtnHexRepeatColor,
+                      hexRepeatOneColor: widget.repeatBtnHexRepeatOneColor,
+                      repeatIcon: widget.repeatBtnIcon,
+                      repeatOneIcon: widget.repeatBtnOneIcon
+                  );
+                },
+              ),
+            ]
           ],
         ),
       ],

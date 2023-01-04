@@ -1,16 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:just_audio/just_audio.dart';
 import '../components/player_buttons.dart';
 import '../services/helper_functions.dart';
-import 'home_screen.dart';
+import 'app_router_screen.dart';
 import 'lyrics_screen.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 class ShowFullPlayer extends StatefulWidget {
-  const ShowFullPlayer({Key? key, required this.player}) : super(key: key);
-  final AudioPlayer player;
+  const ShowFullPlayer({Key? key,}) : super(key: key);
   @override
   State<ShowFullPlayer> createState() => _ShowFullPlayerState();
 }
@@ -20,18 +18,18 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: widget.player.currentIndexStream,
+        stream: mainAudioPlayer.currentIndexStream,
         builder:(context,snapshot){
           if(snapshot.data != null){
-            String hasLyrics = HomeScreen.audioQueueSongData[snapshot.data!]["hasLyrics"];
+            String hasLyrics = AppRouter.audioQueueSongData[snapshot.data!]["hasLyrics"];
             Widget songCover(){
               return Container(
-                width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.75 : MediaQuery.of(context).size.height*0.75 ,
-                height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.75 : MediaQuery.of(context).size.height*0.75 ,
+                width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.70 : MediaQuery.of(context).size.height*0.75 ,
+                height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.70 : MediaQuery.of(context).size.height*0.75 ,
                 decoration:BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(
-                        HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
+                        AppRouter.audioQueueSongData[snapshot.data!]["image"][2]["link"],
                       ),
                       fit: BoxFit.cover
                   ),
@@ -39,10 +37,10 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
               );
             }
             Widget songName(){
-              return Text(htmlDecode.convert(HomeScreen.audioQueueSongData[snapshot.data!]["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
+              return Text(htmlDecode.convert(AppRouter.audioQueueSongData[snapshot.data!]["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
             }
             Widget songArtists(){
-              return Text(htmlDecode.convert(HomeScreen.audioQueueSongData[snapshot.data!]["primaryArtists"]),style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
+              return Text(htmlDecode.convert(AppRouter.audioQueueSongData[snapshot.data!]["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 16,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
             }
             Widget songLyricsBtn(){
               if(hasLyrics == "true") {
@@ -78,7 +76,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
               return Row(
                 children: [
                   StreamBuilder(
-                    stream: widget.player.createPositionStream(),
+                    stream: mainAudioPlayer.createPositionStream(),
                     builder: (context,snapshot){
                       if(snapshot.data != null){
                         return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
@@ -88,8 +86,8 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                     },
                   ),
                   const Spacer(),
-                  if(widget.player.duration != null)
-                    Text(HelperFunctions.printDuration(widget.player.duration!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,)
+                  if(mainAudioPlayer.duration != null)
+                    Text(HelperFunctions.printDuration(mainAudioPlayer.duration!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,)
                 ],
               );
             }
@@ -106,13 +104,13 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                         songLyricsBtn(),
                         const SizedBox(height: 20,),
                       ],
-                      Text(HomeScreen.audioQueueSongData[snapshot.data!]["copyright"] ?? "",style: const TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w300),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
+                      Text(AppRouter.audioQueueSongData[snapshot.data!]["copyright"] ?? "",style: const TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 10,),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
                         child: songTimers(),
                       ),
-                      PlayerController(widget.player, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,)
+                      PlayerController(mainAudioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,)
                     ],
                   ),
                 ),
@@ -123,12 +121,12 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                 int sensitivity = 17;
                 // print(details.delta.dx);
                 if(details.delta.dx > sensitivity){
-                  if(widget.player.hasPrevious){
-                    widget.player.seekToPrevious();
+                  if(mainAudioPlayer.hasPrevious){
+                    mainAudioPlayer.seekToPrevious();
                   }
                 } else if (details.delta.dx < -sensitivity){
-                  if(widget.player.hasNext){
-                    widget.player.seekToNext();
+                  if(mainAudioPlayer.hasNext){
+                    mainAudioPlayer.seekToNext();
                   }
                 }
               },
@@ -144,7 +142,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                             fit: BoxFit.fill,
                             opacity: 0.8,
                             image: NetworkImage(
-                              HomeScreen.audioQueueSongData[snapshot.data!]["image"][2]["link"],
+                              AppRouter.audioQueueSongData[snapshot.data!]["image"][2]["link"],
                             )
                         )
                     ),
@@ -187,7 +185,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                                       padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 5),
                                       child: songTimers(),
                                     ),
-                                    PlayerController(widget.player, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,),
+                                    PlayerController(mainAudioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,),
                                     const Spacer(),
                                   ],
                                 ),
