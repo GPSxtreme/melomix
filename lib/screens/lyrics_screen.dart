@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'app_router_screen.dart';
+import 'package:proto_music_player/services/helper_functions.dart';
 
 class ShowLyrics extends StatefulWidget {
-  const ShowLyrics({Key? key, required this.index,}) : super(key: key);
-  final int index;
+  const ShowLyrics({Key? key, required this.lyrics,}) : super(key: key);
+  final Map lyrics;
   @override
   State<ShowLyrics> createState() => _ShowLyricsState();
 }
@@ -25,7 +25,7 @@ class _ShowLyricsState extends State<ShowLyrics> {
           child: ListView(
             controller: controller,
             children: [
-              Text(AppRouter.audioQueueSongData[widget.index]["lyrics"],
+              Text(widget.lyrics["data"]["lyrics"] ?? "Not Available",
                 style: const TextStyle(
                   wordSpacing: 2.0,
                   color: Colors.white,
@@ -36,7 +36,7 @@ class _ShowLyricsState extends State<ShowLyrics> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20,),
-              Text(AppRouter.audioQueueSongData[widget.index]["lyricsCopyRight"].toString().replaceAll("<br>", '\n'),style: const TextStyle( wordSpacing: 1.2,color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),textAlign: TextAlign.center,)
+              Text(widget.lyrics["data"]["copyright"].toString().replaceAll("<br>", '\n') ?? "",style: const TextStyle( wordSpacing: 1.2,color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),textAlign: TextAlign.center,)
             ],
           )
       ),

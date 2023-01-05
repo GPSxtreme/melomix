@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -51,12 +53,13 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue
                         ),
-                        onPressed: (){
+                        onPressed: ()async{
+                          Map lyrics =  await HelperFunctions.fetchLyrics(AppRouter.audioQueueSongData[snapshot.data!]["id"]);
                           showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
-                              builder: (context) => ShowLyrics(index: snapshot.data!,)
+                              builder: (context) => ShowLyrics(lyrics:lyrics,)
                           );
                         },
                         child: Row(

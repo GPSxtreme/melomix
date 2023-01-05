@@ -24,7 +24,7 @@ class _AppRouterState extends State<AppRouter> {
   HtmlUnescape htmlDecode = HtmlUnescape();
   String currentScreen = "Home";
   final List<String> screenKeys = [HomeScreen.id, MyPlaylistsScreen.id, SearchPageScreen.id,SettingsScreen.id,DownloadsScreen.id];
-  final PersistentTabController controller = PersistentTabController(initialIndex: 0);
+  final PersistentTabController controller = PersistentTabController(initialIndex: 2);
   List<Widget> buildScreens() {
     return [
       const HomeScreen(),
@@ -106,7 +106,7 @@ class _AppRouterState extends State<AppRouter> {
         curve: Curves.easeInCubic,
         duration: Duration(milliseconds: 200),
       ),
-      navBarStyle: NavBarStyle.style9 // Choose the nav bar style with this property.(bangers :[1,9,19])
+      navBarStyle: NavBarStyle.style13 // Choose the nav bar style with this property.(bangers :[1,9,13,14])
     );
   }
 

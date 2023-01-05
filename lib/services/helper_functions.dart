@@ -8,8 +8,6 @@ import 'package:just_audio/just_audio.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
-import 'package:proto_music_player/screens/home_screen.dart';
-
 import '../components/player_buttons.dart';
 import '../components/song_tile.dart';
 import '../screens/full_player_screen.dart';
@@ -31,6 +29,7 @@ class HelperFunctions{
       };
     }
   }
+
   static Future<Map> getSongById(String songId)async{
     try{
       String apiEndPoint = "https://saavn-api-weld.vercel.app/songs?id=$songId";
@@ -47,6 +46,7 @@ class HelperFunctions{
       };
     }
   }
+
   static Future<Map> getPlaylistById(String playlistId)async{
     try{
       String apiEndPoint = "https://saavn-api-weld.vercel.app/playlists?id=$playlistId";
@@ -63,6 +63,7 @@ class HelperFunctions{
       };
     }
   }
+
   static Future<Map> getAlbumById(String albumId)async{
     try{
       String apiEndPoint = "https://saavn-api-weld.vercel.app/albums?id=$albumId";
@@ -79,6 +80,7 @@ class HelperFunctions{
       };
     }
   }
+
   static Future<Map> searchAll(String query) async{
     try{
       String apiEndPoint = "https://saavn-api-weld.vercel.app/search/all?query=${query.replaceAll(" ", "+")}";
@@ -95,18 +97,23 @@ class HelperFunctions{
       };
     }
   }
+
   static Future<void> playHttpSong(Map song,AudioPlayer player)async{
     try{
-      await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
-      AppRouter.audioQueueSongData.insert(0,song);
-      await HelperFunctions.writeSongLyrics(song,false);
-      if(!player.playing){
-        await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
-      }else {
-        await player.stop();
-        await player.seek(Duration.zero, index: 0);
+      //check if song already exists in queue
+      if(checkIfAddedInQueue(song["id"])){
+        int existingSongIndex = await getQueueIndexBySongId(song["id"]);
+        await player.seek(Duration.zero, index: existingSongIndex);
+      }else{
+        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
+        AppRouter.audioQueueSongData.insert(0,song);
+        if(player.audioSource == null){
+          await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
+        }else {
+          await player.seek(Duration.zero, index: 0);
+        }
+        await player.play();
       }
-      await player.play();
     }catch(e){
       if (kDebugMode) {
         print("playHttpSong method error: $e");
@@ -117,7 +124,6 @@ class HelperFunctions{
     try{
       await AppRouter.queue.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
       AppRouter.audioQueueSongData.add(song);
-      await HelperFunctions.writeSongLyrics(song,true);
       if(AppRouter.queue.length == 1){
         await player.setAudioSource(AppRouter.queue , initialIndex: 0);
         await player.play();
@@ -128,17 +134,13 @@ class HelperFunctions{
       }
     }
   }
+
   static Future<void> playGivenListOfSongs(List songs)async{
     try{
       List<AudioSource> givenList = [];
       List givenSongsData = [];
       for(Map song in songs){
         givenList.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
-        Map lyrics = await HelperFunctions.fetchLyrics(song["id"]);
-        if(lyrics["data"] != null && lyrics["message"] == null){
-          song["lyrics"] = lyrics["data"]["lyrics"];
-          song["lyricsCopyRight"] = lyrics["data"]["copyright"];
-        }
         givenSongsData.add(song);
       }
       await AppRouter.queue.insertAll(0,givenList);
@@ -147,9 +149,8 @@ class HelperFunctions{
         await mainAudioPlayer.setAudioSource(AppRouter.queue , initialIndex: 0);
         await mainAudioPlayer.play();
       }
-      if(!mainAudioPlayer.playing){
-        mainAudioPlayer.play();
-      }
+      mainAudioPlayer.seek(Duration.zero,index: 0);
+      mainAudioPlayer.play();
     }catch(e){
       if (kDebugMode) {
         print("playGivenListOfSongs method error : $e");
@@ -157,21 +158,13 @@ class HelperFunctions{
     }
   }
 
-  static Future<void> writeSongLyrics(Map song,bool isLast ,{int? pos})async{
-    try{
-      int index = isLast ? AppRouter.queue.length - 1 : 0;
-      if(song["hasLyrics"] == "true"){
-        Map lyrics = await HelperFunctions.fetchLyrics(song["id"]);
-        if(lyrics["data"] != null && lyrics["message"] == null){
-          AppRouter.audioQueueSongData[pos ?? index]["lyrics"] = lyrics["data"]["lyrics"];
-          AppRouter.audioQueueSongData[pos ?? index]["lyricsCopyRight"] = lyrics["data"]["copyright"];
-        }
-      }
-    }catch(e){
-      if (kDebugMode) {
-        print(e);
-      }
+  static Future<int> getQueueIndexBySongId(String songId)async{
+    int index = 0;
+    for(Map song in AppRouter.audioQueueSongData){
+      if(song["id"] == songId) return index;
+      index++;
     }
+    return -1;
   }
 
   static Future<Map> fetchLyrics (String songId)async{
@@ -190,14 +183,18 @@ class HelperFunctions{
       };
     }
   }
+
   static bool checkIfAddedInQueue(String songId){
-    for(Map songData in AppRouter.audioQueueSongData){
-      if(songData.values.contains(songId)){
-        return true;
+    if(AppRouter.audioQueueSongData.isNotEmpty && AppRouter.queue.length != 0){
+      for(Map songData in AppRouter.audioQueueSongData){
+        if(songData.values.contains(songId)){
+          return true;
+        }
       }
     }
     return false;
   }
+
   static Future<void> removeFromQueue(Map song)async{
     int index = 0;
     for(Map song in AppRouter.audioQueueSongData){
@@ -209,8 +206,10 @@ class HelperFunctions{
     await AppRouter.queue.removeAt(index);
     AppRouter.audioQueueSongData.remove(song);
   }
+
   static void showSnackBar(BuildContext buildContext, String txt, int duration,
-      {Color? bgColor,String? hexCode}) {
+      {Color? bgColor,String? hexCode})
+  {
     Color bgNormalColor = Colors.red;
     if(bgColor != null){
       bgNormalColor = bgColor;
@@ -235,12 +234,14 @@ class HelperFunctions{
       duration: Duration(milliseconds: duration),
     ));
   }
+
   static String printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "$twoDigitMinutes:$twoDigitSeconds";
   }
+
   static Widget collapsedPlayer(){
     HtmlUnescape htmlDecode = HtmlUnescape();
 
@@ -336,6 +337,7 @@ class HelperFunctions{
       },
     );
   }
+
   static Widget listViewRenderer(List<SongResultTile> list,{required double verticalGap}){
     if(list.isNotEmpty){
       return ListView.builder(
@@ -353,6 +355,7 @@ class HelperFunctions{
       return const Text("no results",style: TextStyle(color: Colors.white),);
     }
   }
+
   static Widget gridViewRenderer(List list,{required double horizontalPadding ,
     required double verticalPadding , required int crossAxisCount ,
     required double crossAxisSpacing
@@ -376,4 +379,5 @@ class HelperFunctions{
       return const Text("no results",style: TextStyle(color: Colors.white),);
     }
   }
+
 }

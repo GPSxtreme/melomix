@@ -217,7 +217,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                     if(!userSearched) ...[
                       const Center(
                         heightFactor: 20,
-                        child: Text("Search for a song to show results.",style: TextStyle(color: Colors.white,fontSize: 15),),
+                        child: Text("Search for a song to show results.",style: TextStyle(color: Colors.white70,fontSize: 15),),
                       ),
                     ],
                     if(noResults)
