@@ -59,14 +59,14 @@ class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
       setState(() {
         isLoading = true;
       });
-      await HelperFunctions.playGivenListOfSongs(data["data"]["songs"]);
-      setState(() {
+      Future.delayed(const Duration(milliseconds: 1500),(){setState(() {
         isLoading = false;
-      });
+      });});
+      await HelperFunctions.playGivenListOfSongs(data["data"]["songs"]);
+      firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data["data"]["songs"][0]["id"]);
       isAddedToQueue = true;
     }
   }
-
   bool doesBelong(){
    try{
      //checks whether current playing song belongs to album;
@@ -102,7 +102,6 @@ class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
         onTap:()async{
           if(!isAddedToQueue){
             await addSongsToQueue();
-            firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data["data"]["songs"][0]["id"]);
           }
           else {
             //check whether the current playing song belongs to the album.if not seek to first songs index.
