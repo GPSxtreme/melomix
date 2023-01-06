@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.netlify.prudhvisuraaj.proto_music_player">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_SERVICE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_SERVICE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>

@@ -78,6 +78,7 @@ class _PlayerControllerState extends State<PlayerController> {
               }
           }
         ),
+        const SizedBox(height: 10,),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [

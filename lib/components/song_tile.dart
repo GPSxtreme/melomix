@@ -6,15 +6,15 @@ import 'package:proto_music_player/services/helper_functions.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:line_icons/line_icons.dart';
 
-class SongResultTile extends StatefulWidget {
-  const SongResultTile({Key? key, required this.player, required this.song}) : super(key: key);
+class OnlineSongResultTile extends StatefulWidget {
+  const OnlineSongResultTile({Key? key, required this.player, required this.song}) : super(key: key);
   final Map song;
   final AudioPlayer player;
   @override
-  State<SongResultTile> createState() => _SongResultTileState();
+  State<OnlineSongResultTile> createState() => _OnlineSongResultTileState();
 }
 
-class _SongResultTileState extends State<SongResultTile> {
+class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
   bool addedToQueue = false;
   HtmlUnescape htmlDecode = HtmlUnescape();
   @override

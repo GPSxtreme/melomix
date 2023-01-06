@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
 import '../components/song_tile.dart';
@@ -276,6 +277,7 @@ class HelperFunctions{
               stream: mainAudioPlayer.currentIndexStream,
               builder:(context,AsyncSnapshot<int?> currentIndex){
                 if(currentIndex.data != null && AppRouter.queue.length != 0){
+                  Map songData = mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras;
                   return GestureDetector(
                       onPanUpdate:  (details) {
                         int sensitivity = 8;
@@ -313,7 +315,14 @@ class HelperFunctions{
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.network(mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras["image"][1]["link"],height: 55,width: 55,),
+                                  child: songData["isLocal"] != null && songData["isLocal"] ?
+                                      (
+                                          songData["artworkBytes"] != null ?
+                                      Image.memory(songData["artworkBytes"] , height: 55,width: 55,) :
+                                          Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUnvISVTYopMAy17o3mB2lfSPeEjoKfAdV2w&usqp=CAU",height: 55,width: 55,)
+                                      )
+                                  :
+                                  Image.network(songData["image"][1]["link"],height: 55,width: 55,),
                                 ),
                               ),
                               const SizedBox(width: 10,),
@@ -331,9 +340,9 @@ class HelperFunctions{
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras["name"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                      Text(htmlDecode.convert(songData["name"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
                                       const SizedBox(height: 5,),
-                                      Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
+                                      Text(htmlDecode.convert(songData["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
                                     ],
                                   ),
                                 ),
@@ -358,7 +367,7 @@ class HelperFunctions{
     );
   }
 
-  static Widget listViewRenderer(List<SongResultTile> list,{required double verticalGap}){
+  static Widget listViewRenderer(List<OnlineSongResultTile> list,{required double verticalGap}){
     if(list.isNotEmpty){
       return ListView.builder(
         shrinkWrap: true,
@@ -400,9 +409,53 @@ class HelperFunctions{
     }
   }
 
+  //(not needed/not used/might be useful in future)
   static Future<Map> getMetadata(String songPath) async {
     final metadata = await MetadataRetriever.fromFile(File(songPath));
-    print(metadata.toJson());
     return metadata.toJson();
   }
+  //Local media songs methods
+  //get local media art work
+  static Future<Uint8List?> getLocalSongArtworkUri(int songId)async{
+    final audioQuery = OnAudioQuery();
+    Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO);
+    return bytes;
+  }
+  static Future<ImageProvider<Object>> getLocalSongArtworkImage(int songId)async{
+    final audioQuery = OnAudioQuery();
+    Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO,quality: 400,format: ArtworkFormat.JPEG,size: 1000);
+    if(bytes != null){
+      return Image.memory(bytes,filterQuality: FilterQuality.high,).image;
+    }
+    return const NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUnvISVTYopMAy17o3mB2lfSPeEjoKfAdV2w&usqp=CAU");
+  }
+  //play local media song
+  static Future<void> playLocalSong(Map song,AudioPlayer player)async{
+    try{
+      // check if song already exists in queue
+      if(checkIfAddedInQueue(song["id"])){
+        int existingSongIndex = await getQueueIndexBySongId(song["id"]);
+        await player.seek(Duration.zero, index: existingSongIndex);
+      }
+      else{
+        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["songUri"]),tag: MediaItem(
+            id: song["id"].toString(),
+            album: song["albumName"],
+            title: song["name"],
+            extras: song as Map<String,dynamic>
+        )));
+        if(player.audioSource == null){
+          await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
+        }else {
+          await player.seek(Duration.zero, index: 0);
+        }
+      }
+      await player.play();
+    }catch(e){
+      if (kDebugMode) {
+        print("playLocalSong method error: $e");
+      }
+    }
+  }
+
 }

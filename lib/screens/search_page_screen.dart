@@ -15,9 +15,9 @@ class SearchPageScreen extends StatefulWidget {
 
 class _SearchPageScreenState extends State<SearchPageScreen> {
   Map allSongResultsData = {};
-  List<SongResultTile> allSongResultsList = [];
+  List<OnlineSongResultTile> allSongResultsList = [];
   Map allDataResultsData = {};
-  List<SongResultTile> topSongsResultsList = [];
+  List<OnlineSongResultTile> topSongsResultsList = [];
   List<CommonResultTile> playlistsResultsList = [];
   List<CommonResultTile> albumsResultsList = [];
   List<CommonResultTile> artistsResultsList = [];
@@ -42,7 +42,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
     if(allSongResultsData["status"] == "SUCCESS" && allSongResultsData["data"]["results"].isNotEmpty){
       for(Map song in allSongResultsData["data"]["results"]){
         setState(() {
-          allSongResultsList.add(SongResultTile(song: song,player: mainAudioPlayer,));
+          allSongResultsList.add(OnlineSongResultTile(song: song,player: mainAudioPlayer,));
         });
       }
     }
@@ -52,7 +52,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
     topResult = null;
     if(data["type"] == "song"){
       Map fetchedSong = await HelperFunctions.getSongById(data["id"]);
-      topResult = SongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0]);
+      topResult = OnlineSongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0]);
     }else {
       topResult = TopCommonResultTile(data: data);
     }
@@ -77,7 +77,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
       if(allDataResultsData["data"]["songs"]["results"].isNotEmpty){
         for(Map song in allDataResultsData["data"]["songs"]["results"]){
           Map fetchedSong = await HelperFunctions.getSongById(song["id"]);
-          topSongsResultsList.add(SongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0] ));
+          topSongsResultsList.add(OnlineSongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0] ));
         }
       }
       if(allDataResultsData["data"]["albums"]["results"].isNotEmpty){
@@ -98,9 +98,6 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
     }
     getAllSongResults(query);
   }
-  
-
-
 
 
   Widget label(String name) =>  Padding(
@@ -226,7 +223,8 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                         child: Text("No results found!",style: TextStyle(color: Colors.white,fontSize: 16)),
                       )
                   ],
-                )],
+                ),
+              ],
             ),
             HelperFunctions.collapsedPlayer()
           ] ,

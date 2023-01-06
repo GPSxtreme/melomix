@@ -18,7 +18,7 @@ class CommonViewScreen extends StatefulWidget {
 
 class _CommonViewScreenState extends State<CommonViewScreen> {
   Map data = {};
-  List<SongResultTile> allSongResultsList = [];
+  List<OnlineSongResultTile> allSongResultsList = [];
   bool isLoaded = false;
   HtmlUnescape htmlDecode = HtmlUnescape();
   late bool isAddedToQueue;
@@ -45,7 +45,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
       int i = 0;
       for(Map song in data["data"]["songs"]){
         isAddedToQueue = HelperFunctions.checkIfAddedInQueue(data["data"]["songs"][i]["id"]);
-        allSongResultsList.add(SongResultTile(player: mainAudioPlayer,song: song,));
+        allSongResultsList.add(OnlineSongResultTile(player: mainAudioPlayer,song: song,));
         i++;
       }
     }

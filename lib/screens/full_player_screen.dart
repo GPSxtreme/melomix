@@ -23,26 +23,35 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
         stream: mainAudioPlayer.currentIndexStream,
         builder:(context,AsyncSnapshot<int?> snapshot){
           if(snapshot.data != null){
-            String hasLyrics = mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["hasLyrics"];
+            Map songData = mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras;
+            String hasLyrics = songData["hasLyrics"];
+            late ImageProvider localImage;
+            ImageProvider artwork(){
+              if(songData["isLocal"] != null && songData["isLocal"]) {
+                return localImage;
+              } else {
+                return NetworkImage(
+                    songData["image"][2]["link"]
+                );
+              }
+            }
             Widget songCover(){
               return Container(
                 width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.70 : MediaQuery.of(context).size.height*0.75 ,
                 height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.70 : MediaQuery.of(context).size.height*0.75 ,
                 decoration:BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(
-                        mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["image"][2]["link"]
-                      ),
+                      image: artwork(),
                       fit: BoxFit.cover
                   ),
                 ),
               );
             }
             Widget songName(){
-              return Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
+              return Text(htmlDecode.convert(songData["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
             }
             Widget songArtists(){
-              return Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 16,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
+              return Text(htmlDecode.convert(songData["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 16,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
             }
             Widget songLyricsBtn(){
               if(hasLyrics == "true") {
@@ -54,7 +63,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                             backgroundColor: Colors.blue
                         ),
                         onPressed: ()async{
-                          Map lyrics =  await HelperFunctions.fetchLyrics(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["id"]);
+                          Map lyrics =  await HelperFunctions.fetchLyrics(songData["id"]);
                           showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
@@ -107,7 +116,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                         songLyricsBtn(),
                         const SizedBox(height: 20,),
                       ],
-                      Text(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["copyright"] ?? "",style: const TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
+                      Text(songData["copyright"] ?? "",style: const TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 10,),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
@@ -119,7 +128,8 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                 ),
               );
             }
-            return GestureDetector(
+
+            Widget page() => GestureDetector(
               onPanUpdate: (details){
                 int sensitivity = 17;
                 // print(details.delta.dx);
@@ -144,9 +154,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                         image: DecorationImage(
                             fit: BoxFit.fill,
                             opacity: 0.8,
-                            image: NetworkImage(
-                              mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["image"][2]["link"],
-                            )
+                            image:artwork()
                         )
                     ),
                     child: ClipRRect(
@@ -154,7 +162,8 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                          child: MediaQuery.of(context).orientation == Orientation.portrait ?  Column(
+                          child: MediaQuery.of(context).orientation == Orientation.portrait ?
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Spacer(),
@@ -167,7 +176,9 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                               cprAndPlayer(),
                               const Spacer(),
                             ],
-                          ) : Row(
+                          )
+                              :
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Spacer(),
@@ -203,6 +214,22 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                 } ,
               ),
             );
+
+            if(songData["isLocal"] != null && songData["isLocal"] ){
+              return FutureBuilder(
+                future: HelperFunctions.getLocalSongArtworkImage(songData["intId"]),
+                builder: (BuildContext context, AsyncSnapshot<ImageProvider<Object>> snapshot) {
+                  if(snapshot.hasData){
+                    localImage = snapshot.data!;
+                    return page();
+                  } else{
+                    return const SizedBox(height: 0,width: 0,);
+                  }
+                },
+              );
+            }else{
+              return page();
+            }
           }else{
             return const SizedBox(height: 0,);
           }

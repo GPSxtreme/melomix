@@ -8,6 +8,7 @@ import 'package:proto_music_player/screens/search_page_screen.dart';
 import 'package:proto_music_player/screens/settings_screen.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:permission_handler/permission_handler.dart';
 //audio player global variable
 late AudioPlayer mainAudioPlayer;
 
@@ -69,10 +70,14 @@ class _AppRouterState extends State<AppRouter> {
     ];
   }
 
+  requestPermissions(){
+    Permission.storage.request();
+  }
 
   @override
   void initState() {
     super.initState();
+    requestPermissions();
     mainAudioPlayer = AudioPlayer();
   }
   @override
