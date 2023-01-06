@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -48,6 +48,8 @@ dependencies:
   html_unescape: ^2.0.0
   persistent_bottom_nav_bar: ^5.0.2
   modal_progress_hud: ^0.1.3
+  flutter_media_metadata: ^1.0.0+1
+  just_audio_background: ^0.0.1-beta.9
 
 dev_dependencies:
   flutter_test:

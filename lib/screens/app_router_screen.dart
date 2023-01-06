@@ -14,7 +14,6 @@ late AudioPlayer mainAudioPlayer;
 class AppRouter extends StatefulWidget {
   static String id = "app_router";
   static ConcatenatingAudioSource queue = ConcatenatingAudioSource(children: [],useLazyPreparation: true);
-  static List audioQueueSongData = [];
   const AppRouter({Key? key}) : super(key: key);
   @override
   State<AppRouter> createState() => _AppRouterState();

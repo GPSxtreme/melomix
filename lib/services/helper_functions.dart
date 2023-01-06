@@ -11,6 +11,9 @@ import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
 import '../components/song_tile.dart';
 import '../screens/full_player_screen.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'dart:io';
+import 'package:just_audio_background/just_audio_background.dart';
 
 class HelperFunctions{
   static Future<Map> getSongByName(String query,int limit)async{
@@ -100,13 +103,21 @@ class HelperFunctions{
 
   static Future<void> playHttpSong(Map song,AudioPlayer player)async{
     try{
+      HtmlUnescape htmlDecode = HtmlUnescape();
       //check if song already exists in queue
       if(checkIfAddedInQueue(song["id"])){
         int existingSongIndex = await getQueueIndexBySongId(song["id"]);
         await player.seek(Duration.zero, index: existingSongIndex);
       }else{
-        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
-        AppRouter.audioQueueSongData.insert(0,song);
+        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"]),tag: MediaItem(
+          // Specify a unique ID for each media item:
+          id: '${song["id"]}',
+          // Metadata to display in the notification:
+          album: htmlDecode.convert(song["album"]["name"]),
+          title: htmlDecode.convert(song["name"]),
+          artUri: Uri.parse(song["image"][1]["link"]),
+          extras: song as Map<String,dynamic>
+        )));
         if(player.audioSource == null){
           await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
         }else {
@@ -122,8 +133,16 @@ class HelperFunctions{
   }
   static Future<void> addSongToQueue(Map song,AudioPlayer player)async{
     try{
-      await AppRouter.queue.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
-      AppRouter.audioQueueSongData.add(song);
+      HtmlUnescape htmlDecode = HtmlUnescape();
+      await AppRouter.queue.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"]),tag: MediaItem(
+        // Specify a unique ID for each media item:
+          id: '${song["id"]}',
+          // Metadata to display in the notification:
+          album: htmlDecode.convert(song["album"]["name"]),
+          title: htmlDecode.convert(song["name"]),
+          artUri: Uri.parse(song["image"][1]["link"]),
+          extras: song as Map<String,dynamic>
+      )));
       if(AppRouter.queue.length == 1){
         await player.setAudioSource(AppRouter.queue , initialIndex: 0);
         await player.play();
@@ -137,14 +156,22 @@ class HelperFunctions{
 
   static Future<void> playGivenListOfSongs(List songs)async{
     try{
+      HtmlUnescape htmlDecode = HtmlUnescape();
       List<AudioSource> givenList = [];
       List givenSongsData = [];
       for(Map song in songs){
-        givenList.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"])));
+        givenList.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"]),tag: MediaItem(
+          // Specify a unique ID for each media item:
+            id: '${song["id"]}',
+            // Metadata to display in the notification:
+            album: htmlDecode.convert(song["album"]["name"]),
+            title: htmlDecode.convert(song["name"]),
+            artUri: Uri.parse(song["image"][1]["link"]),
+            extras: song as Map<String,dynamic>
+        )));
         givenSongsData.add(song);
       }
       await AppRouter.queue.insertAll(0,givenList);
-      AppRouter.audioQueueSongData.insertAll(0, givenSongsData);
       if(AppRouter.queue.length == songs.length){
         await mainAudioPlayer.setAudioSource(AppRouter.queue , initialIndex: 0);
         await mainAudioPlayer.play();
@@ -159,10 +186,10 @@ class HelperFunctions{
   }
 
   static Future<int> getQueueIndexBySongId(String songId)async{
-    int index = 0;
-    for(Map song in AppRouter.audioQueueSongData){
-      if(song["id"] == songId) return index;
-      index++;
+    if(mainAudioPlayer.sequence != null){
+      for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
+        if(mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == songId) return i;
+      }
     }
     return -1;
   }
@@ -185,11 +212,9 @@ class HelperFunctions{
   }
 
   static bool checkIfAddedInQueue(String songId){
-    if(AppRouter.audioQueueSongData.isNotEmpty && AppRouter.queue.length != 0){
-      for(Map songData in AppRouter.audioQueueSongData){
-        if(songData.values.contains(songId)){
-          return true;
-        }
+    if( mainAudioPlayer.sequence != null && mainAudioPlayer.sequence!.isNotEmpty && mainAudioPlayer.audioSource != null){
+      for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
+        if(mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == songId) return true;
       }
     }
     return false;
@@ -197,14 +222,10 @@ class HelperFunctions{
 
   static Future<void> removeFromQueue(Map song)async{
     int index = 0;
-    for(Map song in AppRouter.audioQueueSongData){
-      if(song.values.contains(song["id"])){
-        break;
-      }
-      index++;
+    for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
+      if(mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == song["id"]) break;
     }
     await AppRouter.queue.removeAt(index);
-    AppRouter.audioQueueSongData.remove(song);
   }
 
   static void showSnackBar(BuildContext buildContext, String txt, int duration,
@@ -244,7 +265,6 @@ class HelperFunctions{
 
   static Widget collapsedPlayer(){
     HtmlUnescape htmlDecode = HtmlUnescape();
-
     return StreamBuilder<PlayerState>(
       stream: mainAudioPlayer.playerStateStream,
       builder: (_, snapshot) {
@@ -254,14 +274,14 @@ class HelperFunctions{
             bottom: 0,
             child: StreamBuilder(
               stream: mainAudioPlayer.currentIndexStream,
-              builder:(context,snapshot){
-                if(snapshot.data != null && AppRouter.queue.length != 0){
+              builder:(context,AsyncSnapshot<int?> currentIndex){
+                if(currentIndex.data != null && AppRouter.queue.length != 0){
                   return GestureDetector(
                       onPanUpdate:  (details) {
                         int sensitivity = 8;
                         if (details.delta.dy > sensitivity) {
                           // Down Swipe
-                        } else if(details.delta.dy < -sensitivity && AppRouter.audioQueueSongData.isNotEmpty){
+                        } else if(details.delta.dy < -sensitivity){
                           // Up Swipe
                           showModalBottomSheet(
                               context: context,
@@ -293,7 +313,7 @@ class HelperFunctions{
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.network(AppRouter.audioQueueSongData[snapshot.data!]["image"][1]["link"],height: 55,width: 55,),
+                                  child: Image.network(mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras["image"][1]["link"],height: 55,width: 55,),
                                 ),
                               ),
                               const SizedBox(width: 10,),
@@ -311,9 +331,9 @@ class HelperFunctions{
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(htmlDecode.convert(AppRouter.audioQueueSongData[snapshot.data!]["name"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                      Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras["name"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
                                       const SizedBox(height: 5,),
-                                      Text(htmlDecode.convert(AppRouter.audioQueueSongData[snapshot.data!]["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
+                                      Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
                                     ],
                                   ),
                                 ),
@@ -380,4 +400,9 @@ class HelperFunctions{
     }
   }
 
+  static Future<Map> getMetadata(String songPath) async {
+    final metadata = await MetadataRetriever.fromFile(File(songPath));
+    print(metadata.toJson());
+    return metadata.toJson();
+  }
 }

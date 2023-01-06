@@ -13,7 +13,7 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo,
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           //body

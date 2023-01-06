@@ -23,7 +23,7 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
         if(widget.data["type"] != "artist"){
           PersistentNavBarNavigator.pushNewScreen(
             context,
-            screen: PlaylistViewScreen(id: widget.data["id"], type: widget.data["type"],),
+            screen: CommonViewScreen(id: widget.data["id"], type: widget.data["type"],),
             withNavBar: true, // OPTIONAL VALUE. True by default.
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );

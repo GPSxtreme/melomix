@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:proto_music_player/services/helper_functions.dart';
 
 class ShowLyrics extends StatefulWidget {
   const ShowLyrics({Key? key, required this.lyrics,}) : super(key: key);

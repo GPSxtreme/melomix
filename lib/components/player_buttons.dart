@@ -56,7 +56,7 @@ class _PlayerControllerState extends State<PlayerController> {
         if(widget.isFullScreen)
         StreamBuilder(
             stream: widget.audioPlayer.createPositionStream(),
-          builder: (context,snapshot){
+          builder: (context,AsyncSnapshot<Duration> snapshot){
               if(widget.audioPlayer.duration != null && snapshot.data != null){
                 double streamDuration = widget.audioPlayer.duration!.inSeconds.toDouble();
                 return SizedBox(
@@ -66,7 +66,7 @@ class _PlayerControllerState extends State<PlayerController> {
                     // activeColor: HexColor("111111"),
                     // inactiveColor: HexColor("7a7a7a"),
                     min: 0.0,
-                    max: streamDuration + 2,
+                    max: streamDuration,
                     value: snapshot.data!.inSeconds.toDouble(),
                     onChanged: (value) async{
                       await widget.audioPlayer.seek(Duration(seconds: value.toInt()));

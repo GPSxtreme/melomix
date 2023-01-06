@@ -21,9 +21,9 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: mainAudioPlayer.currentIndexStream,
-        builder:(context,snapshot){
+        builder:(context,AsyncSnapshot<int?> snapshot){
           if(snapshot.data != null){
-            String hasLyrics = AppRouter.audioQueueSongData[snapshot.data!]["hasLyrics"];
+            String hasLyrics = mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["hasLyrics"];
             Widget songCover(){
               return Container(
                 width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.70 : MediaQuery.of(context).size.height*0.75 ,
@@ -31,7 +31,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                 decoration:BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(
-                        AppRouter.audioQueueSongData[snapshot.data!]["image"][2]["link"],
+                        mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["image"][2]["link"]
                       ),
                       fit: BoxFit.cover
                   ),
@@ -39,10 +39,10 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
               );
             }
             Widget songName(){
-              return Text(htmlDecode.convert(AppRouter.audioQueueSongData[snapshot.data!]["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
+              return Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
             }
             Widget songArtists(){
-              return Text(htmlDecode.convert(AppRouter.audioQueueSongData[snapshot.data!]["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 16,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
+              return Text(htmlDecode.convert(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 16,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
             }
             Widget songLyricsBtn(){
               if(hasLyrics == "true") {
@@ -54,7 +54,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                             backgroundColor: Colors.blue
                         ),
                         onPressed: ()async{
-                          Map lyrics =  await HelperFunctions.fetchLyrics(AppRouter.audioQueueSongData[snapshot.data!]["id"]);
+                          Map lyrics =  await HelperFunctions.fetchLyrics(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["id"]);
                           showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
@@ -80,7 +80,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                 children: [
                   StreamBuilder(
                     stream: mainAudioPlayer.createPositionStream(),
-                    builder: (context,snapshot){
+                    builder: (context,AsyncSnapshot<Duration?> snapshot){
                       if(snapshot.data != null){
                         return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
                       } else {
@@ -107,7 +107,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                         songLyricsBtn(),
                         const SizedBox(height: 20,),
                       ],
-                      Text(AppRouter.audioQueueSongData[snapshot.data!]["copyright"] ?? "",style: const TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
+                      Text(mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["copyright"] ?? "",style: const TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 10,),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
@@ -145,7 +145,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                             fit: BoxFit.fill,
                             opacity: 0.8,
                             image: NetworkImage(
-                              AppRouter.audioQueueSongData[snapshot.data!]["image"][2]["link"],
+                              mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["image"][2]["link"],
                             )
                         )
                     ),

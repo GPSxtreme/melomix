@@ -7,17 +7,16 @@ import 'package:just_audio/just_audio.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import '../components/song_tile.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-class PlaylistViewScreen extends StatefulWidget {
-  const PlaylistViewScreen({Key? key, required this.id, required this.type}) : super(key: key);
+class CommonViewScreen extends StatefulWidget {
+  const CommonViewScreen({Key? key, required this.id, required this.type}) : super(key: key);
   final String id;
   final String type;
   @override
-  State<PlaylistViewScreen> createState() => _PlaylistViewScreenState();
+  State<CommonViewScreen> createState() => _CommonViewScreenState();
 }
 
-class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
+class _CommonViewScreenState extends State<CommonViewScreen> {
   Map data = {};
   List<SongResultTile> allSongResultsList = [];
   bool isLoaded = false;
@@ -39,6 +38,7 @@ class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
     }else{
       data = await HelperFunctions.getPlaylistById(widget.id);
     }
+    //if in queue returns index != -1
     firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data["data"]["songs"][0]["id"]);
     //put data into list
     if(data["status"] == "SUCCESS" && data["data"]["songs"].length != 0){
@@ -55,24 +55,30 @@ class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
   }
 
   Future<void> addSongsToQueue()async{
-    if(mounted){
-      setState(() {
-        isLoading = true;
-      });
-      Future.delayed(const Duration(milliseconds: 1500),(){setState(() {
-        isLoading = false;
-      });});
-      await HelperFunctions.playGivenListOfSongs(data["data"]["songs"]);
-      firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data["data"]["songs"][0]["id"]);
-      isAddedToQueue = true;
+    if(!isAddedToQueue){
+      if(mounted){
+        setState(() {
+          isLoading = true;
+        });
+        Future.delayed(const Duration(milliseconds: 1500),(){setState(() {
+          isLoading = false;
+        });});
+        setState(() {
+          firstSongIndexInQueue = 0;
+          isAddedToQueue = true;
+        });
+        await HelperFunctions.playGivenListOfSongs(data["data"]["songs"]);
+      }
     }
   }
   bool doesBelong(){
    try{
      //checks whether current playing song belongs to album;
-     print("current index : ${mainAudioPlayer.currentIndex!} , first song index : $firstSongIndexInQueue , queue len :${AppRouter.queue.length}");
+     if (kDebugMode) {
+       print("current index : ${mainAudioPlayer.currentIndex!} , first song index : $firstSongIndexInQueue , queue len :${AppRouter.queue.length}");
+     }
      if(firstSongIndexInQueue != -1 && mainAudioPlayer.currentIndex! >= firstSongIndexInQueue &&
-         data["data"]["songs"][mainAudioPlayer.currentIndex! - firstSongIndexInQueue ]["id"] == AppRouter.audioQueueSongData[mainAudioPlayer.currentIndex!]["id"]){
+         data["data"]["songs"][mainAudioPlayer.currentIndex! - firstSongIndexInQueue ]["id"] == mainAudioPlayer.sequence![mainAudioPlayer.currentIndex!].tag.extras["id"]){
        //does belong
        return true;
      }
@@ -109,6 +115,7 @@ class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
               //seek to albums first song in the queue
                 mainAudioPlayer.seek(Duration.zero,index: firstSongIndexInQueue);
             }
+            //play
             await mainAudioPlayer.play();
           }
         },
@@ -118,7 +125,7 @@ class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
         ),
       );
       }
-      //pause button
+      //pause button is returned when player is playing
       return GestureDetector(
         onTap:()async{
           await mainAudioPlayer.pause();
@@ -146,120 +153,122 @@ class _PlaylistViewScreenState extends State<PlaylistViewScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: ModalProgressHUD(
-          inAsyncCall: false,
-          child: Stack(
-            children: [
-              isLoaded?
-              ListView(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        image: DecorationImage(
-                            image: NetworkImage(data["data"]["image"][2]["link"]),
-                            fit: BoxFit.cover,
-                            opacity: 1
-                        )
-                    ),
-                    child: ClipRRect(
-                      child: BackdropFilter(
-                        filter:ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: FractionalOffset.topCenter,
-                                  end: FractionalOffset.bottomCenter,
-                                  colors: [
-                                    Colors.black12.withOpacity(0.0),
-                                    Colors.black.withOpacity(0.85),
-                                    Colors.black.withOpacity(0.98),
-                                    Colors.black.withOpacity(1),
-                                  ],
-                                  stops: const [
-                                    0.0,
-                                    0.18,
-                                    0.25,
-                                    1.0
-                                  ])
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 20,),
-                              Center(child: Image.network(data["data"]["image"][2]["link"],height: 180,width: 180,)),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      htmlDecode.convert(data["data"]["name"]).trim(),
-                                      maxLines: 2,
-                                      style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w800),
-                                      textAlign: TextAlign.center,
-                                      overflow:TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 15,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              widget.type == "album" ? htmlDecode.convert(data["data"]["primaryArtists"]).trim():htmlDecode.convert(data["data"]["userId"]).trim(),
-                                              maxLines: 2,
-                                              style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
-                                              textAlign: TextAlign.center,
-                                              overflow:TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: 15,),
-                                            Text(
-                                              "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data["data"]["releaseDate"]).toString().split("-")[0]:null}",
-                                              maxLines: 1,
-                                              style: const TextStyle(color: Colors.white60,fontSize: 13,fontWeight: FontWeight.w500),
-                                              textAlign: TextAlign.center,
-                                              overflow:TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        StreamBuilder(
-                                          stream: mainAudioPlayer.playerStateStream,
-                                          builder: (_,snapshot){
-                                            if(snapshot.hasData){
-                                              return playPauseButton(mainAudioPlayer, snapshot.data!, 60);
-                                            }else{
-                                              return const SizedBox(height: 0,width: 0,);
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
+        body: Stack(
+          children: [
+            isLoaded?
+            ListView(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      image: DecorationImage(
+                          image: NetworkImage(data["data"]["image"][2]["link"]),
+                          fit: BoxFit.cover,
+                          opacity: 1
+                      )
+                  ),
+                  child: ClipRRect(
+                    child: BackdropFilter(
+                      filter:ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: FractionalOffset.topCenter,
+                                end: FractionalOffset.bottomCenter,
+                                colors: [
+                                  Colors.black12.withOpacity(0.0),
+                                  Colors.black.withOpacity(0.85),
+                                  Colors.black.withOpacity(0.98),
+                                  Colors.black.withOpacity(1),
+                                ],
+                                stops: const [
+                                  0.0,
+                                  0.18,
+                                  0.25,
+                                  1.0
+                                ])
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20,),
+                            Center(child: Image.network(data["data"]["image"][2]["link"],height: 180,width: 180,)),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    htmlDecode.convert(data["data"]["name"]).trim(),
+                                    maxLines: 2,
+                                    style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w800),
+                                    textAlign: TextAlign.center,
+                                    overflow:TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 15,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.type == "album" ? htmlDecode.convert(data["data"]["primaryArtists"]).trim():htmlDecode.convert(data["data"]["userId"]).trim(),
+                                            maxLines: 2,
+                                            style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
+                                            textAlign: TextAlign.center,
+                                            overflow:TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 15,),
+                                          Text(
+                                            "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data["data"]["releaseDate"]).toString().split("-")[0]:null}",
+                                            maxLines: 1,
+                                            style: const TextStyle(color: Colors.white60,fontSize: 13,fontWeight: FontWeight.w500),
+                                            textAlign: TextAlign.center,
+                                            overflow:TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      StreamBuilder(
+                                        stream: mainAudioPlayer.playerStateStream,
+                                        builder: (_,AsyncSnapshot<PlayerState> snapshot){
+                                          if(snapshot.hasData){
+                                            return playPauseButton(mainAudioPlayer, snapshot.data!, 60);
+                                          }else{
+                                            return const SizedBox(height: 0,width: 0,);
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
-                              //All rendered songs
-                              HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
-                              const SizedBox(height: 70,)
-                            ],
-                          ),
+                            ),
+                            //All rendered songs
+                            HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
+                            const SizedBox(height: 70,)
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ],
-              ):const Center(
-                heightFactor: 15,
-                child: CircularProgressIndicator(color: Colors.white,),
-              ),
-              HelperFunctions.collapsedPlayer()
-            ],
-          ),
+                ),
+              ],
+            )
+                :ListView(
+                  children: const [
+                    Center(
+              heightFactor: 15,
+              child: CircularProgressIndicator(color: Colors.white,),
+            ),
+                  ],
+                ),
+            HelperFunctions.collapsedPlayer()
+          ],
         )
       ),
     );
