@@ -224,7 +224,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                           ),
                                           const SizedBox(height: 15,),
                                           Text(
-                                            "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data["data"]["releaseDate"]).toString().split("-")[0]:null}",
+                                            "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data["data"]["releaseDate"]).toString().split("-")[0]:""}",
                                             maxLines: 1,
                                             style: const TextStyle(color: Colors.white60,fontSize: 13,fontWeight: FontWeight.w500),
                                             textAlign: TextAlign.center,

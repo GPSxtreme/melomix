@@ -57,7 +57,7 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
           children: [
             ListView(
               children: [
-                HelperFunctions.label("All songs", horizontalPadding: 20.0, verticalPadding: 18.0),
+                // HelperFunctions.label("All songs", horizontalPadding: 20.0, verticalPadding: 18.0),
                 allSongs()
               ],
             ),

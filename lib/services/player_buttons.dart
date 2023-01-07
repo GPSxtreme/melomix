@@ -43,7 +43,9 @@ class PlayerButtons{
             index: player.effectiveIndices?.first),
         child: Icon(
           replayIcon ??  Icons.replay,color: iconColorHex ?? Colors.white,
-          size: iconSize,
+          size: iconSize
+
+          ,
         ),
       );
     }

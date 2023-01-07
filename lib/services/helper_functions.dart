@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -266,6 +267,7 @@ class HelperFunctions{
 
   static Widget collapsedPlayer(){
     HtmlUnescape htmlDecode = HtmlUnescape();
+    Random random = Random();
     return StreamBuilder<PlayerState>(
       stream: mainAudioPlayer.playerStateStream,
       builder: (_, snapshot) {
@@ -319,7 +321,10 @@ class HelperFunctions{
                                       (
                                           songData["artworkBytes"] != null ?
                                       Image.memory(songData["artworkBytes"] , height: 55,width: 55,) :
-                                         const Icon(Icons.music_note_rounded,color: Colors.white,size: 40,)
+                                          CircleAvatar(
+                                            backgroundColor:Colors.accents.elementAt(random.nextInt(Colors.accents.length)).withOpacity(0.8),
+                                            child: const Icon(Icons.music_note,color: Colors.white,),
+                                          )
                                       )
                                   :
                                   Image.network(songData["image"][1]["link"],height: 55,width: 55,),
@@ -347,9 +352,7 @@ class HelperFunctions{
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                  child: PlayerController(mainAudioPlayer, isFullScreen: false,nextBtnSize: 20,playPauseBtnSize: 40,prevBtnSize: 20,repeatBtnSize: 20,shuffleBtnSize: 20,)
-                              ),
+                              PlayerController(mainAudioPlayer, isFullScreen: false,nextBtnSize: 20,playPauseBtnSize: 40,prevBtnSize: 20,repeatBtnSize: 20,shuffleBtnSize: 20,),
                             ],
                           )
                       )

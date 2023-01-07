@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -12,13 +13,17 @@ class OfflineSongTile extends StatefulWidget {
 }
 
 class _OfflineSongTileState extends State<OfflineSongTile> {
+  Random random = Random();
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: QueryArtworkWidget(
         id: widget.song.id,
         type: ArtworkType.AUDIO,
-        nullArtworkWidget: const Icon(Icons.music_note,color: Colors.white,),
+        nullArtworkWidget: CircleAvatar(
+          backgroundColor:Colors.accents.elementAt(random.nextInt(Colors.accents.length)).withOpacity(0.8),
+          child: const Icon(Icons.music_note,color: Colors.white,),
+        ),
       ),
       title: Text(widget.song.displayNameWOExt,style: const TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),maxLines: 2,overflow: TextOverflow.ellipsis,),
       subtitle: Text(widget.song.artist ?? "",style: const TextStyle(color: Colors.white70,fontSize: 13,fontWeight: FontWeight.w500),maxLines: 2,overflow: TextOverflow.ellipsis,),
