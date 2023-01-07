@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
-import '../components/song_tile.dart';
+import '../components/online_song_tile.dart';
 import '../screens/full_player_screen.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'dart:io';
@@ -319,7 +319,7 @@ class HelperFunctions{
                                       (
                                           songData["artworkBytes"] != null ?
                                       Image.memory(songData["artworkBytes"] , height: 55,width: 55,) :
-                                          Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUnvISVTYopMAy17o3mB2lfSPeEjoKfAdV2w&usqp=CAU",height: 55,width: 55,)
+                                         const Icon(Icons.music_note_rounded,color: Colors.white,size: 40,)
                                       )
                                   :
                                   Image.network(songData["image"][1]["link"],height: 55,width: 55,),
@@ -409,6 +409,23 @@ class HelperFunctions{
     }
   }
 
+  static Widget label(String name , {required double horizontalPadding , required verticalPadding , double? fontSize}){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ,vertical: verticalPadding),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children:  [
+              Text(name,style:TextStyle(fontSize: fontSize ?? 18,fontWeight: FontWeight.w500,color: Colors.white),textAlign: TextAlign.start,),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+
   //(not needed/not used/might be useful in future)
   static Future<Map> getMetadata(String songPath) async {
     final metadata = await MetadataRetriever.fromFile(File(songPath));
@@ -421,13 +438,13 @@ class HelperFunctions{
     Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO);
     return bytes;
   }
-  static Future<ImageProvider<Object>> getLocalSongArtworkImage(int songId)async{
+  static Future<dynamic> getLocalSongArtworkImage(int songId)async{
     final audioQuery = OnAudioQuery();
     Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO,quality: 400,format: ArtworkFormat.JPEG,size: 1000);
     if(bytes != null){
       return Image.memory(bytes,filterQuality: FilterQuality.high,).image;
     }
-    return const NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUnvISVTYopMAy17o3mB2lfSPeEjoKfAdV2w&usqp=CAU");
+    return false;
   }
   //play local media song
   static Future<void> playLocalSong(Map song,AudioPlayer player)async{
@@ -442,6 +459,7 @@ class HelperFunctions{
             id: song["id"].toString(),
             album: song["albumName"],
             title: song["name"],
+            // artUri: cant determine :(,
             extras: song as Map<String,dynamic>
         )));
         if(player.audioSource == null){

@@ -3,7 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
 import 'package:proto_music_player/components/top_result_common_tile.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
-import '../components/song_tile.dart';
+import '../components/online_song_tile.dart';
 import '../services/helper_functions.dart';
 
 class SearchPageScreen extends StatefulWidget {

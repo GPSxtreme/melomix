@@ -6,7 +6,7 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
-import '../components/song_tile.dart';
+import '../components/online_song_tile.dart';
 
 class CommonViewScreen extends StatefulWidget {
   const CommonViewScreen({Key? key, required this.id, required this.type}) : super(key: key);
@@ -194,7 +194,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 20,),
-                            Center(child: Image.network(data["data"]["image"][2]["link"],height: 180,width: 180,)),
+                            Center(child: Image.network(data["data"]["image"][2]["link"],height: 200,width: 200,)),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
                               child: Column(
