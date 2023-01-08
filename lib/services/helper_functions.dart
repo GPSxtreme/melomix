@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
@@ -12,6 +13,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
 import '../components/online_song_tile.dart';
+import '../models/local_song_data.dart';
 import '../screens/full_player_screen.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'dart:io';
@@ -322,7 +324,7 @@ class HelperFunctions{
                                           songData["artworkBytes"] != null ?
                                       Image.memory(songData["artworkBytes"] , height: 55,width: 55,) :
                                           CircleAvatar(
-                                            backgroundColor:Colors.accents.elementAt(random.nextInt(Colors.accents.length)).withOpacity(0.8),
+                                            backgroundColor:Colors.accents.elementAt(songData["intId"] % Colors.accents.length).withOpacity(0.8),
                                             child: const Icon(Icons.music_note,color: Colors.white,),
                                           )
                                       )
@@ -450,20 +452,20 @@ class HelperFunctions{
     return false;
   }
   //play local media song
-  static Future<void> playLocalSong(Map song,AudioPlayer player)async{
+  static Future<void> playLocalSong(LocalSongData song,AudioPlayer player)async{
     try{
       // check if song already exists in queue
-      if(checkIfAddedInQueue(song["id"])){
-        int existingSongIndex = await getQueueIndexBySongId(song["id"]);
+      if(checkIfAddedInQueue(song.id)){
+        int existingSongIndex = await getQueueIndexBySongId(song.id);
         await player.seek(Duration.zero, index: existingSongIndex);
       }
       else{
-        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["songUri"]),tag: MediaItem(
-            id: song["id"].toString(),
-            album: song["albumName"],
-            title: song["name"],
+        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
+            id: song.id,
+            album: song.albumName,
+            title: song.name,
             // artUri: cant determine :(,
-            extras: song as Map<String,dynamic>
+            extras: song.getMap
         )));
         if(player.audioSource == null){
           await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
@@ -475,6 +477,36 @@ class HelperFunctions{
     }catch(e){
       if (kDebugMode) {
         print("playLocalSong method error: $e");
+      }
+    }
+  }
+
+  static Future<void> playGivenListOfLocalSongs(List<LocalSongData> songs)async{
+    try{
+      List<AudioSource> givenList = [];
+      List givenSongsData = [];
+      for(LocalSongData song in songs){
+        givenList.add(AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
+          // Specify a unique ID for each media item:
+            id: song.id,
+            // Metadata to display in the notification:
+            album: song.albumName,
+            title: song.name ,
+            // artUri: cant determine :(,
+            extras: song.getMap
+        )));
+        givenSongsData.add(song);
+      }
+      await AppRouter.queue.insertAll(0,givenList);
+      if(AppRouter.queue.length == songs.length){
+        await mainAudioPlayer.setAudioSource(AppRouter.queue , initialIndex: 0);
+        await mainAudioPlayer.play();
+      }
+      mainAudioPlayer.seek(Duration.zero,index: 0);
+      mainAudioPlayer.play();
+    }catch(e){
+      if (kDebugMode) {
+        print("playGivenListOfLocalSongs method error : $e");
       }
     }
   }

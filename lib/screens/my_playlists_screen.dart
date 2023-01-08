@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:proto_music_player/components/offline_folder_tile.dart';
-import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../services/helper_functions.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -39,7 +38,7 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
           );
         }
         return GridView.builder(
-          gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,crossAxisSpacing: 10,mainAxisSpacing: 10),
+          gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,crossAxisSpacing: 20,mainAxisSpacing: 20),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: items.data!.length < 200 ? items.data!.length : 200,
@@ -63,7 +62,7 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
               children: [
                 HelperFunctions.label("All albums on device", horizontalPadding: 20.0, verticalPadding: 18.0 , fontSize: 25),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(18.0),
                   child: allFoldersOnDevice(),
                 ),
                 const SizedBox(height: 70,)

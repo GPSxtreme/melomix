@@ -41,11 +41,11 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
             Widget songCover(){
               bool isLocalWithArtwork = isLocal && songData["isLocal"] && localImage.runtimeType != bool;
               return Container(
-                width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.70 : MediaQuery.of(context).size.height*0.75 ,
-                height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.70 : MediaQuery.of(context).size.height*0.75 ,
+                width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.65 : MediaQuery.of(context).size.height*0.75 ,
+                height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.65 : MediaQuery.of(context).size.height*0.75 ,
                 decoration:BoxDecoration(
-                  borderRadius: !isLocalWithArtwork && isLocal ?  BorderRadius.circular(999) : null,
-                  color: !isLocalWithArtwork ?  Colors.accents.elementAt(random.nextInt(Colors.accents.length)).withOpacity(0.8) : null,
+                  borderRadius: BorderRadius.circular(8),
+                  color:  isLocal && !isLocalWithArtwork ?  Colors.accents.elementAt(songData["intId"] % Colors.accents.length).withOpacity(0.8) : null,
                   image: ( isLocalWithArtwork ) || songData["isLocal"] == null ?
                   DecorationImage(
                       fit: BoxFit.fill,

@@ -21,10 +21,10 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
   List<OnlineSongResultTile> allSongResultsList = [];
   bool isLoaded = false;
   HtmlUnescape htmlDecode = HtmlUnescape();
-  late bool isAddedToQueue;
   bool isLoading = false;
   bool play = false;
-  int firstSongIndexInQueue = 0;
+  late int firstSongIndexInQueue;
+  late bool isAddedToQueue;
   @override
   void initState() {
     // TODO: implement initState
@@ -75,7 +75,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
    try{
      //checks whether current playing song belongs to album;
      if (kDebugMode) {
-       print("current index : ${mainAudioPlayer.currentIndex!} , first song index : $firstSongIndexInQueue , queue len :${AppRouter.queue.length}");
+       print("online model : current index : ${mainAudioPlayer.currentIndex!} , first song index : $firstSongIndexInQueue , queue len :${AppRouter.queue.length}");
      }
      if(firstSongIndexInQueue != -1 && mainAudioPlayer.currentIndex! >= firstSongIndexInQueue &&
          data["data"]["songs"][mainAudioPlayer.currentIndex! - firstSongIndexInQueue ]["id"] == mainAudioPlayer.sequence![mainAudioPlayer.currentIndex!].tag.extras["id"]){
@@ -86,12 +86,13 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
      return false;
    }catch(e){
      if (kDebugMode) {
-       print("checker error : $e");
+       print("online model : checker error : $e");
      }
      //error
      return false;
    }
   }
+
   Widget playPauseButton(AudioPlayer player, PlayerState playerState ,double iconSize) {
     final processingState = playerState.processingState;
     //albums first song index
@@ -124,17 +125,18 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
           size: iconSize,
         ),
       );
+      } else{
+        //pause button is returned when player is playing
+        return GestureDetector(
+          onTap:()async{
+            await mainAudioPlayer.pause();
+          },
+          child: Icon(
+            Icons.pause_circle,color:  Colors.blue,
+            size: iconSize,
+          ),
+        );
       }
-      //pause button is returned when player is playing
-      return GestureDetector(
-        onTap:()async{
-          await mainAudioPlayer.pause();
-        },
-        child: Icon(
-          Icons.pause_circle,color:  Colors.blue,
-          size: iconSize,
-        ),
-      );
     } else {
       return GestureDetector(
         onTap:() =>player.seek(Duration.zero,
@@ -194,7 +196,12 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 20,),
-                            Center(child: Image.network(data["data"]["image"][2]["link"],height: 200,width: 200,)),
+                            Center(
+                                child: Material(
+                                  elevation: 20,
+                                    child: Image.network(data["data"]["image"][2]["link"],height: 200,width: 200,)
+                                )
+                            ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
                               child: Column(
@@ -237,7 +244,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                         stream: mainAudioPlayer.playerStateStream,
                                         builder: (_,AsyncSnapshot<PlayerState> snapshot){
                                           if(snapshot.hasData){
-                                            return playPauseButton(mainAudioPlayer, snapshot.data!, 60);
+                                            return playPauseButton(mainAudioPlayer, snapshot.data!, 65);
                                           }else{
                                             return const SizedBox(height: 0,width: 0,);
                                           }
