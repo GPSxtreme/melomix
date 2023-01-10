@@ -70,8 +70,12 @@ class _AppRouterState extends State<AppRouter> {
     ];
   }
 
-  requestPermissions(){
-    Permission.storage.request();
+  requestPermissions()async{
+    await Permission.storage.request();
+    await Permission.accessMediaLocation.request();
+    await Permission.manageExternalStorage.request();
+    await Permission.accessMediaLocation.request();
+    await Permission.mediaLibrary.request();
   }
 
   @override

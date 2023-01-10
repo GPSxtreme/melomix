@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
@@ -10,6 +9,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
 import '../components/online_song_tile.dart';
@@ -18,6 +18,7 @@ import '../screens/full_player_screen.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'dart:io';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:flowder/flowder.dart';
 
 class HelperFunctions{
   static Future<Map> getSongByName(String query,int limit)async{
@@ -187,6 +188,43 @@ class HelperFunctions{
         print("playGivenListOfSongs method error : $e");
       }
     }
+  }
+  static Future<bool> checkIfLocalDirExistsInApp(String path)async{
+    // final appDocDir = await getApplicationDocumentsDirectory();
+    Directory fileDir = Directory('storage/emulated/0/proto player/$path/');
+    final doesDirExist = await fileDir.exists();
+    return doesDirExist;
+  }
+  static Future<void> createLocalDirInApp(String path)async{
+    // final appDocDir = await getApplicationDocumentsDirectory();
+    Directory fileDir = Directory('storage/emulated/0/proto player/$path/');
+    await fileDir.create(recursive: true);
+  }
+  static Future downloadHttpSong({required String link , required String parentDir , required String fileName})async{
+    // final appDocDir = await getApplicationDocumentsDirectory();
+    bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
+    if(!dirExists){
+      await HelperFunctions.createLocalDirInApp(parentDir);
+    }
+    final downloaderUtils = DownloaderUtils(
+      progressCallback: (current, total) {
+        final progress = (current / total) * 100;
+        if (kDebugMode) {
+          print('Downloading: $progress');
+        }
+      },
+      file: File('storage/emulated/0/proto player/$parentDir/$fileName.mp3'),
+      progress: ProgressImplementation(),
+      onDone: () {
+        if (kDebugMode) {
+          print('Download done');
+        }},
+      deleteOnCancel: true,
+    );
+
+    await Flowder.download(
+        link,
+        downloaderUtils);
   }
 
   static Future<int> getQueueIndexBySongId(String songId)async{

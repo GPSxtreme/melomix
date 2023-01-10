@@ -6,6 +6,12 @@ import 'package:proto_music_player/services/helper_functions.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:line_icons/line_icons.dart';
 
+enum DropdownItem{
+  queue,
+  download
+}
+
+
 class OnlineSongResultTile extends StatefulWidget {
   const OnlineSongResultTile({Key? key, required this.player, required this.song}) : super(key: key);
   final Map song;
@@ -17,6 +23,7 @@ class OnlineSongResultTile extends StatefulWidget {
 class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
   bool addedToQueue = false;
   HtmlUnescape htmlDecode = HtmlUnescape();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -57,20 +64,49 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
         backgroundColor: Colors.indigo,
         backgroundImage: NetworkImage(widget.song["image"][1]["link"]),
       ),
-      trailing: IconButton(icon: !addedToQueue ?  const Icon(LineIcons.verticalEllipsis,color: Colors.white,): const Icon(Icons.check,color: Colors.white,) ,
-        onPressed: () async{
-          if(!addedToQueue){
-            setState(() {
-              addedToQueue = true;
-            });
-            await HelperFunctions.addSongToQueue(widget.song, widget.player);
-          }else{
-            await HelperFunctions.removeFromQueue(widget.song);
-            setState(() {
-              addedToQueue = false;
-            });
-          }
-        },
+      trailing: PopupMenuButton(
+          icon: const Icon(LineIcons.verticalEllipsis,color: Colors.white,) ,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8)
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 2,vertical: 2),
+          position: PopupMenuPosition.under,
+          onSelected: (value)async{
+            if(value == DropdownItem.queue){
+              //add to queue
+              if(!addedToQueue){
+                setState(() {
+                  addedToQueue = true;
+                });
+                await HelperFunctions.addSongToQueue(widget.song, widget.player);
+              }
+              //remove from queue
+              // else{
+              //   await HelperFunctions.removeFromQueue(widget.song["id"]);
+              //   setState(() {
+              //     addedToQueue = false;
+              //   });
+              // }
+            }else{
+              //download song
+              HelperFunctions.downloadHttpSong(
+                  link: widget.song["downloadUrl"][4]["link"],
+                  parentDir: "${widget.song["album"]["name"]}_${widget.song["album"]["id"]}",
+                  fileName: '${widget.song["name"]}_${widget.song["id"]}'
+              );
+            }
+          },
+          itemBuilder: (context) =>[
+            PopupMenuItem(
+              value: DropdownItem.queue,
+              child: Text(addedToQueue ? "In queue" : "Queue" ),
+            ),
+            const PopupMenuItem(
+                value: DropdownItem.download,
+                child: Text("Download")
+            ),
+          ]
       ),
     );
   }
