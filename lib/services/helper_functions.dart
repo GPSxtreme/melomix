@@ -9,7 +9,6 @@ import 'package:just_audio/just_audio.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
 import '../components/online_song_tile.dart';
@@ -21,9 +20,13 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:flowder/flowder.dart';
 
 class HelperFunctions{
+  //app dir name
+  static String appDir = "storage/emulated/0/proto player";
+  static String apiDomain = "https://saavn-api-weld.vercel.app/";
+
   static Future<Map> getSongByName(String query,int limit)async{
     try{
-      String apiEndPoint = "https://saavn-api-weld.vercel.app/search/songs?query=${query.replaceAll(" ", "+")}&page=1&limit=$limit";
+      String apiEndPoint = "${apiDomain}search/songs?query=${query.replaceAll(" ", "+")}&page=1&limit=$limit";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
@@ -40,7 +43,7 @@ class HelperFunctions{
 
   static Future<Map> getSongById(String songId)async{
     try{
-      String apiEndPoint = "https://saavn-api-weld.vercel.app/songs?id=$songId";
+      String apiEndPoint = "${apiDomain}songs?id=$songId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
@@ -57,7 +60,7 @@ class HelperFunctions{
 
   static Future<Map> getPlaylistById(String playlistId)async{
     try{
-      String apiEndPoint = "https://saavn-api-weld.vercel.app/playlists?id=$playlistId";
+      String apiEndPoint = "${apiDomain}playlists?id=$playlistId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
@@ -74,7 +77,7 @@ class HelperFunctions{
 
   static Future<Map> getAlbumById(String albumId)async{
     try{
-      String apiEndPoint = "https://saavn-api-weld.vercel.app/albums?id=$albumId";
+      String apiEndPoint = "${apiDomain}albums?id=$albumId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
@@ -91,7 +94,7 @@ class HelperFunctions{
 
   static Future<Map> searchAll(String query) async{
     try{
-      String apiEndPoint = "https://saavn-api-weld.vercel.app/search/all?query=${query.replaceAll(" ", "+")}";
+      String apiEndPoint = "${apiDomain}search/all?query=${query.replaceAll(" ", "+")}";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
@@ -191,13 +194,13 @@ class HelperFunctions{
   }
   static Future<bool> checkIfLocalDirExistsInApp(String path)async{
     // final appDocDir = await getApplicationDocumentsDirectory();
-    Directory fileDir = Directory('storage/emulated/0/proto player/$path/');
+    Directory fileDir = Directory('$appDir/$path/');
     final doesDirExist = await fileDir.exists();
     return doesDirExist;
   }
   static Future<void> createLocalDirInApp(String path)async{
     // final appDocDir = await getApplicationDocumentsDirectory();
-    Directory fileDir = Directory('storage/emulated/0/proto player/$path/');
+    Directory fileDir = Directory('$appDir/$path/');
     await fileDir.create(recursive: true);
   }
   static Future downloadHttpSong({required String link , required String parentDir , required String fileName})async{
@@ -213,7 +216,7 @@ class HelperFunctions{
           print('Downloading: $progress');
         }
       },
-      file: File('storage/emulated/0/proto player/$parentDir/$fileName.mp3'),
+      file: File('$appDir/$parentDir/$fileName.mp3'),
       progress: ProgressImplementation(),
       onDone: () {
         if (kDebugMode) {
@@ -238,7 +241,7 @@ class HelperFunctions{
 
   static Future<Map> fetchLyrics (String songId)async{
     try{
-      String apiEndPoint = "https://saavn.me/lyrics?id=$songId";
+      String apiEndPoint = "${apiDomain}lyrics?id=$songId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
