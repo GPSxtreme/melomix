@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 enum DropdownItem{
   queue,
@@ -81,19 +81,31 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
                 });
                 await HelperFunctions.addSongToQueue(widget.song, widget.player);
               }
-              //remove from queue
-              // else{
-              //   await HelperFunctions.removeFromQueue(widget.song["id"]);
-              //   setState(() {
-              //     addedToQueue = false;
-              //   });
-              // }
+              // remove from queue
+              else{
+                Fluttertoast.showToast(
+                    msg: "Song already in Queue.",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.SNACKBAR,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: HexColor("4f4f4f"),
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
+              }
             }else{
-              //download song
+              // download song
               HelperFunctions.downloadHttpSong(
-                  link: widget.song["downloadUrl"][4]["link"],
-                  parentDir: "${widget.song["album"]["name"]}_${widget.song["album"]["id"]}",
-                  fileName: '${widget.song["name"]}_${widget.song["id"]}'
+                  songData: widget.song
+              );
+              Fluttertoast.showToast(
+                  msg: "Downloading..",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.SNACKBAR,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: HexColor("4f4f4f"),
+                  textColor: Colors.white,
+                  fontSize: 16.0
               );
             }
           },

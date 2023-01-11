@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:math';
+import 'package:audiotagger/models/tag.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
@@ -18,6 +16,8 @@ import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'dart:io';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:flowder/flowder.dart';
+import 'package:audiotagger/audiotagger.dart';
+
 
 class HelperFunctions{
   //app dir name
@@ -203,33 +203,121 @@ class HelperFunctions{
     Directory fileDir = Directory('$appDir/$path/');
     await fileDir.create(recursive: true);
   }
-  static Future downloadHttpSong({required String link , required String parentDir , required String fileName})async{
-    // final appDocDir = await getApplicationDocumentsDirectory();
-    bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
-    if(!dirExists){
-      await HelperFunctions.createLocalDirInApp(parentDir);
+  ///Downloads songs artwork
+  static Future<void> downloadSongArtwork(String link , String filePath)async{
+    try{
+      final downloaderUtils = DownloaderUtils(
+        progressCallback: (current, total) {
+          final progress = (current / total) * 100;
+          if (kDebugMode) {
+            print('Downloading: $progress');
+          }
+        },
+        file: File(filePath),
+        progress: ProgressImplementation(),
+        onDone: () async{
+          if (kDebugMode) {
+            print('online song artwork downloaded');
+          }
+        },
+      );
+      await Flowder.download(
+          link,
+          downloaderUtils
+      );
+    }catch(e){
+      if(kDebugMode){
+        print('downloadSongArtwork method error : $e');
+      }
     }
-    final downloaderUtils = DownloaderUtils(
-      progressCallback: (current, total) {
-        final progress = (current / total) * 100;
-        if (kDebugMode) {
-          print('Downloading: $progress');
-        }
-      },
-      file: File('$appDir/$parentDir/$fileName.mp3'),
-      progress: ProgressImplementation(),
-      onDone: () {
-        if (kDebugMode) {
-          print('Download done');
-        }},
-      deleteOnCancel: true,
+  }
+  ///get song tags of the given song.
+  static Future<Map> getSongTags({required songPath})async{
+    final tagger = Audiotagger();
+    final Map? tags = await tagger.readTagsAsMap(
+        path: songPath
     );
-
-    await Flowder.download(
-        link,
-        downloaderUtils);
+    return tags!;
   }
 
+  ///Sets song tags to the given song.
+  static Future<void> setSongTags({required Map songData, required String path , required imgFilePath})async {
+    try{
+      HtmlUnescape htmlDecode = HtmlUnescape();
+      final tagger = Audiotagger();
+      final tag = Tag(
+        name: htmlDecode.convert(songData["name"]),
+        artist: htmlDecode.convert(songData["primaryArtists"]),
+        album: htmlDecode.convert(songData["album"]["name"]),
+        id: songData["id"],
+        artwork: imgFilePath,
+        explicitContent: songData["explicitContent"].toString(),
+        hasLyrics: songData["hasLyrics"],
+        copyright: songData["copyright"],
+        year: songData["year"]
+      );
+      bool? isSuccess = await tagger.writeTags(
+        path: path,
+        tag: tag,
+      );
+      // delete artwork file
+      File artworkFile = File(imgFilePath);
+      await artworkFile.delete();
+      Map songTags = await getSongTags(songPath: path);
+      if(kDebugMode){
+        print("isSuccess : $isSuccess" ?? "nothing");
+        print(songTags);
+      }
+    }catch(e){
+      if(kDebugMode){
+        print('setSongTags method error : $e');
+      }
+    }
+  }
+  ///Downloads http songs to device memory with Id3 tags using [setSongTags] function.
+  static Future<void> downloadHttpSong({required Map songData})async{
+    try{
+      HtmlUnescape htmlDecode = HtmlUnescape();
+      String link =  songData["downloadUrl"][4]["link"];
+      String parentDir = "${htmlDecode.convert(songData["album"]["name"])}_${songData["album"]["id"]}";
+      String fileName = '${htmlDecode.convert(songData["name"])}_${songData["id"]}';
+      bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
+      String filePath = '$appDir/$parentDir/$fileName.mp3';
+      String imgFilePath = '$appDir/$parentDir/${fileName}_img.png';
+      if(!dirExists){
+        await HelperFunctions.createLocalDirInApp(parentDir);
+      }
+      //download song artwork
+      await downloadSongArtwork(songData["image"][2]["link"], imgFilePath);
+      final downloaderUtils = DownloaderUtils(
+        progressCallback: (current, total) {
+          final progress = (current / total) * 100;
+          if (kDebugMode) {
+            print('Downloading: $progress');
+          }
+        },
+        file: File(filePath),
+        progress: ProgressImplementation(),
+        onDone: () async{
+            if (kDebugMode) {
+              print('Download done');
+              await setSongTags(songData: songData, path: filePath , imgFilePath : imgFilePath);
+            }
+          },
+        deleteOnCancel: true,
+      );
+
+      await Flowder.download(
+          link,
+          downloaderUtils
+      );
+    }catch(e){
+      if(kDebugMode){
+        print('downloadHttpSong method error : $e');
+      }
+    }
+  }
+  ///Returns song index in queue.
   static Future<int> getQueueIndexBySongId(String songId)async{
     if(mainAudioPlayer.sequence != null){
       for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
@@ -238,7 +326,7 @@ class HelperFunctions{
     }
     return -1;
   }
-
+  ///Fetches song lyrics.
   static Future<Map> fetchLyrics (String songId)async{
     try{
       String apiEndPoint = "${apiDomain}lyrics?id=$songId";
@@ -255,7 +343,7 @@ class HelperFunctions{
       };
     }
   }
-
+  ///Checks if the given [songId] exists in queue.
   static bool checkIfAddedInQueue(String songId){
     if( mainAudioPlayer.sequence != null && mainAudioPlayer.sequence!.isNotEmpty && mainAudioPlayer.audioSource != null){
       for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
@@ -264,7 +352,7 @@ class HelperFunctions{
     }
     return false;
   }
-
+  ///Removes the given song from queue.
   static Future<void> removeFromQueue(Map song)async{
     int index = 0;
     for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
@@ -272,45 +360,16 @@ class HelperFunctions{
     }
     await AppRouter.queue.removeAt(index);
   }
-
-  static void showSnackBar(BuildContext buildContext, String txt, int duration,
-      {Color? bgColor,String? hexCode})
-  {
-    Color bgNormalColor = Colors.red;
-    if(bgColor != null){
-      bgNormalColor = bgColor;
-    }
-    ScaffoldMessenger.of(buildContext).showSnackBar(SnackBar(
-      content: SizedBox(
-        width: MediaQuery.of(buildContext).size.width * 0.80,
-        child: AutoSizeText(
-          txt,
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
-          maxLines: 7,
-        ),
-      ),
-      backgroundColor: hexCode != null ? HexColor(hexCode):bgNormalColor,
-      shape: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          borderSide: BorderSide(color: Colors.transparent)
-      ),
-      duration: Duration(milliseconds: duration),
-    ));
-  }
-
+  ///Formats given [Duration] into a readable song duration.
   static String printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "$twoDigitMinutes:$twoDigitSeconds";
   }
-
+  ///Returns a mini audio player attached to [BottomNavigationBar].
   static Widget collapsedPlayer(){
     HtmlUnescape htmlDecode = HtmlUnescape();
-    Random random = Random();
     return StreamBuilder<PlayerState>(
       stream: mainAudioPlayer.playerStateStream,
       builder: (_, snapshot) {
@@ -412,7 +471,7 @@ class HelperFunctions{
       },
     );
   }
-
+  ///A standard ListViewRenderer.
   static Widget listViewRenderer(List<OnlineSongResultTile> list,{required double verticalGap}){
     if(list.isNotEmpty){
       return ListView.builder(
@@ -430,7 +489,7 @@ class HelperFunctions{
       return const Text("no results",style: TextStyle(color: Colors.white),);
     }
   }
-
+  ///A standard GridViewRenderer.
   static Widget gridViewRenderer(List list,{required double horizontalPadding ,
     required double verticalPadding , required int crossAxisCount ,
     required double crossAxisSpacing
@@ -454,7 +513,7 @@ class HelperFunctions{
       return const Text("no results",style: TextStyle(color: Colors.white),);
     }
   }
-
+  ///returns a label widget.
   static Widget label(String name , {required double horizontalPadding , required verticalPadding , double? fontSize}){
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding ,vertical: verticalPadding),
@@ -472,18 +531,19 @@ class HelperFunctions{
   }
 
 
-  //(not needed/not used/might be useful in future)
+  ///get song meta data by its path.
   static Future<Map> getMetadata(String songPath) async {
     final metadata = await MetadataRetriever.fromFile(File(songPath));
     return metadata.toJson();
   }
   //Local media songs methods
-  //get local media art work
+  ///get local media art work uri by [songId].
   static Future<Uint8List?> getLocalSongArtworkUri(int songId)async{
     final audioQuery = OnAudioQuery();
     Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO);
     return bytes;
   }
+  ///get local media art work image by [songId].
   static Future<dynamic> getLocalSongArtworkImage(int songId)async{
     final audioQuery = OnAudioQuery();
     Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO,quality: 400,format: ArtworkFormat.JPEG,size: 1000);
@@ -492,7 +552,7 @@ class HelperFunctions{
     }
     return false;
   }
-  //play local media song
+  ///plays local media song by taking [LocalSongData] as input.
   static Future<void> playLocalSong(LocalSongData song,AudioPlayer player)async{
     try{
       // check if song already exists in queue
@@ -521,7 +581,7 @@ class HelperFunctions{
       }
     }
   }
-
+  ///Plays a given list of type [LocalSongData] and adds them to queue.
   static Future<void> playGivenListOfLocalSongs(List<LocalSongData> songs)async{
     try{
       List<AudioSource> givenList = [];
