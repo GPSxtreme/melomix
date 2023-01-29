@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-import '../screens/playlist_view_screen.dart';
+import '../screens/common_view_screen.dart';
 
 class CommonResultTile extends StatefulWidget {
   const CommonResultTile({Key? key, required this.data}) : super(key: key);

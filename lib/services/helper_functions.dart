@@ -246,14 +246,14 @@ class HelperFunctions{
       HtmlUnescape htmlDecode = HtmlUnescape();
       final tagger = Audiotagger();
       final tag = Tag(
-        name: htmlDecode.convert(songData["name"]),
+        title: htmlDecode.convert(songData["name"]),
         artist: htmlDecode.convert(songData["primaryArtists"]),
         album: htmlDecode.convert(songData["album"]["name"]),
-        id: songData["id"],
+        // id: songData["id"],
         artwork: imgFilePath,
-        explicitContent: songData["explicitContent"].toString(),
-        hasLyrics: songData["hasLyrics"],
-        copyright: songData["copyright"],
+        // explicitContent: songData["explicitContent"].toString(),
+        // hasLyrics: songData["hasLyrics"],
+        // copyright: songData["copyright"],
         year: songData["year"]
       );
       bool? isSuccess = await tagger.writeTags(
@@ -261,11 +261,11 @@ class HelperFunctions{
         tag: tag,
       );
       // delete artwork file
-      File artworkFile = File(imgFilePath);
-      await artworkFile.delete();
+      // File artworkFile = File(imgFilePath);
+      // await artworkFile.delete();
       Map songTags = await getSongTags(songPath: path);
       if(kDebugMode){
-        print("isSuccess : $isSuccess" ?? "nothing");
+        print("isSuccess : $isSuccess");
         print(songTags);
       }
     }catch(e){
@@ -283,7 +283,7 @@ class HelperFunctions{
       String fileName = '${htmlDecode.convert(songData["name"])}_${songData["id"]}';
       bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
       String filePath = '$appDir/$parentDir/$fileName.mp3';
-      String imgFilePath = '$appDir/$parentDir/${fileName}_img.png';
+      String imgFilePath = '$appDir/$parentDir/${fileName}_img.jpg';
       if(!dirExists){
         await HelperFunctions.createLocalDirInApp(parentDir);
       }
