@@ -169,7 +169,11 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            isLoaded?
+            if(!isLoaded)
+              const Center(
+                  child: SpinKitRipple(color: Colors.white,size: 80,)
+              ),
+            if(isLoaded)
             ListView(
               children: [
                 Container(
@@ -287,15 +291,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                 HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
                 const SizedBox(height: 70,)
               ],
-            )
-                :ListView(
-                  children: const [
-                    Center(
-              heightFactor: 15,
-              child: CircularProgressIndicator(color: Colors.white,),
             ),
-                  ],
-                ),
             HelperFunctions.collapsedPlayer()
           ],
         )

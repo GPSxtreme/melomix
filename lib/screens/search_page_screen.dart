@@ -5,6 +5,7 @@ import 'package:proto_music_player/components/top_result_common_tile.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/online_song_tile.dart';
 import '../services/helper_functions.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SearchPageScreen extends StatefulWidget {
   const SearchPageScreen({Key? key,}) : super(key: key);
@@ -122,6 +123,18 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
+            if(allSongResultsList.isEmpty && userSearched && !noResults)
+              const Center(
+                  child: SpinKitRipple(color: Colors.white,size: 80,)
+              ),
+            if(!userSearched)
+              const Center(
+                // child: Text("Search for a song to show results.",style: TextStyle(color: Colors.white70,fontSize: 15),),
+              ),
+            if(noResults)
+              const Center(
+                child: Text("No results found!",style: TextStyle(color: Colors.white,fontSize: 16)),
+              ),
             ListView(
               children: [
                 Column(
@@ -178,11 +191,6 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                         ),
                       ),
                     ),
-                    if(allSongResultsList.isEmpty && userSearched && !noResults)
-                      const Center(
-                          heightFactor: 15,
-                          child: CircularProgressIndicator(color: Colors.white,)
-                      ),
                     if(userSearched) ...[
                       if(topResult != null) ...[
                         label("Top result"),
@@ -211,17 +219,6 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                       if(mainAudioPlayer.playing)
                         const SizedBox(height: 60,),
                     ],
-                    if(!userSearched) ...[
-                      const Center(
-                        heightFactor: 20,
-                        child: Text("Search for a song to show results.",style: TextStyle(color: Colors.white70,fontSize: 15),),
-                      ),
-                    ],
-                    if(noResults)
-                      const Center(
-                        heightFactor: 20,
-                        child: Text("No results found!",style: TextStyle(color: Colors.white,fontSize: 16)),
-                      )
                   ],
                 ),
               ],
