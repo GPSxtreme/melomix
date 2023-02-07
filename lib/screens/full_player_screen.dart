@@ -40,33 +40,34 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
             }
             Widget songCover(){
               bool isLocalWithArtwork = isLocal && songData["isLocal"] && localImage.runtimeType != bool;
-              return Container(
-                width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.65 : MediaQuery.of(context).size.height*0.75 ,
-                height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.65 : MediaQuery.of(context).size.height*0.75 ,
-                decoration:BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color:  isLocal && !isLocalWithArtwork ?  Colors.accents.elementAt(songData["intId"] % Colors.accents.length).withOpacity(0.8) : null,
-                  image: ( isLocalWithArtwork ) || songData["isLocal"] == null ?
-                  DecorationImage(
-                      fit: BoxFit.fill,
-                      image:artwork()
-                  ) : null,
+              return Material(
+                borderRadius: BorderRadius.circular(8),
+                elevation: 80,
+                child: Container(
+                  width: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.85 : MediaQuery.of(context).size.height*0.75 ,
+                  height: MediaQuery.of(context).orientation == Orientation.portrait ?  MediaQuery.of(context).size.width*0.85 : MediaQuery.of(context).size.height*0.75 ,
+                  decoration:BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color:  isLocal && !isLocalWithArtwork ?  Colors.accents.elementAt(songData["intId"] % Colors.accents.length).withOpacity(0.8) : null,
+                    image: ( isLocalWithArtwork ) || songData["isLocal"] == null ?
+                    DecorationImage(
+                        fit: BoxFit.fill,
+                        image:artwork()
+                    ) : null,
+                  ),
+                  child:(!isLocalWithArtwork && isLocal) ?
+                  const Center(
+                    child: Icon(Icons.music_note_rounded,size: 120,color: Colors.white,)
+                  ):null,
                 ),
-                child:(!isLocalWithArtwork && isLocal) ?
-                const Center(
-                  child: Icon(Icons.music_note_rounded,size: 120,color: Colors.white,)
-                ):null,
               );
             }
-
             Widget songName(){
               return Text(htmlDecode.convert(songData["name"]),style: const TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w600),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,);
             }
-
             Widget songArtists(){
               return Text(htmlDecode.convert(songData["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 16,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis);
             }
-
             Widget songLyricsBtn(){
               if(hasLyrics == "true") {
                 return SizedBox(
@@ -74,7 +75,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                   child: Center(
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue
+                            backgroundColor: Colors.blue[400]
                         ),
                         onPressed: ()async{
                           Map lyrics =  await HelperFunctions.fetchLyrics(songData["id"]);
@@ -127,7 +128,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
               );
             }
 
-            Widget cprAndPlayer(){
+            Widget playerControlsBlock(){
               return ConstrainedBox(
                 constraints: BoxConstraints(
                   minWidth: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height*0.4 : MediaQuery.of(context).size.width*0.6,
@@ -138,15 +139,15 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                     children: [
                       if(hasLyrics == "true") ...[
                         songLyricsBtn(),
-                        const SizedBox(height: 20,),
+                        const SizedBox(height: 10,),
                       ],
-                      Text(songData["copyright"] ?? "",style: const TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
-                      const SizedBox(height: 10,),
+                      // Text(songData["copyright"] ?? "",style: const TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),textAlign: TextAlign.center,maxLines: 3,overflow: TextOverflow.ellipsis),
+                      const SizedBox(height: 20,),
+                      PlayerController(mainAudioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 45,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 0),
                         child: songTimers(),
                       ),
-                      PlayerController(mainAudioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,)
                     ],
                   ),
                 ),
@@ -186,7 +187,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                       ),
                       child: ClipRRect(
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
                             child: MediaQuery.of(context).orientation == Orientation.portrait ?
@@ -195,12 +196,12 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                               children: [
                                 const Spacer(),
                                 songCover(),
-                                const SizedBox(height: 25,),
+                                const Spacer(),
                                 songName(),
-                                const SizedBox(height: 5,),
+                                const SizedBox(height: 10,),
                                 songArtists(),
                                 const Spacer(),
-                                cprAndPlayer(),
+                                playerControlsBlock(),
                                 const Spacer(),
                               ],
                             )
@@ -222,11 +223,12 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                                       songArtists(),
                                       const Spacer(),
                                       songLyricsBtn(),
+                                      const SizedBox(height: 10,),
+                                      PlayerController(mainAudioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 5),
+                                        padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 0),
                                         child: songTimers(),
                                       ),
-                                      PlayerController(mainAudioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,),
                                       const Spacer(),
                                     ],
                                   ),

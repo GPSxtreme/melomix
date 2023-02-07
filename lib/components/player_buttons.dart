@@ -53,32 +53,6 @@ class _PlayerControllerState extends State<PlayerController> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if(widget.isFullScreen)
-        StreamBuilder(
-            stream: widget.audioPlayer.createPositionStream(),
-          builder: (context,AsyncSnapshot<Duration> snapshot){
-              if(widget.audioPlayer.duration != null && snapshot.data != null){
-                double streamDuration = widget.audioPlayer.duration!.inSeconds.toDouble();
-                return SizedBox(
-                  height: 10,
-                  child: Slider(
-                    // thumbColor:Colors.black,
-                    // activeColor: HexColor("111111"),
-                    // inactiveColor: HexColor("7a7a7a"),
-                    min: 0.0,
-                    max: streamDuration,
-                    value: snapshot.data!.inSeconds.toDouble(),
-                    onChanged: (value) async{
-                      await widget.audioPlayer.seek(Duration(seconds: value.toInt()));
-                    },
-                  ),
-                );
-              } else {
-                return const SizedBox(height: 0,);
-              }
-          }
-        ),
-        const SizedBox(height: 10,),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -86,10 +60,21 @@ class _PlayerControllerState extends State<PlayerController> {
               StreamBuilder<bool>(
                 stream: widget.audioPlayer.shuffleModeEnabledStream,
                 builder: (context, snapshot) {
-                  return PlayerButtons.shuffleButton(context, snapshot.data ?? false , widget.audioPlayer, widget.shuffleBtnSize,
-                      hexActiveColor: widget.shuffleBtnActiveColor,
-                      hexDisableColor: widget.shuffleBtnDisableColor,
-                      shuffleIcon: widget.shuffleBtnIcon
+                  return Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(999),
+                    child: InkWell(
+                      onTap: (){},
+                      borderRadius: BorderRadius.circular(999),
+                      child: Padding(
+                        padding:  widget.isFullScreen ? const EdgeInsets.all(8.0) : const EdgeInsets.all(3.0),
+                        child: PlayerButtons.shuffleButton(context, snapshot.data ?? false , widget.audioPlayer, widget.shuffleBtnSize,
+                            hexActiveColor: widget.shuffleBtnActiveColor,
+                            hexDisableColor: widget.shuffleBtnDisableColor,
+                            shuffleIcon: widget.shuffleBtnIcon
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
@@ -99,11 +84,22 @@ class _PlayerControllerState extends State<PlayerController> {
               stream: widget.audioPlayer.sequenceStateStream,
               builder: (_, __) {
                 if(widget.audioPlayer.hasPrevious || widget.isFullScreen) {
-                  return PlayerButtons.previousButton(widget.audioPlayer,widget.prevBtnSize,
-                hexDisableColor: widget.prevBtnHexDisableColor,
-                  hexActiveColor: widget.prevBtnHexActiveColor,
-                    prevIcon: widget.prevBtnIcon
-                );
+                  return Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(999),
+                    child: InkWell(
+                      onTap: (){},
+                      borderRadius: BorderRadius.circular(999),
+                      child: Padding(
+                        padding:  widget.isFullScreen ? const EdgeInsets.all(8.0) : const EdgeInsets.all(3.0),
+                        child: PlayerButtons.previousButton(widget.audioPlayer,widget.prevBtnSize,
+                         hexDisableColor: widget.prevBtnHexDisableColor,
+                        hexActiveColor: widget.prevBtnHexActiveColor,
+                          prevIcon: widget.prevBtnIcon
+                ),
+                      ),
+                    ),
+                  );
                 } else {
                   return const SizedBox(height: 0,);
                 }
@@ -115,14 +111,31 @@ class _PlayerControllerState extends State<PlayerController> {
               builder: (_, snapshot) {
                   final playerState = snapshot.data;
                   if(playerState != null) {
-                    return PlayerButtons.playPauseButton(widget.audioPlayer,playerState,widget.playPauseBtnSize,
-                    iconColorHex: widget.ppBtnColor,
-                      pauseIcon: widget.ppBtnPlayIcon,
-                      playIcon: widget.ppBtnPlayIcon,
-                      replayIcon: widget.ppBtnReplayIcon
+                    return Material(
+                      elevation: 100,
+                      borderRadius: BorderRadius.circular(999),
+                      color:widget.isFullScreen ? Colors.blue[400]:Colors.transparent,
+                      child: InkWell(
+                        splashColor: Colors.white70,
+                        onTap: (){},
+                        borderRadius: BorderRadius.circular(999),
+                        child: Padding(
+                          padding: widget.isFullScreen ? const EdgeInsets.all(10.0) : const EdgeInsets.all(3.0),
+                          child: Material(
+                            elevation: 80,
+                            color: Colors.transparent,
+                            child: PlayerButtons.playPauseButton(widget.audioPlayer,playerState,widget.playPauseBtnSize,
+                            iconColorHex: widget.ppBtnColor,
+                              pauseIcon: widget.ppBtnPlayIcon,
+                              playIcon: widget.ppBtnPlayIcon,
+                              replayIcon: widget.ppBtnReplayIcon
+                            ),
+                          ),
+                        ),
+                      ),
                     );
                   }else {
-                    return const Text("n/a");
+                    return const SizedBox();
                   }
               },
             ),
@@ -131,11 +144,22 @@ class _PlayerControllerState extends State<PlayerController> {
               stream: widget.audioPlayer.sequenceStateStream,
               builder: (_, __) {
                 if(widget.audioPlayer.hasNext || widget.isFullScreen) {
-                  return PlayerButtons.nextButton(widget.audioPlayer,widget.nextBtnSize,
-                hexActiveColor: widget.nextBtnHexActiveColor,
-                  hexDisableColor: widget.nextBtnHexDisableColor,
-                  nextIcon: widget.nextBtnIcon
-                );
+                  return Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(999),
+                    child: InkWell(
+                      onTap: (){},
+                      borderRadius: BorderRadius.circular(999),
+                      child: Padding(
+                        padding:  widget.isFullScreen ? const EdgeInsets.all(8.0) : const EdgeInsets.all(3.0),
+                        child: PlayerButtons.nextButton(widget.audioPlayer,widget.nextBtnSize,
+                        hexActiveColor: widget.nextBtnHexActiveColor,
+                        hexDisableColor: widget.nextBtnHexDisableColor,
+                        nextIcon: widget.nextBtnIcon
+                ),
+                      ),
+                    ),
+                  );
                 } else {
                   return const SizedBox(height: 0,);
                 }
@@ -146,18 +170,56 @@ class _PlayerControllerState extends State<PlayerController> {
               StreamBuilder<LoopMode>(
                 stream: widget.audioPlayer.loopModeStream,
                 builder: (context, snapshot) {
-                  return PlayerButtons.repeatButton(context, snapshot.data ?? LoopMode.off,widget.audioPlayer,widget.repeatBtnSize,
-                      hexColor: widget.repeatBtnHexColor,
-                      hexRepeatColor: widget.repeatBtnHexRepeatColor,
-                      hexRepeatOneColor: widget.repeatBtnHexRepeatOneColor,
-                      repeatIcon: widget.repeatBtnIcon,
-                      repeatOneIcon: widget.repeatBtnOneIcon
+                  return Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(999),
+                    child: InkWell(
+                      onTap: (){},
+                      borderRadius: BorderRadius.circular(999),
+                      child: Padding(
+                        padding:  widget.isFullScreen ? const EdgeInsets.all(8.0) : const EdgeInsets.all(3.0),
+                        child: PlayerButtons.repeatButton(context, snapshot.data ?? LoopMode.off,widget.audioPlayer,widget.repeatBtnSize,
+                            hexColor: widget.repeatBtnHexColor,
+                            hexRepeatColor: widget.repeatBtnHexRepeatColor,
+                            hexRepeatOneColor: widget.repeatBtnHexRepeatOneColor,
+                            repeatIcon: widget.repeatBtnIcon,
+                            repeatOneIcon: widget.repeatBtnOneIcon
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
             ]
           ],
         ),
+        if(widget.isFullScreen) ...[
+          StreamBuilder(
+              stream: widget.audioPlayer.createPositionStream(),
+              builder: (context,AsyncSnapshot<Duration> snapshot){
+                if(widget.audioPlayer.duration != null && snapshot.data != null){
+                  double streamDuration = widget.audioPlayer.duration!.inSeconds.toDouble();
+                  return SliderTheme(
+                    data: SliderThemeData(
+                      thumbColor: Colors.blue[400],
+                      activeTrackColor: Colors.blue[400],
+                      inactiveTrackColor: Colors.white24
+                    ),
+                    child: Slider(
+                      min: 0.0,
+                      max: streamDuration,
+                      value: snapshot.data!.inSeconds.toDouble(),
+                      onChanged: (value) async{
+                        await widget.audioPlayer.seek(Duration(seconds: value.toInt()));
+                      },
+                    ),
+                  );
+                } else {
+                  return const SizedBox(height: 0,);
+                }
+              }
+          ),
+        ],
       ],
     );
   }

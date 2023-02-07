@@ -133,7 +133,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
           }
         },
         child: Icon(
-          Icons.play_circle,color:Colors.blue,
+          Icons.play_arrow_sharp,color:Colors.white,
           size: iconSize,
         ),
       );
@@ -144,7 +144,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
             await mainAudioPlayer.pause();
           },
           child: Icon(
-            Icons.pause_circle,color:  Colors.blue,
+            Icons.pause_outlined,color:  Colors.white,
             size: iconSize,
           ),
         );
@@ -155,7 +155,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
             index: firstSongIndexInQueue
         ),
         child: Icon(
-          Icons.replay,color:Colors.blue,
+          Icons.replay,color:Colors.white,
           size: iconSize,
         ),
       );
@@ -258,26 +258,29 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                       const Spacer(),
                                       //play pause replay button
                                       Material(
-                                        color: Colors.transparent,
+                                        color: Colors.blue,
                                         borderRadius: BorderRadius.circular(999),
                                         child: InkWell(
                                           onTap: (){},
                                           borderRadius: BorderRadius.circular(999),
-                                          child: StreamBuilder(
-                                            stream: mainAudioPlayer.playerStateStream,
-                                            builder: (_,AsyncSnapshot<PlayerState> snapshot){
-                                              if(snapshot.hasData){
-                                                return playPauseButton(mainAudioPlayer, snapshot.data!, 65);
-                                              }else{
-                                                return const SizedBox(height: 0,width: 0,);
-                                              }
-                                            },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: StreamBuilder(
+                                              stream: mainAudioPlayer.playerStateStream,
+                                              builder: (_,AsyncSnapshot<PlayerState> snapshot){
+                                                if(snapshot.hasData){
+                                                  return playPauseButton(mainAudioPlayer, snapshot.data!, 45);
+                                                }else{
+                                                  return const SizedBox(height: 0,width: 0,);
+                                                }
+                                              },
+                                            ),
                                           ),
                                         ),
                                       )
                                     ],
                                   ),
-                                  const SizedBox(height: 20,),
+                                  const SizedBox(height: 5,),
                                 ],
                               ),
                             ),

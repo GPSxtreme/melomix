@@ -18,7 +18,7 @@ class PlayerButtons{
         processingState == ProcessingState.buffering) {
       return SpinKitRipple(
         color: Colors.white,
-        size: iconSize + 16.5,
+        size: iconSize,
       );
     } else if (player.playing != true) {
       return GestureDetector(
