@@ -12,7 +12,8 @@ class _ShowLyricsState extends State<ShowLyrics> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.6,
+      initialChildSize: 1,
+      minChildSize: 0.9999,
       builder:(_,controller) => Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
@@ -24,13 +25,14 @@ class _ShowLyricsState extends State<ShowLyrics> {
           child: ListView(
             controller: controller,
             children: [
+              const SizedBox(height: 40,),
               Text(widget.lyrics["data"]["lyrics"] ?? "Not Available",
                 style: const TextStyle(
-                  wordSpacing: 2.0,
+                  wordSpacing: 2.5,
                   color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 18,
-                  height: 1.4,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 25,
+                  height: 1.5,
                 ),
                 textAlign: TextAlign.center,
               ),

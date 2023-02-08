@@ -117,7 +117,7 @@ class HelperFunctions{
         int existingSongIndex = await getQueueIndexBySongId(song["id"]);
         await player.seek(Duration.zero, index: existingSongIndex);
       }else{
-        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][1]["link"]),tag: MediaItem(
+        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][2]["link"]),tag: MediaItem(
           // Specify a unique ID for each media item:
           id: '${song["id"]}',
           // Metadata to display in the notification:

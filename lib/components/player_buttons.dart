@@ -5,7 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import '../services/player_buttons.dart';
 
 class PlayerController extends StatefulWidget {
-  PlayerController(this.audioPlayer, {super.key, required this.isFullScreen, required this.shuffleBtnSize, required this.prevBtnSize, required this.playPauseBtnSize, required this.nextBtnSize, required this.repeatBtnSize, this.ppBtnColor, this.ppBtnPlayIcon, this.ppBtnPauseIcon, this.ppBtnReplayIcon, this.shuffleBtnIcon, this.shuffleBtnActiveColor, this.shuffleBtnDisableColor, this.prevBtnIcon, this.prevBtnHexActiveColor, this.prevBtnHexDisableColor, this.nextBtnIcon, this.nextBtnHexActiveColor, this.nextBtnHexDisableColor, this.repeatBtnIcon, this.repeatBtnOneIcon , this.repeatBtnHexColor, this.repeatBtnHexRepeatColor, this.repeatBtnHexRepeatOneColor,});
+  PlayerController(this.audioPlayer, {super.key, required this.isFullScreen, required this.shuffleBtnSize, required this.prevBtnSize, required this.playPauseBtnSize, required this.nextBtnSize, required this.repeatBtnSize, this.ppBtnColor, this.ppBtnPlayIcon, this.ppBtnPauseIcon, this.ppBtnReplayIcon, this.shuffleBtnIcon, this.shuffleBtnActiveColor, this.shuffleBtnDisableColor, this.prevBtnIcon, this.prevBtnHexActiveColor, this.prevBtnHexDisableColor, this.nextBtnIcon, this.nextBtnHexActiveColor, this.nextBtnHexDisableColor, this.repeatBtnIcon, this.repeatBtnOneIcon , this.repeatBtnHexColor, this.repeatBtnHexRepeatColor, this.repeatBtnHexRepeatOneColor});
   //required data
   final AudioPlayer audioPlayer;
   final bool isFullScreen;
@@ -190,7 +190,7 @@ class _PlayerControllerState extends State<PlayerController> {
                   );
                 },
               ),
-            ]
+            ],
           ],
         ),
         if(widget.isFullScreen) ...[
