@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:line_icons/line_icons.dart';
@@ -63,6 +65,15 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
         radius: 30,
         backgroundColor: Colors.indigo,
         backgroundImage: NetworkImage(widget.song["image"][1]["link"]),
+        child: StreamBuilder(
+          stream: mainAudioPlayer.currentIndexStream,
+          builder: (buildContext, AsyncSnapshot<int?> snapshot){
+              if(mainAudioPlayer.playing && snapshot.hasData && mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["id"] == widget.song["id"]){
+                return const SpinKitWave(color: Colors.white70,size: 35,);
+              }
+            return const SizedBox();
+          },
+        ),
       ),
       trailing: PopupMenuButton(
           icon: const Icon(LineIcons.verticalEllipsis,color: Colors.white,) ,

@@ -112,7 +112,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
         processingState == ProcessingState.buffering || isLoading) {
       return SpinKitRipple(
         color: Colors.white,
-        size: iconSize + 16.5,
+        size: iconSize,
       );
     } else if (!player.playing|| (processingState != ProcessingState.completed) || (!doesBelong() && processingState == ProcessingState.completed)) {
       //play button
@@ -239,7 +239,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            widget.type == "album" ? htmlDecode.convert(data["data"]["primaryArtists"]).trim():htmlDecode.convert(data["data"]["userId"]).trim(),
+                                            widget.type == "album" ? htmlDecode.convert(data["data"]["primaryArtists"]).trim():"Saavn",
                                             maxLines: 2,
                                             style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
                                             textAlign: TextAlign.center,

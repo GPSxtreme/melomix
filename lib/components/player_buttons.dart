@@ -215,7 +215,9 @@ class _PlayerControllerState extends State<PlayerController> {
                     ),
                   );
                 } else {
-                  return const SizedBox(height: 0,);
+                  return Slider(
+                    min: 0.0, max:10 ,value: 0, onChanged: (double value) {},
+                  );
                 }
               }
           ),

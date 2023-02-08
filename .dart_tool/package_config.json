@@ -81,9 +81,9 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "crypto",
@@ -137,7 +137,7 @@
       "name": "flutter",
       "rootUri": "file:///C:/flutter%20sdk/flutter_windows_3.0.1-stable/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "flutter_blurhash",
@@ -173,13 +173,13 @@
       "name": "flutter_test",
       "rootUri": "file:///C:/flutter%20sdk/flutter_windows_3.0.1-stable/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///C:/flutter%20sdk/flutter_windows_3.0.1-stable/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "fluttertoast",
@@ -231,9 +231,9 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.5",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7",
       "packageUri": "lib/",
-      "languageVersion": "2.16"
+      "languageVersion": "2.19"
     },
     {
       "name": "just_audio",
@@ -273,7 +273,7 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.13",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.14",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -285,15 +285,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.9.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
-    },
-    {
-      "name": "modal_progress_hud",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/modal_progress_hud-0.1.3",
-      "packageUri": "lib/",
-      "languageVersion": "1.20"
     },
     {
       "name": "octo_image",
@@ -321,7 +315,7 @@
     },
     {
       "name": "path",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -525,7 +519,7 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.4.16",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.4.18",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -566,7 +560,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-02-07T04:12:08.392214Z",
+  "generated": "2023-02-08T12:48:11.556310Z",
   "generator": "pub",
-  "generatorVersion": "2.19.0-406.0.dev"
+  "generatorVersion": "3.0.0-204.0.dev"
 }

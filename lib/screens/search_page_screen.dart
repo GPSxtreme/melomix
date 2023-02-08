@@ -26,7 +26,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   bool noResults = false;
   dynamic topResult;
   String lastSavedQuery = "";
-
+  bool isProcessing = false;
   resetData(){
     setState(() {
       topResult = null;
@@ -61,6 +61,9 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   }
 
   getAllDataResults(String query)async{
+    setState(() {
+      isProcessing = true;
+    });
     resetData();
     allDataResultsData = await HelperFunctions.searchAll(query.trim());
     if(allDataResultsData["data"]["songs"]["results"].isEmpty){
@@ -72,7 +75,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
     else if(allDataResultsData["status"] == "SUCCESS" && allDataResultsData["data"] != null){
       if(allDataResultsData["data"]["topQuery"]["results"].isNotEmpty){
         for(Map topQuery in allDataResultsData["data"]["topQuery"]["results"]){
-          assignTopResult(topQuery);
+          await assignTopResult(topQuery);
         }
       }
       if(allDataResultsData["data"]["songs"]["results"].isNotEmpty){
@@ -97,7 +100,10 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
         }
       }
     }
-    getAllSongResults(query);
+    await getAllSongResults(query);
+    setState(() {
+      isProcessing = false;
+    });
   }
 
 
@@ -123,7 +129,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            if(allSongResultsList.isEmpty && userSearched && !noResults)
+            if(allSongResultsList.isEmpty && userSearched && !noResults || isProcessing)
               const Center(
                   child: SpinKitRipple(color: Colors.white,size: 80,)
               ),
@@ -143,50 +149,63 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                     //Search bar
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      child: TextField(
-                        textAlign: TextAlign.start,
-                        cursorColor: Colors.white,
-                        style: const TextStyle(color: Colors.white),
-                        cursorHeight: 20,
-                        keyboardType: TextInputType.name,
-                        onSubmitted: (query)async{
-                          if(query.trim().isNotEmpty && query != lastSavedQuery){
-                            setState(() {
-                              userSearched = true;
-                              noResults = false;
-                              lastSavedQuery = query;
-                            });
-                            await getAllDataResults(query);
-                          }
-                          FocusManager.instance.primaryFocus?.unfocus();
-                        },
-                        onChanged:(query){
-                          if(query.trim().isEmpty){
-                            setState(() {
-                              lastSavedQuery = "";
-                              userSearched = false;
-                              noResults = false;
-                            });
-                          }
-                        },
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(icon: const Icon(Icons.sort,color: Colors.white,), onPressed: () {},),
-                          filled: true,
-                          fillColor: HexColor("111111"),
-                          hintText: 'What do you want to listen to?',
-                          hintStyle: const TextStyle(color: Colors.white24),
-                          prefixIcon: const Icon(Icons.search,color: Colors.white,),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                              borderRadius: BorderRadius.circular(100)
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                              borderRadius: BorderRadius.circular(100)
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                              borderRadius: BorderRadius.circular(100)
+                      child: Material(
+                        elevation: 100,
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.transparent,
+                        child: TextField(
+                          textAlign: TextAlign.start,
+                          cursorColor: Colors.white,
+                          style: const TextStyle(color: Colors.white),
+                          cursorHeight: 20,
+                          keyboardType: TextInputType.name,
+                          onSubmitted: (query)async{
+                            if(query.trim().isNotEmpty && query != lastSavedQuery){
+                              setState(() {
+                                userSearched = true;
+                                noResults = false;
+                                lastSavedQuery = query;
+                              });
+                              await getAllDataResults(query);
+                            }
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          onChanged:(query)async{
+                            if(query.trim().isEmpty){
+                              setState(() {
+                                lastSavedQuery = "";
+                                userSearched = false;
+                                noResults = false;
+                              });
+                            }
+                            if(query.trim().isNotEmpty && query != lastSavedQuery && !isProcessing){
+                              setState(() {
+                                userSearched = true;
+                                noResults = false;
+                                lastSavedQuery = query;
+                              });
+                              await getAllDataResults(query);
+                            }
+                          },
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(icon: const Icon(Icons.sort,color: Colors.white,), onPressed: () {},),
+                            filled: true,
+                            fillColor: HexColor("111111"),
+                            hintText: 'What do you want to listen to?',
+                            hintStyle: const TextStyle(color: Colors.white24),
+                            prefixIcon: const Icon(Icons.search,color: Colors.white,),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                                borderRadius: BorderRadius.circular(100)
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                                borderRadius: BorderRadius.circular(100)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                                borderRadius: BorderRadius.circular(100)
+                            ),
                           ),
                         ),
                       ),

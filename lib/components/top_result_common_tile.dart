@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:proto_music_player/screens/common_view_screen.dart';
@@ -35,7 +34,7 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
           height: MediaQuery.of(context).size.height*0.25,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(8),
               color: Colors.white,
             image: DecorationImage(
               image: NetworkImage(widget.data["image"][2]["link"]),
@@ -44,9 +43,9 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
             )
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(8),
             child: BackdropFilter(
-              filter:ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              filter:ImageFilter.blur(sigmaX: 35, sigmaY: 35),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                 child: Row(
@@ -54,7 +53,7 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.black,
+                      backgroundColor: Colors.blue,
                       radius: 63,
                       backgroundImage: NetworkImage(widget.data["image"][2]["link"]),
                     ),
@@ -74,7 +73,7 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
                           Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(18),
-                              color: HexColor("111111").withOpacity(0.8)
+                              color: Colors.black54
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),

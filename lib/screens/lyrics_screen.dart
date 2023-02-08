@@ -18,9 +18,6 @@ class _ShowLyricsState extends State<ShowLyrics> {
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
               color: HexColor("#111111"),
-              borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(28)
-              )
           ),
           child: ListView(
             controller: controller,

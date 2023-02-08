@@ -47,7 +47,6 @@ dependencies:
   html: ^0.15.1
   html_unescape: ^2.0.0
   persistent_bottom_nav_bar: ^5.0.2
-  modal_progress_hud: ^0.1.3
   flutter_media_metadata: ^1.0.0+1
   just_audio_background: ^0.0.1-beta.9
   on_audio_query: ^2.6.1

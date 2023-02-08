@@ -206,10 +206,10 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                   StreamBuilder(
                     stream: mainAudioPlayer.createPositionStream(),
                     builder: (context,AsyncSnapshot<Duration?> snapshot){
-                      if(snapshot.data != null){
+                      if(snapshot.hasData){
                         return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
                       } else {
-                        return const Text("");
+                        return const Text("00:00", style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
                       }
                     },
                   ),
@@ -217,10 +217,10 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                   StreamBuilder(
                     stream: mainAudioPlayer.durationStream,
                     builder: (context,AsyncSnapshot<Duration?> snapshot){
-                      if(snapshot.data != null){
-                        return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.start,);
+                      if(snapshot.hasData){
+                        return Text(HelperFunctions.printDuration(snapshot.data!), style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.end,);
                       } else {
-                        return const Text("");
+                        return const Text("00:00", style:TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),textAlign: TextAlign.end,);
                       }
                     },
                   ),
@@ -265,7 +265,14 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                           const SizedBox(height: 10,),
                           songArtists(),
                           const Spacer(),
-                          playerControlsBlock(),
+                          Container(
+                            padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: HexColor("121212"),
+                                borderRadius: BorderRadius.circular(8)
+                              ),
+                              child: playerControlsBlock()
+                          ),
                           if(hasLyrics != "true")
                           const Spacer(),
                           if(hasLyrics == "true") ...[
@@ -294,10 +301,13 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                               songArtists(),
                               const Spacer(),
                               const SizedBox(height: 10,),
-                              PlayerController(mainAudioPlayer, isFullScreen: true,nextBtnSize: 30,playPauseBtnSize: 50,prevBtnSize: 30,repeatBtnSize: 30,shuffleBtnSize: 30,),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 0),
-                                child: songTimers(),
+                              Container(
+                                  padding: const EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      color: HexColor("121212"),
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+                                  child: playerControlsBlock()
                               ),
                               const Spacer(),
                             ],
