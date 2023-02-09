@@ -33,7 +33,7 @@
     },
     {
       "name": "audiotagger",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/audiotagger-2.2.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/git/Audiotagger-d83bcc5c1be3a391ff64e91c4f4b186b320a96c5/",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -183,7 +183,7 @@
     },
     {
       "name": "fluttertoast",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.1.2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -560,7 +560,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-02-08T12:48:11.556310Z",
+  "generated": "2023-02-09T10:25:09.173716Z",
   "generator": "pub",
   "generatorVersion": "3.0.0-204.0.dev"
 }

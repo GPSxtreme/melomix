@@ -241,33 +241,43 @@ class HelperFunctions{
   }
 
   ///Sets song tags to the given song.
-  static Future<void> setSongTags({required Map songData, required String path , required imgFilePath})async {
+  static Future<void> setSongTags({required Map songData, required String songPath , required String imgFilePath})async {
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
       final tagger = Audiotagger();
-      final tag = Tag(
+      final tags = Tag(
         title: htmlDecode.convert(songData["name"]),
         artist: htmlDecode.convert(songData["primaryArtists"]),
         album: htmlDecode.convert(songData["album"]["name"]),
-        // id: songData["id"],
+        id: songData["id"],
         artwork: imgFilePath,
-        // explicitContent: songData["explicitContent"].toString(),
-        // hasLyrics: songData["hasLyrics"],
-        // copyright: songData["copyright"],
+        explicitContent: songData["explicitContent"].toString(),
+        hasLyrics: songData["hasLyrics"],
+        copyright: songData["copyright"],
         year: songData["year"]
       );
-      bool? isSuccess = await tagger.writeTags(
-        path: path,
-        tag: tag,
+      final isSuccess = await tagger.writeTags(
+        path: songPath,
+        tag: tags,
       );
-      // delete artwork file
-      // File artworkFile = File(imgFilePath);
-      // await artworkFile.delete();
-      Map songTags = await getSongTags(songPath: path);
+      Map songTags = await getSongTags(songPath: songPath);
       if(kDebugMode){
+        print(tags.toMap());
         print("isSuccess : $isSuccess");
         print(songTags);
       }
+      Future.delayed(const Duration(seconds: 5),()async{
+        if(!isSuccess!){
+          File song = File(songPath);
+          await song.delete();
+          // delete artwork file
+          File artworkFile = File(imgFilePath);
+          await artworkFile.delete();
+          if(kDebugMode){
+            print("failed and deleted");
+          }
+        }
+      });
     }catch(e){
       if(kDebugMode){
         print('setSongTags method error : $e');
@@ -278,7 +288,7 @@ class HelperFunctions{
   static Future<void> downloadHttpSong({required Map songData})async{
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
-      String link =  songData["downloadUrl"][4]["link"];
+      String link =  songData["downloadUrl"][3]["link"];
       String parentDir = "${htmlDecode.convert(songData["album"]["name"])}_${songData["album"]["id"]}";
       String fileName = '${htmlDecode.convert(songData["name"])}_${songData["id"]}';
       bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
@@ -301,7 +311,7 @@ class HelperFunctions{
         onDone: () async{
             if (kDebugMode) {
               print('Download done');
-              await setSongTags(songData: songData, path: filePath , imgFilePath : imgFilePath);
+              await setSongTags(songData: songData, songPath: filePath , imgFilePath : imgFilePath);
             }
           },
         deleteOnCancel: true,
