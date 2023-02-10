@@ -237,7 +237,11 @@ class HelperFunctions{
     final Map? tags = await tagger.readTagsAsMap(
         path: songPath
     );
-    return tags!;
+    if(tags != null) {
+      return tags;
+    } else{
+      return {};
+    }
   }
 
   ///Sets song tags to the given song.
@@ -289,8 +293,8 @@ class HelperFunctions{
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
       String link =  songData["downloadUrl"][3]["link"];
-      String parentDir = "${htmlDecode.convert(songData["album"]["name"])}_${songData["album"]["id"]}";
-      String fileName = '${htmlDecode.convert(songData["name"])}_${songData["id"]}';
+      String parentDir = htmlDecode.convert(songData["album"]["name"]);
+      String fileName = htmlDecode.convert(songData["name"]);
       bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
       String filePath = '$appDir/$parentDir/$fileName.mp3';
       String imgFilePath = '$appDir/$parentDir/${fileName}_img.jpg';

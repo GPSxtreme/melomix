@@ -33,7 +33,7 @@
     },
     {
       "name": "audiotagger",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/git/Audiotagger-d83bcc5c1be3a391ff64e91c4f4b186b320a96c5/",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/git/Audiotagger-960a6c5ee882177fcaadbd977ca1384c2f48f68b/",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -81,9 +81,9 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.12"
     },
     {
       "name": "crypto",
@@ -129,15 +129,15 @@
     },
     {
       "name": "flowder",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/flowder-0.2.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/git/flowder-1ddd171a763c4f1ba09b95e34e35e2e5cf0d1bba/",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "flutter",
-      "rootUri": "file:///C:/flutter%20sdk/flutter_windows_3.0.1-stable/flutter/packages/flutter",
+      "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_blurhash",
@@ -171,15 +171,15 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///C:/flutter%20sdk/flutter_windows_3.0.1-stable/flutter/packages/flutter_test",
+      "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///C:/flutter%20sdk/flutter_windows_3.0.1-stable/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.17"
     },
     {
       "name": "fluttertoast",
@@ -231,9 +231,9 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.5",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.16"
     },
     {
       "name": "just_audio",
@@ -273,7 +273,7 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.14",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.13",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -285,7 +285,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.9.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -315,7 +315,7 @@
     },
     {
       "name": "path",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.3",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -465,7 +465,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///C:/flutter%20sdk/flutter_windows_3.0.1-stable/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///D:/flutter%20sdk/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -519,7 +519,7 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.4.18",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.4.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -560,7 +560,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-02-09T10:25:09.173716Z",
+  "generated": "2023-02-10T10:14:26.574824Z",
   "generator": "pub",
-  "generatorVersion": "3.0.0-204.0.dev"
+  "generatorVersion": "2.19.1"
 }

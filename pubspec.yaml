@@ -51,7 +51,9 @@ dependencies:
   just_audio_background: ^0.0.1-beta.9
   on_audio_query: ^2.6.1
   permission_handler: ^10.2.0
-  flowder: ^0.2.0
+  flowder:
+   git:
+    url: https://github.com/Harsh223/flowder.git
   path_provider: ^2.0.11
   fluttertoast: ^8.1.2
   audiotagger:
