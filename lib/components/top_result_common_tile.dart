@@ -17,6 +17,7 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData device = MediaQuery.of(context);
     return GestureDetector(
       onTap: (){
         if(widget.data["type"] != "artist"){
@@ -26,18 +27,20 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
             withNavBar: true, // OPTIONAL VALUE. True by default.
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
+        }else{
+
         }
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18,vertical: 5),
         child: Container(
-          height: MediaQuery.of(context).size.height*0.25,
-          width: MediaQuery.of(context).size.width,
+          height: device.orientation == Orientation.portrait ? device.size.height*0.25 : device.size.height *0.4,
+          width: device.size.width,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: Colors.white,
             image: DecorationImage(
-              image: NetworkImage(widget.data["image"][2]["link"]),
+              image: NetworkImage(widget.data["image"][0]["link"]),
               fit: BoxFit.cover,
                 opacity: 1
             )
@@ -45,17 +48,22 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: BackdropFilter(
-              filter:ImageFilter.blur(sigmaX: 35, sigmaY: 35),
+              filter:ImageFilter.blur(sigmaX: 30, sigmaY: 30),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      radius: 63,
-                      backgroundImage: NetworkImage(widget.data["image"][2]["link"]),
+                    Material(
+                      elevation: 40,
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(double.infinity),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        radius: 64,
+                        backgroundImage: NetworkImage(widget.data["image"][2]["link"]),
+                      ),
                     ),
                     const SizedBox(width: 5,),
                     Expanded(

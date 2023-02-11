@@ -33,7 +33,7 @@
     },
     {
       "name": "audiotagger",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/git/Audiotagger-960a6c5ee882177fcaadbd977ca1384c2f48f68b/",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/git/Audiotagger-298cd4ef27de843a1043d2af52dcaad03de0fcef/",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -135,7 +135,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter",
+      "rootUri": "file:///C:/flutter_windows_3.7.3-stable/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -171,13 +171,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter_test",
+      "rootUri": "file:///C:/flutter_windows_3.7.3-stable/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///C:/flutter_windows_3.7.3-stable/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -465,7 +465,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///D:/flutter%20sdk/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///C:/flutter_windows_3.7.3-stable/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -560,7 +560,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-02-10T10:14:26.574824Z",
+  "generated": "2023-02-10T20:03:25.258297Z",
   "generator": "pub",
-  "generatorVersion": "2.19.1"
+  "generatorVersion": "2.19.2"
 }

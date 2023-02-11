@@ -46,7 +46,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "960a6c5ee882177fcaadbd977ca1384c2f48f68b"
+      resolved-ref: "298cd4ef27de843a1043d2af52dcaad03de0fcef"
       url: "https://github.com/GPSxtreme/Audiotagger"
     source: git
     version: "2.2.1"

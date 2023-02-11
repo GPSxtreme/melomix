@@ -421,6 +421,7 @@ class HelperFunctions{
                           ),
                           child:Row(
                             children: [
+                              //song artwork.
                               GestureDetector(
                                 onTap: (){
                                   showModalBottomSheet(
@@ -447,6 +448,7 @@ class HelperFunctions{
                                 ),
                               ),
                               const SizedBox(width: 10,),
+                              //song title,song artists.
                               Expanded(
                                 child: GestureDetector(
                                   onTap: (){
@@ -468,6 +470,7 @@ class HelperFunctions{
                                   ),
                                 ),
                               ),
+                              //player controller buttons.
                               PlayerController(mainAudioPlayer, isFullScreen: false,nextBtnSize: 20,playPauseBtnSize: 40,prevBtnSize: 20,repeatBtnSize: 20,shuffleBtnSize: 20,),
                             ],
                           )

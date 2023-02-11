@@ -137,7 +137,8 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
           size: iconSize,
         ),
       );
-      } else{
+      }
+      else{
         //pause button is returned when player is playing
         return GestureDetector(
           onTap:()async{
@@ -201,7 +202,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                 stops: const [
                                   0.0,
                                   0.3,
-                                  0.6,
+                                  0.8,
                                   1.0
                                 ])
                         ),
@@ -209,11 +210,11 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 20,),
+                            const SizedBox(height: 25,),
                             Center(
                                 child: Material(
-                                  elevation: 20,
-                                    child: Image.network(data["data"]["image"][2]["link"],height: 200,width: 200,)
+                                  elevation: 10,
+                                    child: Image.network(data["data"]["image"][2]["link"],height: 220,width: 220,)
                                 )
                             ),
                             Padding(
@@ -234,29 +235,30 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      //Details
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            widget.type == "album" ? htmlDecode.convert(data["data"]["primaryArtists"]).trim():"Saavn",
-                                            maxLines: 2,
-                                            style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
-                                            textAlign: TextAlign.center,
-                                            overflow:TextOverflow.ellipsis,
-                                          ),
-                                          const SizedBox(height: 15,),
-                                          Text(
-                                            "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data["data"]["releaseDate"]).toString().split("-")[0]:""}",
-                                            maxLines: 1,
-                                            style: const TextStyle(color: Colors.white60,fontSize: 13,fontWeight: FontWeight.w500),
-                                            textAlign: TextAlign.center,
-                                            overflow:TextOverflow.ellipsis,
-                                          ),
-                                        ],
+                                      //song title,song artists.
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.type == "album" ? htmlDecode.convert(data["data"]["primaryArtists"]).trim():"Saavn",
+                                              maxLines: 2,
+                                              style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
+                                              textAlign: TextAlign.center,
+                                              overflow:TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 15,),
+                                            Text(
+                                              "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data["data"]["releaseDate"]).toString().split("-")[0]:""}",
+                                              maxLines: 1,
+                                              style: const TextStyle(color: Colors.white60,fontSize: 13,fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
+                                              overflow:TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      const Spacer(),
-                                      //play pause replay button
+                                      //player controller button.
                                       Material(
                                         color: Colors.blue,
                                         borderRadius: BorderRadius.circular(999),
@@ -280,7 +282,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                       )
                                     ],
                                   ),
-                                  const SizedBox(height: 5,),
+                                  const SizedBox(height: 8,),
                                 ],
                               ),
                             ),
