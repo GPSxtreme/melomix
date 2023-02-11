@@ -125,9 +125,9 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
         processingState == ProcessingState.buffering || isLoading) {
       return SpinKitRipple(
         color: Colors.white,
-        size: iconSize + 16.5,
+        size: iconSize,
       );
-    } else if (!player.playing|| (processingState != ProcessingState.completed)) {
+    } else if (!player.playing|| (processingState != ProcessingState.completed) || (!doesBelong() && processingState == ProcessingState.completed)) {
       //play button
       if(!player.playing || !doesBelong()) {
         return GestureDetector(
@@ -146,37 +146,35 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
             }
           },
           child: Icon(
-            Icons.play_circle,color:Colors.blue,
+            Icons.play_arrow_sharp,color:Colors.white,
             size: iconSize,
           ),
         );
       }
-      //pause button is returned when player is playing
-      return GestureDetector(
-        onTap:()async{
-          print("pause");
-          await mainAudioPlayer.pause();
-        },
-        child: Icon(
-          Icons.pause_circle,color:  Colors.blue,
-          size: iconSize,
-        ),
-      );
+      else{
+        //pause button is returned when player is playing
+        return GestureDetector(
+          onTap:()async{
+            await mainAudioPlayer.pause();
+          },
+          child: Icon(
+            Icons.pause_outlined,color:  Colors.white,
+            size: iconSize,
+          ),
+        );
+      }
     } else {
       return GestureDetector(
-        onTap:() {
-          player.seek(Duration.zero,
-              index: firstSongIndexInQueue
-          );
-        },
+        onTap:() =>player.seek(Duration.zero,
+            index: firstSongIndexInQueue
+        ),
         child: Icon(
-          Icons.replay,color:Colors.blue,
+          Icons.replay,color:Colors.white,
           size: iconSize,
         ),
       );
     }
   }
-
 
 
   @override
@@ -189,14 +187,13 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
           children: [
             isFetching ?
                 const Center(
-                  heightFactor: 20,
-                  child: CircularProgressIndicator(color: Colors.white,),
+                    child: SpinKitRipple(color: Colors.white,size: 80,)
                 ):
             ListView(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.accents.elementAt(widget.folderModel.id % Colors.accents.length).withOpacity(0.8)
+                    color: Colors.accents.elementAt(widget.folderModel.id % Colors.accents.length).withOpacity(0.8),
                   ),
                   child: ClipRRect(
                     child: BackdropFilter(
@@ -208,14 +205,14 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
                                 end: FractionalOffset.bottomCenter,
                                 colors: [
                                   Colors.black12.withOpacity(0.0),
-                                  Colors.black.withOpacity(0.80),
-                                  Colors.black.withOpacity(0.98),
+                                  Colors.black.withOpacity(0.2),
+                                  Colors.black.withOpacity(0.5),
                                   Colors.black.withOpacity(1),
                                 ],
                                 stops:const [
                                   0.0,
-                                  0.4,
-                                  0.6,
+                                  0.3,
+                                  0.8,
                                   1.0
                                 ])
                       ),
@@ -227,72 +224,101 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
                                 const SizedBox(height: 20,),
                                 Center(
                                   child: Material(
-                                    elevation: 20,
+                                    elevation: 10,
                                     child: Container(
-                                      height: 180,
-                                      width: 180,
+                                      height: 220,
+                                      width: 220,
                                       color: Colors.accents.elementAt((widget.folderModel.id - 1) % Colors.accents.length).withOpacity(0.8),
-                                      child: const Icon(Icons.multitrack_audio_rounded,color: Colors.white,size: 60,),
+                                      child: QueryArtworkWidget(
+                                        artworkFit: BoxFit.fill,
+                                        size: 1000,
+                                        artworkHeight: 220,
+                                        artworkWidth: 220,
+                                        artworkBorder: BorderRadius.circular(0),
+                                        id: widget.folderModel.id,
+                                        type: ArtworkType.ALBUM,
+                                        nullArtworkWidget: const Icon(Icons.multitrack_audio_rounded,color: Colors.white,size: 60,)
+                                      ) ,
                                     ),
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                                  child: Row(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              widget.folderModel.album ?? "",
-                                              style: const TextStyle(color: Colors.white,fontSize:25,fontWeight: FontWeight.w800),
-                                              textAlign: TextAlign.start,
-                                              overflow:TextOverflow.ellipsis,
-                                              maxLines: 3,
-                                            ),
-                                            const SizedBox(height: 10,),
-                                            Text(
-                                              widget.folderModel.artist ?? "",
-                                              style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
-                                              textAlign: TextAlign.start,
-                                              overflow:TextOverflow.ellipsis,
-                                              maxLines: 3,
-                                            ),
-                                            const SizedBox(height: 10,),
-                                            Text(
-                                              widget.folderModel.numOfSongs.toString(),
-                                              style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
-                                              textAlign: TextAlign.center,
-                                              overflow:TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
+                                      const SizedBox(height: 20,),
+                                      Text(
+                                        widget.folderModel.album.trim() ?? "",
+                                        style: const TextStyle(color: Colors.white,fontSize:25,fontWeight: FontWeight.w800),
+                                        textAlign: TextAlign.start,
+                                        overflow:TextOverflow.ellipsis,
+                                        maxLines: 2,
                                       ),
-                                      StreamBuilder(
-                                        stream: mainAudioPlayer.playerStateStream,
-                                        builder: (_,AsyncSnapshot<PlayerState> snapshot){
-                                          if(snapshot.hasData){
-                                            return playPauseButton(mainAudioPlayer, snapshot.data!, 60);
-                                          }else{
-                                            return const SizedBox(height: 0,width: 0,);
-                                          }
-                                        },
-                                      )
+                                      const SizedBox(height: 15,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  widget.folderModel.artist ?? "",
+                                                  style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
+                                                  textAlign: TextAlign.start,
+                                                  overflow:TextOverflow.ellipsis,
+                                                  maxLines: 3,
+                                                ),
+                                                const SizedBox(height: 15,),
+                                                Text(
+                                                  widget.folderModel.numOfSongs.toString(),
+                                                  style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
+                                                  textAlign: TextAlign.center,
+                                                  overflow:TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Material(
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.circular(999),
+                                            child: InkWell(
+                                              onTap: (){},
+                                              borderRadius: BorderRadius.circular(999),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(10.0),
+                                                child: StreamBuilder(
+                                                  stream: mainAudioPlayer.playerStateStream,
+                                                  builder: (_,AsyncSnapshot<PlayerState> snapshot){
+                                                    if(snapshot.hasData){
+                                                      return playPauseButton(mainAudioPlayer, snapshot.data!, 45);
+                                                    }else{
+                                                      return const SizedBox(height: 0,width: 0,);
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8,),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
-                            allSongs(),
-                            const SizedBox(height: 70,)
                           ],
                         ),
                     ),
                   ),
-                ),),
-                // HelperFunctions.label("All songs", horizontalPadding: 20.0, verticalPadding: 18.0),
+                ),
+                ),
+                //All rendered songs
+                allSongs(),
+                const SizedBox(height: 70,)
               ],
             ),
             HelperFunctions.collapsedPlayer()

@@ -569,6 +569,15 @@ class HelperFunctions{
     }
     return false;
   }
+  ///get local media art work image by [songId].
+  static Future<dynamic> getLocalAlbumArtworkImage(int albumId)async{
+    final audioQuery = OnAudioQuery();
+    Uint8List? bytes =  await  audioQuery.queryArtwork(albumId, ArtworkType.ALBUM,quality: 400,format: ArtworkFormat.JPEG,size: 1000);
+    if(bytes != null){
+      return Image.memory(bytes,filterQuality: FilterQuality.high,).image;
+    }
+    return null;
+  }
   ///plays local media song by taking [LocalSongData] as input.
   static Future<void> playLocalSong(LocalSongData song,AudioPlayer player)async{
     try{
@@ -628,5 +637,4 @@ class HelperFunctions{
       }
     }
   }
-
 }

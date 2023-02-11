@@ -170,11 +170,10 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            if(!isLoaded)
+           !isLoaded ?
               const Center(
                   child: SpinKitRipple(color: Colors.white,size: 80,)
-              ),
-            if(isLoaded)
+              ):
             ListView(
               children: [
                 Container(

@@ -19,9 +19,12 @@ class _OfflineSongTileState extends State<OfflineSongTile> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: QueryArtworkWidget(
+        artworkHeight: 55,
+        artworkWidth: 55,
         id: widget.song.id,
         type: ArtworkType.AUDIO,
         nullArtworkWidget: CircleAvatar(
+          radius: 25,
           backgroundColor:Colors.accents.elementAt(widget.song.id % Colors.accents.length).withOpacity(0.8),
           child: const Icon(Icons.music_note,color: Colors.white,),
         ),

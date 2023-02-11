@@ -343,7 +343,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                   builder: (_,controller) {
                     return Container(
                       decoration: BoxDecoration(
-                        color: HexColor("111111"),
+                        color: HexColor("222222"),
                         image: isLocalWithArtwork || !isLocal ?
                         DecorationImage(
                             fit: BoxFit.fill,
