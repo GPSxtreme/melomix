@@ -25,6 +25,7 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
   List<SongModel> fetchedSongs = [];
   late bool isAddedToQueue;
   late int firstSongIndexInQueue;
+  DecorationImage? albumArt;
   @override
  initState(){
     // TODO: implement initState
@@ -34,6 +35,15 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
 
   fetchAllSongs()async{
     if(mounted){
+      final img = await HelperFunctions.getLocalAlbumArtworkImage(widget.folderModel.id);
+      if(img != null){
+        albumArt = DecorationImage(
+            image: img,
+            fit: BoxFit.fill
+        );
+      }else{
+        albumArt = null;
+      }
       fetchedSongs = await audioQuery.queryAudiosFrom(
           AudiosFromType.ALBUM_ID,
           widget.folderModel.id,
@@ -194,6 +204,7 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.accents.elementAt(widget.folderModel.id % Colors.accents.length).withOpacity(0.8),
+                    image: albumArt
                   ),
                   child: ClipRRect(
                     child: BackdropFilter(

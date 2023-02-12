@@ -574,9 +574,18 @@ class HelperFunctions{
     final audioQuery = OnAudioQuery();
     Uint8List? bytes =  await  audioQuery.queryArtwork(albumId, ArtworkType.ALBUM,quality: 400,format: ArtworkFormat.JPEG,size: 1000);
     if(bytes != null){
-      return Image.memory(bytes,filterQuality: FilterQuality.high,).image;
+      return Image.memory(bytes,filterQuality: FilterQuality.medium,).image;
     }
     return null;
+  }
+  ///check if the given album has artwork
+  static Future<bool> hasAlbumArtwork(int albumId)async{
+    final audioQuery = OnAudioQuery();
+    Uint8List? bytes =  await  audioQuery.queryArtwork(albumId, ArtworkType.ALBUM,quality: 1,format: ArtworkFormat.JPEG,size: 1);
+    if(bytes != null){
+      return true;
+    }
+    return false;
   }
   ///plays local media song by taking [LocalSongData] as input.
   static Future<void> playLocalSong(LocalSongData song,AudioPlayer player)async{
