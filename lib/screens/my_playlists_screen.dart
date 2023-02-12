@@ -103,7 +103,7 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
                 children: const [
                   SpinKitRipple(color: Colors.white,size: 60,),
                   SizedBox(height: 10,),
-                  Text("Please wait this might take some time 😅.",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,)
+                  Text("Hold tight this might take some time 😅.",style: TextStyle(color: Colors.white70,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,)
                 ],
               ),
             ):

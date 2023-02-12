@@ -578,6 +578,13 @@ class HelperFunctions{
     }
     return null;
   }
+
+  static Future<Uri> getSongArtworkUri(Uint8List artwork) async {
+      final bytes = base64Encode(artwork);
+      const mimeType = 'image/JPEG';
+      final dataUri = 'data:$mimeType;base64,$bytes';
+      return Uri.parse(dataUri);
+  }
   ///check if the given album has artwork
   static Future<bool> hasAlbumArtwork(int albumId)async{
     final audioQuery = OnAudioQuery();
@@ -596,11 +603,18 @@ class HelperFunctions{
         await player.seek(Duration.zero, index: existingSongIndex);
       }
       else{
+        Uri? artUri;
+        if(song.artworkBytes != null){
+          if (kDebugMode) {
+            print("has artwork");
+          }
+         artUri = await getSongArtworkUri(song.artworkBytes!);
+        }
         await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
             id: song.id,
             album: song.albumName,
             title: song.name,
-            // artUri: cant determine :(,
+            artUri: artUri,
             extras: song.getMap
         )));
         if(player.audioSource == null){
