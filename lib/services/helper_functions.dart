@@ -580,10 +580,10 @@ class HelperFunctions{
   }
 
   static Future<Uri> getSongArtworkUri(Uint8List artwork) async {
-      final bytes = base64Encode(artwork);
-      const mimeType = 'image/JPEG';
-      final dataUri = 'data:$mimeType;base64,$bytes';
-      return Uri.parse(dataUri);
+    String base64Image = base64Encode(artwork);
+    String dataUri = 'content://$base64Image';
+    Uri imageUri = Uri.parse(dataUri);
+    return imageUri;
   }
   ///check if the given album has artwork
   static Future<bool> hasAlbumArtwork(int albumId)async{
@@ -605,9 +605,6 @@ class HelperFunctions{
       else{
         Uri? artUri;
         if(song.artworkBytes != null){
-          if (kDebugMode) {
-            print("has artwork");
-          }
          artUri = await getSongArtworkUri(song.artworkBytes!);
         }
         await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
