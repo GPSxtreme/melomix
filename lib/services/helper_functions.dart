@@ -579,7 +579,7 @@ class HelperFunctions{
     }
     return null;
   }
-  ///Get the mp3 artwork uri from Uint8List.
+  ///Get the mp3 artwork uri from UInt8List.
   static Future<Uri> getSongArtworkUri(Uint8List artwork) async {
     String base64Image = base64Encode(artwork);
     String dataUri = 'content://$base64Image';
@@ -593,9 +593,7 @@ class HelperFunctions{
       File file = File('${tempDir.path}/$filename');
       //check if file already exists.
       if(file.existsSync()){
-        //delete file.
-        //this might solve storage problem,but causes slow caching always.
-        file.deleteSync();
+        return file.uri;
       }
       await file.writeAsBytes(data);
       return file.uri;
@@ -626,8 +624,8 @@ class HelperFunctions{
       else{
         Uri? artUri;
         if(song.artworkBytes != null){
-         // artUri = await getSongArtworkUri(song.artworkBytes!);
-          artUri = await saveTempFile(song.artworkBytes!, "temp_artwork.jpeg");
+          //return temporary path for artwork image file.
+          artUri = await saveTempFile(song.artworkBytes!, "${song.name}.jpeg");
         }
         await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
             id: song.id,
@@ -655,13 +653,18 @@ class HelperFunctions{
       List<AudioSource> givenList = [];
       List givenSongsData = [];
       for(LocalSongData song in songs){
+        Uri? artUri;
+        if(song.artworkBytes != null){
+          //return temporary path for artwork image file.
+          artUri = await saveTempFile(song.artworkBytes!, "${song.name}.jpeg");
+        }
         givenList.add(AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
           // Specify a unique ID for each media item:
             id: song.id,
             // Metadata to display in the notification:
             album: song.albumName,
             title: song.name ,
-            // artUri: cant determine :(,
+            artUri: artUri,
             extras: song.getMap
         )));
         givenSongsData.add(song);
