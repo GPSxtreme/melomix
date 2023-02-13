@@ -7,6 +7,7 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
 import '../components/online_song_tile.dart';
@@ -578,12 +579,32 @@ class HelperFunctions{
     }
     return null;
   }
-
+  ///Get the mp3 artwork uri from Uint8List.
   static Future<Uri> getSongArtworkUri(Uint8List artwork) async {
     String base64Image = base64Encode(artwork);
     String dataUri = 'content://$base64Image';
     Uri imageUri = Uri.parse(dataUri);
     return imageUri;
+  }
+  ///Temporarily save artwork image in app dir(cache).
+  static Future<Uri?> saveTempFile(Uint8List data, String filename) async {
+    try{
+      Directory tempDir = await getTemporaryDirectory();
+      File file = File('${tempDir.path}/$filename');
+      //check if file already exists.
+      if(file.existsSync()){
+        //delete file.
+        //this might solve storage problem,but causes slow caching always.
+        file.deleteSync();
+      }
+      await file.writeAsBytes(data);
+      return file.uri;
+    }catch(e){
+      if(kDebugMode){
+        print("saveTempFile method error: $e");
+      }
+      return null;
+    }
   }
   ///check if the given album has artwork
   static Future<bool> hasAlbumArtwork(int albumId)async{
@@ -605,7 +626,8 @@ class HelperFunctions{
       else{
         Uri? artUri;
         if(song.artworkBytes != null){
-         artUri = await getSongArtworkUri(song.artworkBytes!);
+         // artUri = await getSongArtworkUri(song.artworkBytes!);
+          artUri = await saveTempFile(song.artworkBytes!, "temp_artwork.jpeg");
         }
         await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
             id: song.id,

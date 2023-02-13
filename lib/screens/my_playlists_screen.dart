@@ -111,10 +111,14 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
             ListView(
               children: [
                 const SizedBox(height: 10,),
-                label("All Albums on device (${foldersWithArt.length})"),
-                gridViewRenderer(foldersWithArt),
-                label("Other audio files on device (${foldersWithNoArt.length})"),
-                listViewRenderer(foldersWithNoArt),
+                if(foldersWithArt.isNotEmpty) ...[
+                  label("All Albums on device (${foldersWithArt.length})"),
+                  gridViewRenderer(foldersWithArt),
+                ],
+                if(foldersWithNoArt.isNotEmpty) ...[
+                  label("Other audio files on device (${foldersWithNoArt.length})"),
+                  listViewRenderer(foldersWithNoArt),
+                ],
                 const SizedBox(height: 70,)
               ],
             ):
