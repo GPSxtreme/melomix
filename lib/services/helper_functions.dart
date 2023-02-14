@@ -510,21 +510,18 @@ class HelperFunctions{
   ///A standard GridViewRenderer.
   static Widget gridViewRenderer(List list,{required double horizontalPadding ,
     required double verticalPadding , required int crossAxisCount ,
-    required double crossAxisSpacing
+    required double crossAxisSpacing , required double mainAxisSpacing
   }){
     if(list.isNotEmpty){
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 13,vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding,vertical: verticalPadding),
         child: GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: list.length,
           itemBuilder: (context,index){
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: list[index],
-            );
-          }, gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,crossAxisSpacing: 10),
+            return list[index];
+          }, gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: crossAxisCount,crossAxisSpacing: crossAxisSpacing,mainAxisSpacing: mainAxisSpacing),
         ),
       );
     }else{

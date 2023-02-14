@@ -3,6 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
 import 'package:proto_music_player/components/top_result_common_tile.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
+import '../components/home_screen_module.dart';
 import '../components/online_song_tile.dart';
 import '../services/helper_functions.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -123,6 +124,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController searchController = TextEditingController();
     return SafeArea(
       child: Scaffold(
         appBar: null,
@@ -133,113 +135,109 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
               const Center(
                   child: SpinKitRipple(color: Colors.white,size: 80,)
               ),
-            if(!userSearched)
-              const Center(
-                // child: Text("Search for a song to show results.",style: TextStyle(color: Colors.white70,fontSize: 15),),
-              ),
             if(noResults)
               const Center(
                 child: Text("No results found!",style: TextStyle(color: Colors.white,fontSize: 16)),
               ),
+
             ListView(
               children: [
-                Column(
-                  children: [
-                    const SizedBox(height: 10,),
-                    //Search bar
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      child: Material(
-                        elevation: 100,
-                        borderRadius: BorderRadius.circular(100),
-                        color: Colors.transparent,
-                        child: TextField(
-                          textAlign: TextAlign.start,
-                          cursorColor: Colors.white,
-                          style: const TextStyle(color: Colors.white),
-                          cursorHeight: 20,
-                          keyboardType: TextInputType.name,
-                          onSubmitted: (query)async{
-                            if(query.trim().isNotEmpty && query != lastSavedQuery){
-                              setState(() {
-                                userSearched = true;
-                                noResults = false;
-                                lastSavedQuery = query;
-                              });
-                              await getAllDataResults(query);
-                            }
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          },
-                          onChanged:(query)async{
-                            if(query.trim().isEmpty){
-                              setState(() {
-                                lastSavedQuery = "";
-                                userSearched = false;
-                                noResults = false;
-                              });
-                            }
-                            if(query.trim().isNotEmpty && query != lastSavedQuery && !isProcessing){
-                              setState(() {
-                                userSearched = true;
-                                noResults = false;
-                                lastSavedQuery = query;
-                              });
-                              await getAllDataResults(query);
-                            }
-                          },
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(icon: const Icon(Icons.sort,color: Colors.white,), onPressed: () {},),
-                            filled: true,
-                            fillColor: HexColor("111111"),
-                            hintText: 'What do you want to listen to?',
-                            hintStyle: const TextStyle(color: Colors.white24),
-                            prefixIcon: const Icon(Icons.search,color: Colors.white,),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                                borderRadius: BorderRadius.circular(100)
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                                borderRadius: BorderRadius.circular(100)
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                                borderRadius: BorderRadius.circular(100)
-                            ),
-                          ),
+                const SizedBox(height: 10,),
+                //Search bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                  child: Material(
+                    elevation: 100,
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.transparent,
+                    child: TextField(
+                      textAlign: TextAlign.start,
+                      cursorColor: Colors.white,
+                      style: const TextStyle(color: Colors.white),
+                      cursorHeight: 20,
+                      keyboardType: TextInputType.name,
+                      onSubmitted: (query)async{
+                        if(query.trim().isNotEmpty && query != lastSavedQuery){
+                          setState(() {
+                            userSearched = true;
+                            noResults = false;
+                            lastSavedQuery = query;
+                          });
+                          await getAllDataResults(query);
+                        }
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      onChanged:(query)async{
+                        if(query.trim().isEmpty){
+                          setState(() {
+                            lastSavedQuery = "";
+                            userSearched = false;
+                            noResults = false;
+                          });
+                        }
+                        if(query.trim().isNotEmpty && query != lastSavedQuery && !isProcessing){
+                          setState(() {
+                            userSearched = true;
+                            noResults = false;
+                            lastSavedQuery = query;
+                          });
+                          await getAllDataResults(query);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: HexColor("111111"),
+                        hintText: 'What do you want to listen to?',
+                        hintStyle: const TextStyle(color: Colors.white24),
+                        prefixIcon: const Icon(Icons.search,color: Colors.white,),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                            borderRadius: BorderRadius.circular(100)
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                            borderRadius: BorderRadius.circular(100)
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                            borderRadius: BorderRadius.circular(100)
                         ),
                       ),
                     ),
-                    if(userSearched) ...[
-                      if(topResult != null) ...[
-                        label("Top result"),
-                        topResult
-                      ],
-                      if(topSongsResultsList.isNotEmpty) ...[
-                        label("Top songs"),
-                        HelperFunctions.listViewRenderer(topSongsResultsList,verticalGap: 5),
-                      ],
-                      if(albumsResultsList.isNotEmpty) ...[
-                        label("Albums"),
-                        HelperFunctions.gridViewRenderer(albumsResultsList, horizontalPadding: 13, verticalPadding: 5, crossAxisCount: 3, crossAxisSpacing: 10),
-                      ],
-                      if(artistsResultsList.isNotEmpty) ...[
-                        label("Artists"),
-                        HelperFunctions.gridViewRenderer(artistsResultsList, horizontalPadding: 13, verticalPadding: 5, crossAxisCount: 3, crossAxisSpacing: 10),
-                      ],
-                      if(playlistsResultsList.isNotEmpty) ...[
-                        label("Playlists"),
-                        HelperFunctions.gridViewRenderer(playlistsResultsList, horizontalPadding: 13, verticalPadding: 5, crossAxisCount: 3, crossAxisSpacing: 10),
-                      ],
-                      if(allSongResultsList.isNotEmpty) ...[
-                        label("All song results"),
-                        HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
-                      ],
-                      if(mainAudioPlayer.playing)
-                        const SizedBox(height: 60,),
-                    ],
-                  ],
+                  ),
                 ),
+                if(!userSearched) ...[
+                  //show home-screen module.
+                  const HomeScreenModule(languages: ["english"],)
+                ],
+                if(userSearched) ...[
+                  if(topResult != null) ...[
+                    label("Top result"),
+                    topResult
+                  ],
+                  if(topSongsResultsList.isNotEmpty) ...[
+                    label("Top songs"),
+                    HelperFunctions.listViewRenderer(topSongsResultsList,verticalGap: 5),
+                  ],
+                  if(albumsResultsList.isNotEmpty) ...[
+                    label("Albums"),
+                    HelperFunctions.gridViewRenderer(albumsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+                  ],
+                  if(artistsResultsList.isNotEmpty) ...[
+                    label("Artists"),
+                    HelperFunctions.gridViewRenderer(artistsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+                  ],
+                  if(playlistsResultsList.isNotEmpty) ...[
+                    label("Playlists"),
+                    HelperFunctions.gridViewRenderer(playlistsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+                  ],
+                  if(allSongResultsList.isNotEmpty) ...[
+                    label("All song results"),
+                    HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
+                  ],
+                  if(mainAudioPlayer.playing)
+                    const SizedBox(height: 60,),
+                ],
               ],
             ),
             HelperFunctions.collapsedPlayer()

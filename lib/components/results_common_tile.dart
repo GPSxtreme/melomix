@@ -35,11 +35,20 @@ class _CommonResultTileState extends State<CommonResultTile> {
         ),
       );
     }else{
-      return GestureDetector(
-        onTap: (){
-          pushViewScreen();
-        },
-        child: Image.network(widget.data["image"][2]["link"],height: 150,width: 150,),
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(widget.data["image"][2]["link"])
+          )
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: (){
+              pushViewScreen();
+            },
+          ),
+        ),
       );
     }
   }
