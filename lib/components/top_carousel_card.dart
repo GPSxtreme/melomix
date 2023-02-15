@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../screens/common_view_screen.dart';
 
@@ -12,6 +13,7 @@ class TopCarouselCard extends StatefulWidget {
 }
 
 class _TopCarouselCardState extends State<TopCarouselCard> {
+  HtmlUnescape htmlDecode = HtmlUnescape();
   double borderRadius = 8.0;
   pushViewScreen(){
     if(widget.data["type"] != "artist"){
@@ -28,7 +30,7 @@ class _TopCarouselCardState extends State<TopCarouselCard> {
     if(widget.data["artists"].isNotEmpty){
       for (int i = 0; i < widget.data["artists"].length; i++) {
         if (i != widget.data["artists"].length - 1) {
-          artists += "${widget.data["artists"][i]["name"].trim()},";
+          artists += "${htmlDecode.convert(widget.data["artists"][i]["name"].trim())},";
         } else {
           artists += "${widget.data["artists"][i]["name"]}";
         }
@@ -73,9 +75,9 @@ class _TopCarouselCardState extends State<TopCarouselCard> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.data["name"] ?? "",style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 22),maxLines: 2,textAlign: TextAlign.start,),
+                            Text(htmlDecode.convert(widget.data["name"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 22),maxLines: 2,textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,),
                             const SizedBox(height: 4,),
-                            Text(artists(),style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 14),textAlign: TextAlign.start,),
+                            Text(artists(),style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 14),textAlign: TextAlign.start,maxLines: 2,overflow: TextOverflow.ellipsis,),
                           ],
                         ),
                       ),

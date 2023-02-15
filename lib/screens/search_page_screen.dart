@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
 import 'package:proto_music_player/components/top_result_common_tile.dart';
@@ -39,7 +38,6 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
       allSongResultsList.clear();
     });
   }
-
   getAllSongResults(String query)async{
     allSongResultsData = await HelperFunctions.getSongByName(query.trim(), 10);
     if(allSongResultsData["status"] == "SUCCESS" && allSongResultsData["data"]["results"].isNotEmpty){
@@ -205,7 +203,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                 ),
                 if(!userSearched) ...[
                   //show home-screen module.
-                  const HomeScreenModule(languages: ["english"],)
+                  const HomeScreenModule(languages: ["english" , "hindi" , "telugu"],)
                 ],
                 if(userSearched) ...[
                   if(topResult != null) ...[

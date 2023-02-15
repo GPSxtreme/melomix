@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:proto_music_player/components/online_song_tile.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
