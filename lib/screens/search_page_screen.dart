@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
 import 'package:proto_music_player/components/top_result_common_tile.dart';
@@ -106,8 +107,6 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
       isProcessing = false;
     });
   }
-
-
   Widget label(String name) =>  Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 18),
     child: Column(
@@ -121,10 +120,8 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
       ],
     ),
   );
-
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
     return SafeArea(
       child: Scaffold(
         appBar: null,

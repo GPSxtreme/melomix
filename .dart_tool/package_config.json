@@ -68,6 +68,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "carousel_slider",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/carousel_slider-4.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "characters",
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.2.1",
       "packageUri": "lib/",
@@ -560,7 +566,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-02-10T20:03:25.258297Z",
+  "generated": "2023-02-15T13:37:37.014327Z",
   "generator": "pub",
   "generatorVersion": "2.19.2"
 }

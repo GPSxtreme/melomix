@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:proto_music_player/main.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import 'package:html_unescape/html_unescape.dart';

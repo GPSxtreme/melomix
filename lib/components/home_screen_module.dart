@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:proto_music_player/components/online_song_tile.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
+import 'package:proto_music_player/components/top_album_tile.dart';
+import 'package:proto_music_player/components/top_carousel_card.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeScreenModule extends StatefulWidget {
   const HomeScreenModule({Key? key, required this.languages}) : super(key: key);
@@ -18,10 +22,15 @@ class HomeScreenModule extends StatefulWidget {
 class _HomeScreenModuleState extends State<HomeScreenModule> {
   bool isLoaded = false;
   List<OnlineSongResultTile> trendingSongs = [];
-  List<CommonResultTile> trendingAlbums = [];
+  List<TopAlbumTile> trendingAlbums = [];
+  List<TopCarouselCard> displayCards = [];
   List<CommonResultTile> charts = [];
   List<CommonResultTile> playlists = [];
   List<CommonResultTile> albums = [];
+  //The total carousel effect cards.
+  int totalCardsCount = 5;
+  //shows the index of current showing card.
+  int currentCardIndex = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -50,8 +59,14 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
             trendingSongs.add(OnlineSongResultTile(player: mainAudioPlayer, song: song["data"][0]));
           }
           if(data["data"]["trending"]["albums"].isNotEmpty){
+            int count = totalCardsCount;
             for(Map album in data["data"]["trending"]["albums"]){
-              trendingAlbums.add(CommonResultTile(data: album));
+              count--;
+              if(count >= 0){
+                displayCards.add(TopCarouselCard(data: album));
+              }else{
+                trendingAlbums.add(TopAlbumTile(data: album));
+              }
             }
           }
         }
@@ -77,7 +92,7 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
     }
   }
   Widget label(String name) =>  Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 18),
+    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
     child: Column(
       children: [
         Row(
@@ -94,6 +109,29 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
     if(isLoaded){
       return Column(
         children: [
+          if(trendingAlbums.isNotEmpty) ...[
+            Container(
+              margin: const EdgeInsets.only(left: 15,right: 15,top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 10),
+              child: CarouselSlider(
+                  items: displayCards,
+                  options: CarouselOptions(
+                    height: MediaQuery.of(context).size.height*0.27,
+                    viewportFraction: 1,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 3),
+                    autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    pauseAutoPlayOnTouch: true,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        currentCardIndex = index;
+                      });
+                    },
+                  ),
+              ),
+            )
+          ],
           if(trendingSongs.isNotEmpty) ...[
             label("Top songs"),
             HelperFunctions.listViewRenderer(trendingSongs,verticalGap: 5),
