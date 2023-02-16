@@ -38,20 +38,21 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
     }else{
       data = await HelperFunctions.getPlaylistById(widget.id);
     }
-    //if in queue returns index != -1
-    firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data["data"]["songs"][0]["id"]);
-    //put data into list
     if(data["status"] == "SUCCESS" && data["data"]["songs"].length != 0){
+      //if in queue returns index != -1
+      firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data["data"]["songs"][0]["id"]);
+      //put data into list
       int i = 0;
       for(Map song in data["data"]["songs"]){
         isAddedToQueue = HelperFunctions.checkIfAddedInQueue(data["data"]["songs"][i]["id"]);
         allSongResultsList.add(OnlineSongResultTile(player: mainAudioPlayer,song: song,));
         i++;
       }
+      setState(() {
+        isLoaded = true;
+      });
     }
-    setState(() {
-      isLoaded = true;
-    });
+
   }
 
   Future<void> addSongsToQueue()async{

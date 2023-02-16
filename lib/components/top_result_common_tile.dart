@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:proto_music_player/screens/artist_view_screen.dart';
 import 'package:proto_music_player/screens/common_view_screen.dart';
 
 
@@ -28,7 +29,12 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
         }else{
-
+          PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: ArtistViewScreen(artistId: widget.data['id'],),
+            withNavBar: true, // OPTIONAL VALUE. True by default.
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
         }
       },
       child: Padding(

@@ -109,6 +109,77 @@ class HelperFunctions{
       };
     }
   }
+  ///Returns artist details.
+  static Future<Map> getArtistDetails(String id)async{
+    try{
+      String apiEndPoint = "${apiDomain}artists?id=$id";
+      Uri url = Uri.parse(apiEndPoint);
+      Response response = await get(url);
+      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      return data;
+    }catch(e){
+      if (kDebugMode) {
+        print("getArtistDetails method error: $e");
+      }
+      return {
+        "error":"unable to fetch data"
+      };
+    }
+  }
+
+  ///Returns artist's albums.
+  static Future<Map> getArtistAlbums(String id,String pageNo)async{
+    try{
+      String apiEndPoint = "${apiDomain}artists/$id/albums?page=$pageNo";
+      Uri url = Uri.parse(apiEndPoint);
+      Response response = await get(url);
+      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      return data;
+    }catch(e){
+      if (kDebugMode) {
+        print("getArtistAlbums method error: $e");
+      }
+      return {
+        "error":"unable to fetch data"
+      };
+    }
+  }
+
+  ///Returns artist's songs.
+  static Future<Map> getArtistSongs(String id,String pageNo)async{
+    try{
+      String apiEndPoint = "${apiDomain}artists/$id/songs?page=$pageNo";
+      Uri url = Uri.parse(apiEndPoint);
+      Response response = await get(url);
+      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      return data;
+    }catch(e){
+      if (kDebugMode) {
+        print("getArtistSongs method error: $e");
+      }
+      return {
+        "error":"unable to fetch data"
+      };
+    }
+  }
+
+  ///Returns artist's recommendations.
+  static Future<Map> getArtistRecommendations(String id,String songId)async{
+    try{
+      String apiEndPoint = "${apiDomain}artists/$id/recommendations/$songId";
+      Uri url = Uri.parse(apiEndPoint);
+      Response response = await get(url);
+      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      return data;
+    }catch(e){
+      if (kDebugMode) {
+        print("getArtistRecommendations method error: $e");
+      }
+      return {
+        "error":"unable to fetch data"
+      };
+    }
+  }
 
   static Future<void> playHttpSong(Map song,AudioPlayer player)async{
     try{

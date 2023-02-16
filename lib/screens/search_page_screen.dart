@@ -230,11 +230,10 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                     label("All song results"),
                     HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
                   ],
-                  if(mainAudioPlayer.playing)
-                    const SizedBox(height: 60,),
                 ],
               ],
             ),
+            const SizedBox(height: 70,),
             HelperFunctions.collapsedPlayer()
           ] ,
         ),

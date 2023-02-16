@@ -97,7 +97,7 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children:  [
-            Text(name,style: GoogleFonts.poppins(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.white),textAlign: TextAlign.start,),
+            Text(name,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.white),textAlign: TextAlign.start,),
           ],
         ),
       ],

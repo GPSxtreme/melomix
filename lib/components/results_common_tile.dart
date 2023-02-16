@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:proto_music_player/screens/artist_view_screen.dart';
 
 import '../screens/common_view_screen.dart';
 
@@ -16,6 +17,13 @@ class _CommonResultTileState extends State<CommonResultTile> {
       PersistentNavBarNavigator.pushNewScreen(
         context,
         screen: CommonViewScreen(id: widget.data["id"], type: widget.data["type"],),
+        withNavBar: true, // OPTIONAL VALUE. True by default.
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
+    }else{
+      PersistentNavBarNavigator.pushNewScreen(
+        context,
+        screen: ArtistViewScreen(artistId: widget.data["id"]),
         withNavBar: true, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
