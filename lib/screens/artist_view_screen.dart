@@ -128,14 +128,12 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     htmlDecode.convert(artistDetails["data"]["name"]).trim(),
                                     maxLines: 2,
                                     style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w800),
-                                    textAlign: TextAlign.center,
                                     overflow:TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 15,),
@@ -143,18 +141,17 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
                                     "${artistDetails["data"]["dominantType"].trim()} . ${artistDetails["data"]["dominantLanguage"].trim()}",
                                     maxLines: 2,
                                     style: const TextStyle(color: Colors.white70,fontSize: 18 ,fontWeight: FontWeight.w700),
-                                    textAlign: TextAlign.center,
                                     overflow:TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 15,),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       const Icon(Icons.people_alt_rounded,color: Colors.white70,size: 25,),
                                       Text(
-                                        " ${formatter.format(int.parse(artistDetails["data"]["fanCount"]))}",
+                                        " ${formatter.format(int.parse(artistDetails["data"]["fanCount"]))} Listeners",
                                         maxLines: 2,
                                         style: const TextStyle(color: Colors.white70,fontSize: 18 ,fontWeight: FontWeight.w700),
-                                        textAlign: TextAlign.center,
                                         overflow:TextOverflow.ellipsis,
                                       ),
                                     ],
