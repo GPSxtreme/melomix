@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:proto_music_player/components/online_song_tile.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
@@ -110,7 +109,7 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
         children: [
           if(trendingAlbums.isNotEmpty) ...[
             Container(
-              margin: const EdgeInsets.only(left: 15,right: 15,top: 5),
+              margin: const EdgeInsets.only(left: 15,right: 15,top: 0),
               padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 10),
               child: CarouselSlider(
                   items: displayCards,

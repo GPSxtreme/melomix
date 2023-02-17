@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:audiotagger/models/tag.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart';
@@ -10,7 +11,6 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
-import '../components/online_song_tile.dart';
 import '../models/local_song_data.dart';
 import '../screens/full_player_screen.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
@@ -561,7 +561,7 @@ class HelperFunctions{
     );
   }
   ///A standard ListViewRenderer.
-  static Widget listViewRenderer(List<OnlineSongResultTile> list,{required double verticalGap}){
+  static Widget listViewRenderer(List list,{required double verticalGap}){
     if(list.isNotEmpty){
       return ListView.builder(
         shrinkWrap: true,
@@ -749,5 +749,13 @@ class HelperFunctions{
         print("playGivenListOfLocalSongs method error : $e");
       }
     }
+  }
+  static Widget makerSign(){
+    return Column(
+      children: [
+        Text("By\nGPSxtreme",style: GoogleFonts.mansalva(color: Colors.white54),textAlign: TextAlign.center,),
+        const SizedBox(height: 10,)
+      ],
+    );
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:proto_music_player/components/results_common_tile.dart';
 import 'package:proto_music_player/components/top_result_common_tile.dart';
+import 'package:proto_music_player/components/trending_song_tile.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
-import '../components/home_screen_module.dart';
 import '../components/online_song_tile.dart';
 import '../services/helper_functions.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -16,6 +16,7 @@ class SearchPageScreen extends StatefulWidget {
 }
 
 class _SearchPageScreenState extends State<SearchPageScreen> {
+  final searchController = TextEditingController();
   Map allSongResultsData = {};
   List<OnlineSongResultTile> allSongResultsList = [];
   Map allDataResultsData = {};
@@ -23,6 +24,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   List<CommonResultTile> playlistsResultsList = [];
   List<CommonResultTile> albumsResultsList = [];
   List<CommonResultTile> artistsResultsList = [];
+  List<TrendingSongTile> trendingSongs = [];
   bool userSearched = false;
   bool noResults = false;
   dynamic topResult;
@@ -105,8 +107,35 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
       isProcessing = false;
     });
   }
-  Widget label(String name) =>  Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 18),
+  getTrendingSongs()async{
+    setState(() {
+      isProcessing = true;
+    });
+    Map data = await HelperFunctions.getPlaylistById("110858205");
+    if(data.isNotEmpty && data["data"]["songs"].isNotEmpty){
+      for(Map song in data["data"]["songs"]){
+        trendingSongs.add(TrendingSongTile(songData: song));
+      }
+    }
+    setState(() {
+      isProcessing = false;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getTrendingSongs();
+    searchController.addListener(searchLogic);
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    searchController.dispose();
+    super.dispose();
+  }
+  Widget label(String name , {double? verticalPadding}) =>  Padding(
+    padding: EdgeInsets.symmetric(horizontal: 20,vertical: verticalPadding ?? 18),
     child: Column(
       children: [
         Row(
@@ -118,6 +147,23 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
       ],
     ),
   );
+  void searchLogic()async{
+    if(searchController.text.trim().isEmpty){
+      setState(() {
+        lastSavedQuery = "";
+        userSearched = false;
+        noResults = false;
+      });
+    }
+    if(searchController.text.trim().isNotEmpty && searchController.text != lastSavedQuery && !isProcessing){
+      setState(() {
+        userSearched = true;
+        noResults = false;
+        lastSavedQuery = searchController.text;
+      });
+      await getAllDataResults(searchController.text);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -146,38 +192,14 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.transparent,
                     child: TextField(
+                      controller: searchController,
                       textAlign: TextAlign.start,
                       cursorColor: Colors.white,
                       style: const TextStyle(color: Colors.white),
                       cursorHeight: 20,
                       keyboardType: TextInputType.name,
-                      onSubmitted: (query)async{
-                        if(query.trim().isNotEmpty && query != lastSavedQuery){
-                          setState(() {
-                            userSearched = true;
-                            noResults = false;
-                            lastSavedQuery = query;
-                          });
-                          await getAllDataResults(query);
-                        }
+                      onSubmitted: (query){
                         FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                      onChanged:(query)async{
-                        if(query.trim().isEmpty){
-                          setState(() {
-                            lastSavedQuery = "";
-                            userSearched = false;
-                            noResults = false;
-                          });
-                        }
-                        if(query.trim().isNotEmpty && query != lastSavedQuery && !isProcessing){
-                          setState(() {
-                            userSearched = true;
-                            noResults = false;
-                            lastSavedQuery = query;
-                          });
-                          await getAllDataResults(query);
-                        }
                       },
                       decoration: InputDecoration(
                         filled: true,
@@ -197,13 +219,24 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                             borderSide: BorderSide(color: HexColor("111111"), width: 3),
                             borderRadius: BorderRadius.circular(100)
                         ),
+                        suffixIcon:searchController.text.isNotEmpty ?  Material(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(99),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(99),
+                            onTap: () {
+                              searchController.clear();
+                            },
+                            child:const Icon(Icons.close_rounded,size: 20,color: Colors.white,),
+                          ),
+                        ) : null
                       ),
                     ),
                   ),
                 ),
-                if(!userSearched) ...[
-                  //show home-screen module.
-                  const HomeScreenModule(languages: ["english" , "hindi" , "telugu"],)
+                if(!userSearched && !isProcessing && trendingSongs.isNotEmpty) ...[
+                  HelperFunctions.listViewRenderer(trendingSongs,verticalGap: 5),
+                  const SizedBox(height: 70,),
                 ],
                 if(userSearched) ...[
                   if(topResult != null) ...[
@@ -230,10 +263,10 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
                     label("All song results"),
                     HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
                   ],
+                  const SizedBox(height: 70,),
                 ],
               ],
             ),
-            const SizedBox(height: 70,),
             HelperFunctions.collapsedPlayer()
           ] ,
         ),

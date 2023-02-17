@@ -24,14 +24,14 @@ class _AppRouterState extends State<AppRouter> {
   HtmlUnescape htmlDecode = HtmlUnescape();
   String currentScreen = "Home";
   final List<String> screenKeys = [HomeScreen.id, MyPlaylistsScreen.id, SearchPageScreen.id,SettingsScreen.id,DownloadsScreen.id];
-  final PersistentTabController controller = PersistentTabController(initialIndex: 2);
+  final PersistentTabController controller = PersistentTabController(initialIndex: 0);
   List<Widget> buildScreens() {
     return [
       const HomeScreen(),
       const MyPlaylistsScreen(),
       const SearchPageScreen(),
       const SettingsScreen(),
-      const DownloadsScreen()
+      // const DownloadsScreen()
     ];
   }
 
@@ -61,12 +61,12 @@ class _AppRouterState extends State<AppRouter> {
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.white,
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.download_rounded),
-        title: ("Downloads"),
-        activeColorPrimary: Colors.blue,
-        inactiveColorPrimary: Colors.white,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: const Icon(Icons.download_rounded),
+      //   title: ("Downloads"),
+      //   activeColorPrimary: Colors.blue,
+      //   inactiveColorPrimary: Colors.white,
+      // ),
     ];
   }
 
