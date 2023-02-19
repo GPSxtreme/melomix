@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../screens/common_view_screen.dart';
@@ -42,6 +43,7 @@ class _TopCarouselCardState extends State<TopCarouselCard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        color: HexColor("222222"),
           borderRadius: BorderRadius.circular(borderRadius),
           image: DecorationImage(
               image: NetworkImage(widget.data["image"][2]["link"]),

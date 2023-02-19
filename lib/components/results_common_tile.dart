@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:proto_music_player/screens/artist_view_screen.dart';
 
@@ -45,6 +46,7 @@ class _CommonResultTileState extends State<CommonResultTile> {
     }else{
       return Container(
         decoration: BoxDecoration(
+          color: HexColor("222222"),
           image: DecorationImage(
             image: NetworkImage(widget.data["image"][2]["link"])
           )

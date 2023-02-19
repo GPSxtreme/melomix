@@ -1,42 +1,33 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDataService{
-  static void setPPSName(String imgUrl)async{
+  //setters
+  static Future<void> setSongQualityWifi(String quality)async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('PPSName', imgUrl);
+    await prefs.setString('songQualityWifi', quality);
   }
-  static Future<String?> getUserDpUrl()async{
+  static Future<void> setSongQualityMd(String quality)async{
     final prefs = await SharedPreferences.getInstance();
-    String? url = prefs.getString('userDpUrl');
-    return url;
+    await prefs.setString('songQualityMd', quality);
   }
-  static void setUserName(String userName)async{
+  static Future<void> setUserName(String userName)async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName',  userName);
   }
-  static void setUserDp(String userDpUrl)async{
+  //getters
+  static Future<String?> getSongQualityWifi()async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userDpUrl',  userDpUrl);
+    String? quality = prefs.getString('songQualityWifi');
+    return quality;
+  }
+  static Future<String?> getSongQualityMd()async{
+    final prefs = await SharedPreferences.getInstance();
+    String? quality = prefs.getString('songQualityMd');
+    return quality;
   }
   static Future<String?> getUserName()async{
     final prefs = await SharedPreferences.getInstance();
     String? userName = prefs.getString('userName');
     return userName;
   }
-  static Future<String?> getUserDp()async{
-    final prefs = await SharedPreferences.getInstance();
-    String? userDpUrl = prefs.getString('userDpUrl');
-    return userDpUrl;
-  }
-  //themes storage
-  static Future setUserTheme(String themeHexCode)async{
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('themeHexCode', themeHexCode);
-  }
-  static Future<String?> getUserTheme()async{
-    final prefs = await SharedPreferences.getInstance();
-    String? userTheme = prefs.getString('themeHexCode');
-    return userTheme;
-  }
-
 }

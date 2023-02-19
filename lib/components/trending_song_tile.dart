@@ -47,7 +47,7 @@ class _TrendingSongTileState extends State<TrendingSongTile> {
       ),
       leading: CircleAvatar(
         radius: 30,
-        backgroundColor: Colors.indigo,
+        backgroundColor: HexColor("222222"),
         backgroundImage: NetworkImage(widget.songData["image"][1]["link"]),
         child: StreamBuilder(
           stream: mainAudioPlayer.currentIndexStream,

@@ -1,3 +1,4 @@
+// ignore_for_file: unused_field, constant_identifier_names
 import 'dart:convert';
 import 'package:audiotagger/models/tag.dart';
 import 'package:flutter/foundation.dart';
@@ -19,11 +20,15 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:flowder/flowder.dart';
 import 'package:audiotagger/audiotagger.dart';
 
+import 'app_settings.dart';
+
+
 
 class HelperFunctions{
   //app dir name
   static String appDir = "storage/emulated/0/proto player";
   static String apiDomain = "https://saavn-api-weld.vercel.app/";
+
 
   static Future<Map> getSongByName(String query,int limit)async{
     try{
@@ -180,7 +185,26 @@ class HelperFunctions{
       };
     }
   }
-
+  static String returnDownloadUrl(List list){
+    for(Map qualityMap in list){
+      //if device is connected to wifi return wifi quality.
+      if(AppRouter.isOverWifi && qualityMap["quality"] == AppSettings.qualityWifi){
+        if(kDebugMode){
+          print("over wifi : ${AppSettings.qualityWifi}");
+        }
+        return qualityMap["link"];
+      }
+      //if device is connected to mobile data return md quality.
+      else if(!AppRouter.isOverWifi && qualityMap["quality"] == AppSettings.qualityMd){
+        if(kDebugMode){
+          print("over mobile data : ${AppSettings.qualityMd}");
+        }
+        return qualityMap["link"];
+      }
+    }
+    //user quality not found so return highest quality available.
+    return list[list.length - 1]["link"];
+  }
   static Future<void> playHttpSong(Map song,AudioPlayer player)async{
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
@@ -189,7 +213,7 @@ class HelperFunctions{
         int existingSongIndex = await getQueueIndexBySongId(song["id"]);
         await player.seek(Duration.zero, index: existingSongIndex);
       }else{
-        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song["downloadUrl"][2]["link"]),tag: MediaItem(
+        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(returnDownloadUrl(song["downloadUrl"])),tag: MediaItem(
           // Specify a unique ID for each media item:
           id: '${song["id"]}',
           // Metadata to display in the notification:
@@ -214,7 +238,7 @@ class HelperFunctions{
   static Future<void> addSongToQueue(Map song,AudioPlayer player)async{
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
-      await AppRouter.queue.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"]),tag: MediaItem(
+      await AppRouter.queue.add(AudioSource.uri(Uri.parse(returnDownloadUrl(song["downloadUrl"])),tag: MediaItem(
         // Specify a unique ID for each media item:
           id: '${song["id"]}',
           // Metadata to display in the notification:

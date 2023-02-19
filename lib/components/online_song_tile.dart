@@ -63,7 +63,7 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
       ),
       leading: CircleAvatar(
         radius: 30,
-        backgroundColor: Colors.indigo,
+        backgroundColor: HexColor("222222"),
         backgroundImage: NetworkImage(widget.song["image"][1]["link"]),
         child: StreamBuilder(
           stream: mainAudioPlayer.currentIndexStream,

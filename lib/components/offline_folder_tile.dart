@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:proto_music_player/screens/offline_folder_view.dart';
@@ -47,6 +48,7 @@ class _OfflineFolderTileState extends State<OfflineFolderTile> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        color: HexColor("222222"),
         borderRadius: BorderRadius.circular(8),
         image: albumArt
       ),

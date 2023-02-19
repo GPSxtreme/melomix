@@ -61,6 +61,7 @@ dependencies:
       url: https://github.com/GPSxtreme/Audiotagger
   carousel_slider: ^4.2.1
   intl: ^0.18.0
+  connectivity_plus: ^3.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

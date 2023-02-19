@@ -91,21 +91,13 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
   }
   Widget label(String name) =>  Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children:  [
-            Text(name,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.white),textAlign: TextAlign.start,),
-          ],
-        ),
-      ],
-    ),
+    child: Text(name,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.white),textAlign: TextAlign.start,),
   );
   @override
   Widget build(BuildContext context) {
     if(isLoaded){
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if(trendingAlbums.isNotEmpty) ...[
             Container(

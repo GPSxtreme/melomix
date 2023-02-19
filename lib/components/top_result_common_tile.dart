@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:proto_music_player/screens/artist_view_screen.dart';
@@ -44,7 +45,7 @@ class _TopCommonResultTileState extends State<TopCommonResultTile> {
           width: device.size.width,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
+              color: HexColor("222222"),
             image: DecorationImage(
               image: NetworkImage(widget.data["image"][0]["link"]),
               fit: BoxFit.cover,

@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:just_audio/just_audio.dart';
@@ -9,11 +11,14 @@ import 'package:proto_music_player/screens/settings_screen.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 //audio player global variable
 late AudioPlayer mainAudioPlayer;
 
 class AppRouter extends StatefulWidget {
   static String id = "app_router";
+  static bool isOnline = false;
+  static late bool isOverWifi;
   static ConcatenatingAudioSource queue = ConcatenatingAudioSource(children: [],useLazyPreparation: true);
   const AppRouter({Key? key}) : super(key: key);
   @override
@@ -22,6 +27,7 @@ class AppRouter extends StatefulWidget {
 
 class _AppRouterState extends State<AppRouter> {
   HtmlUnescape htmlDecode = HtmlUnescape();
+  late StreamSubscription<ConnectivityResult> connectionState;
   String currentScreen = "Home";
   final List<String> screenKeys = [HomeScreen.id, MyPlaylistsScreen.id, SearchPageScreen.id,SettingsScreen.id,DownloadsScreen.id];
   final PersistentTabController controller = PersistentTabController(initialIndex: 0);
@@ -77,16 +83,34 @@ class _AppRouterState extends State<AppRouter> {
     await Permission.accessMediaLocation.request();
     await Permission.mediaLibrary.request();
   }
+  updateConnectionStatus(ConnectivityResult result){
+    if(result == ConnectivityResult.wifi){
+      AppRouter.isOnline = true;
+      AppRouter.isOverWifi = true;
+    }else if(result == ConnectivityResult.mobile || result == ConnectivityResult.vpn){
+      AppRouter.isOnline = true;
+      AppRouter.isOverWifi = false;
+    }else if(result == ConnectivityResult.none){
+      AppRouter.isOnline = false;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     requestPermissions();
+    connectionState = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      updateConnectionStatus(result);
+      if(kDebugMode){
+        print(result);
+      }
+    });
     mainAudioPlayer = AudioPlayer();
   }
   @override
   void dispose() {
     super.dispose();
+    connectionState.cancel();
     mainAudioPlayer.dispose();
   }
 
