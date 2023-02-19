@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
@@ -9,10 +10,10 @@ import 'package:proto_music_player/components/top_carousel_card.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:proto_music_player/services/local_data_service.dart';
 
 class HomeScreenModule extends StatefulWidget {
-  const HomeScreenModule({Key? key, required this.languages}) : super(key: key);
-  final List<String> languages;
+  const HomeScreenModule({Key? key,}) : super(key: key);
   @override
   State<HomeScreenModule> createState() => _HomeScreenModuleState();
 }
@@ -35,20 +36,16 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
     super.initState();
     fetchData();
   }
-  String formatLanguages(){
-    String language = '';
-    for(String l in widget.languages){
-      language += "$l,";
-    }
-    return language;
-  }
   fetchData()async{
     if(mounted){
       setState(() {
         isLoaded = false;
       });
-      String languages = formatLanguages();
-      Response response = await get(Uri.parse("${HelperFunctions.apiDomain}modules?language=$languages"));
+      String? languages = await LocalDataService.getLanguagesString();
+      if (kDebugMode) {
+        print("selected languages : $languages");
+      }
+      Response response = await get(Uri.parse("${HelperFunctions.apiDomain}modules?language=${languages ?? "english"}"));
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
       if(data["status"] == "SUCCESS"){
         if(data["data"]["trending"]["songs"].isNotEmpty){

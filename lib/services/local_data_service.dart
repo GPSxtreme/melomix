@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDataService{
@@ -10,9 +11,47 @@ class LocalDataService{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('songQualityMd', quality);
   }
-  static Future<void> setUserName(String userName)async{
+  ///Replaces the saved languages string with the given string.
+  static Future<void> setLanguage(String languageString)async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userName',  userName);
+    await prefs.setString('languages', languageString);
+  }
+  ///Adds given language to the existing language list.
+  static Future<void> addLanguage(String language)async{
+    List langList = await getLanguages();
+    String langString = "";
+    if(language.trim().isNotEmpty && langList.isNotEmpty){
+      langList.add(language);
+      for(int i = 0 ; i < langList.length;i++){
+        if(i == langList.length - 1){
+          langString += langList[i];
+        }else{
+          langString += "${langList[i]},";
+        }
+      }
+      await setLanguage(langString);
+    }else if(langList.isEmpty && language.trim().isNotEmpty){
+      await setLanguage("$language,");
+    }
+    if (kDebugMode) {
+      print(await getLanguages());
+    }
+  }
+  static Future<void> removeLanguage(String language)async{
+    List langList = await getLanguages();
+    langList.remove(language);
+    String langString = "";
+    for(int i = 0 ; i < langList.length;i++){
+      if(i == langList.length - 1){
+        langString += langList[i];
+      }else{
+        langString += "${langList[i]},";
+      }
+    }
+    setLanguage(langString);
+    if (kDebugMode) {
+      print(await getLanguages());
+    }
   }
   //getters
   static Future<String?> getSongQualityWifi()async{
@@ -25,9 +64,20 @@ class LocalDataService{
     String? quality = prefs.getString('songQualityMd');
     return quality;
   }
-  static Future<String?> getUserName()async{
+  static Future<String?> getLanguagesString()async{
     final prefs = await SharedPreferences.getInstance();
-    String? userName = prefs.getString('userName');
-    return userName;
+    String? languages = prefs.getString('languages');
+    return languages;
+  }
+  static Future<List> getLanguages()async{
+    final prefs = await SharedPreferences.getInstance();
+    String? languages = prefs.getString('languages');
+    if(languages != null && languages.trim().isNotEmpty) {
+      List data = languages.split(",");
+      data.removeWhere((item) => [" ",",",""].contains(item));
+      return data;
+    } else {
+      return [];
+    }
   }
 }

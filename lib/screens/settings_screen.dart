@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:proto_music_player/components/language_chip.dart';
 import '../services/app_settings.dart';
 import '../services/helper_functions.dart';
 
@@ -44,6 +45,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
           //body
           ListView(
             children: [
+              //languages
+              label("Music languages",fontWeight: FontWeight.w400 , fontSize: 18),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Wrap(
+                  spacing: 6.0,
+                  runSpacing: 6.0,
+                  children: const [
+                    LanguageChip(language: "English"),
+                    LanguageChip(language: "Hindi"),
+                    LanguageChip(language: "Tamil"),
+                    LanguageChip(language: "Telugu"),
+                    LanguageChip(language: "Punjabi"),
+                    LanguageChip(language: "Marathi"),
+                    LanguageChip(language: "Gujarati"),
+                    LanguageChip(language: "Bengali"),
+                    LanguageChip(language: "Kannada"),
+                    LanguageChip(language: "Bhojpuri"),
+                    LanguageChip(language: "Urdu"),
+                    LanguageChip(language: "Haryanvi"),
+                    LanguageChip(language: "Rajasthani"),
+                    LanguageChip(language: "Odia"),
+                    LanguageChip(language: "Assamese"),
+                  ],
+                ),
+              ),
               //song quality
               label("Streaming quality",fontWeight: FontWeight.w400 , fontSize: 18),
               ListTile(
@@ -108,6 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
+          if(MediaQuery.of(context).orientation == Orientation.portrait)
           Positioned(
             bottom: 70,
             right: 0,

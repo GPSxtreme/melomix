@@ -33,7 +33,7 @@ class _TopCarouselCardState extends State<TopCarouselCard> {
         if (i != widget.data["artists"].length - 1) {
           artists += "${htmlDecode.convert(widget.data["artists"][i]["name"].trim())},";
         } else {
-          artists += "${widget.data["artists"][i]["name"]}";
+          artists += htmlDecode.convert(widget.data["artists"][i]["name"].trim());
         }
       }
     }
