@@ -73,21 +73,10 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
       },
     );
   }
-  Widget label(String text){
-    return  Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-      child: Container(
-          decoration: BoxDecoration(
-              color: HexColor("222222"),
-              borderRadius: BorderRadius.circular(10)
-          ),
-          child: Padding(
-              padding:const EdgeInsets.symmetric(vertical: 16,horizontal: 8),
-              child: Text(text,style: const TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.w600),)
-          )
-      ),
-    );
-  }
+  Widget label(String name , {FontWeight? fontWeight , double? fontSize,Color? fontColor,double? hPadding,double? vPadding}) =>  Padding(
+    padding: EdgeInsets.symmetric(horizontal: hPadding ?? 15,vertical:vPadding ?? 15),
+    child: Text(name,style: TextStyle(fontSize:fontSize ?? 19,fontWeight: fontWeight ?? FontWeight.w600,color: fontColor ?? Colors.white),textAlign: TextAlign.start,),
+  );
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -110,13 +99,24 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
             allFolders.isNotEmpty ?
             ListView(
               children: [
-                const SizedBox(height: 10,),
+                const SizedBox(height: 50,),
                 if(foldersWithArt.isNotEmpty) ...[
-                  label("All Albums on device (${foldersWithArt.length})"),
+                  label("Albums" , fontSize: 40),
+                  label("All Albums on device (${foldersWithArt.length})",fontColor: Colors.white70 , hPadding: 15 , vPadding: 0),
+                  const SizedBox(height: 5,),
                   gridViewRenderer(foldersWithArt),
                 ],
                 if(foldersWithNoArt.isNotEmpty) ...[
-                  label("Other audio files on device (${foldersWithNoArt.length})"),
+                   Divider(
+                    color: HexColor("222222"),
+                    thickness: 1,
+                    height: 90,
+                    // endIndent: 30,
+                    // indent: 30,
+                  ),
+                  label("Audio files",fontSize: 40,vPadding: 0),
+                  label("Audio files on device (${foldersWithNoArt.length})",fontSize: 20 , fontColor: Colors.white70),
+                  const SizedBox(height: 20,),
                   listViewRenderer(foldersWithNoArt),
                 ],
                 const SizedBox(height: 70,)

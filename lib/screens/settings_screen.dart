@@ -13,23 +13,49 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final List<DropdownMenuItem<SongQuality>> qualityEntries = [];
+  final List<DropdownMenuItem<VolumeLevel>> volumeEntries = [];
   late SongQuality qualityWifi ;
   late SongQuality qualityMd;
+  late VolumeLevel volumeLevel;
+  late bool isDataSaver;
+  late bool allowExplicit;
   bool isLoaded = false;
   fetchSettings()async{
     for(final quality in SongQuality.values){
       qualityEntries.add(DropdownMenuItem<SongQuality>(
         value: quality,
-        child: Text(quality.name),
+        child: Text(quality.name.replaceAll("_", " ").capitalize()),
+      ));
+    }
+    for(final volume in VolumeLevel.values){
+      volumeEntries.add(DropdownMenuItem<VolumeLevel>(
+        value: volume,
+        child: Text(volume.name.capitalize()),
       ));
     }
     qualityWifi = AppSettings.qualityObjWifi;
     qualityMd = AppSettings.qualityObjMd;
+    isDataSaver = AppSettings.isDataSaver;
+    allowExplicit = AppSettings.allowExplicit;
+    volumeLevel = VolumeLevel.values.firstWhere((obj) => obj.name == AppSettings.volumeLevel);
   }
   Widget label(String name , {FontWeight? fontWeight , double? fontSize}) =>  Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-    child: Text(name,style: TextStyle(fontSize:fontSize ?? 20,fontWeight: fontWeight ?? FontWeight.w700,color: Colors.white),textAlign: TextAlign.start,),
+    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+    child: Text(name,style: TextStyle(fontSize:fontSize ?? 19,fontWeight: fontWeight ?? FontWeight.w600,color: Colors.white),textAlign: TextAlign.start,),
   );
+  Widget dataSaverActive(){
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+      decoration: BoxDecoration(
+        color: HexColor("111111"),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 16),
+        child: Text("Data saver",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),),
+      ),
+    );
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -45,13 +71,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           //body
           ListView(
             children: [
-              //languages
-              label("Music languages",fontWeight: FontWeight.w400 , fontSize: 18),
+              const SizedBox(height: 50,),
+              label("Settings",fontSize: 40),
+              //languages selection.
+              label("Music languages",),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Wrap(
                   spacing: 6.0,
-                  runSpacing: 6.0,
+                  runSpacing: -8,
                   children: const [
                     LanguageChip(language: "English"),
                     LanguageChip(language: "Hindi"),
@@ -71,12 +99,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
               ),
-              //song quality
-              label("Streaming quality",fontWeight: FontWeight.w400 , fontSize: 18),
+              //data saver switch.
+              label("Data saver",),
               ListTile(
-                leading: const Icon(Icons.wifi,color: Colors.white,size: 35,),
-                title: const Text("Over Wi-Fi",style: TextStyle(color: Colors.white,fontSize: 18),),
-                trailing: Container(
+                title: const Text("Audio quality",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
+                subtitle:const Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text("Sets your audio quality to low(equivalent to 48kbit/s).",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
+                ) ,
+                trailing: Switch(
+                  value: isDataSaver,
+                  inactiveTrackColor: HexColor("111111"),
+                  activeColor: Colors.blue[400],
+                  onChanged: (value)async{
+                    await AppSettings.setDataSaver(value);
+                    setState(() {
+                      isDataSaver = value;
+                    });
+                  },
+                ),
+              ),
+              //streaming quality.
+              label("Streaming quality",),
+              //Wifi streaming quality.
+              ListTile(
+                // leading: const Icon(Icons.wifi,color: Colors.white,size: 35,),
+                title: const Text("Over Wi-Fi",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
+                trailing:!isDataSaver ? Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   decoration: BoxDecoration(
                     color: HexColor("111111"),
@@ -100,14 +149,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       }
                     },
                   ),
-                )
+                ) : dataSaverActive()
               ),
               const SizedBox(height: 5,),
+              //Cellular streaming quality.
               ListTile(
-                  leading: const Icon(Icons.network_cell_rounded,color: Colors.white,size: 35,),
-                  title: const Text("Over mobile data",style: TextStyle(color: Colors.white,fontSize: 18),),
-                  subtitle:const Text("recommended medium",style: TextStyle(color: Colors.white70,fontSize: 13),) ,
-                  trailing: Container(
+                  // leading: const Icon(Icons.network_cell_rounded,color: Colors.white,size: 35,),
+                  title: const Text("Over cellular",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
+                  subtitle:const Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child:Text("Streaming higher quality over a cellular connection uses more data.",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
+                  ) ,
+                  trailing:!isDataSaver ? Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                     decoration: BoxDecoration(
                       color: HexColor("111111"),
@@ -131,17 +184,70 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         }
                       },
                     ),
-                  )
+                  ) : dataSaverActive()
+              ),
+              label("Playback",),
+              //Explicit content switch.
+              ListTile(
+                title: const Text("Allow explicit content",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
+                subtitle:const Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text("Turn on to play explicit content\nExplicit content is labeled with 'E' tag.",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
+                ) ,
+                trailing: Switch(
+                  value: allowExplicit,
+                  inactiveTrackColor: HexColor("111111"),
+                  activeColor: Colors.blue[400],
+                  onChanged: (value)async{
+                    await AppSettings.setAllowExplicit(value);
+                    setState(() {
+                      allowExplicit = value;
+                    });
+                  },
+                ),
+              ),
+              //Volume level setting.
+              ListTile(
+                title: const Text("Volume level",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
+                subtitle:const Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text("Adjust the volume for your environment.Loud may diminish aoudio quality.No effect on audio quality in Normal or Quiet.",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
+                ) ,
+                trailing: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                  decoration: BoxDecoration(
+                    color: HexColor("111111"),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: DropdownButton<VolumeLevel>(
+                    icon: const Icon(Icons.arrow_drop_down),
+                    iconSize: 30,
+                    underline: const SizedBox(),
+                    value: volumeLevel,
+                    items: volumeEntries,
+                    dropdownColor: HexColor("111111"),
+                    borderRadius: BorderRadius.circular(10),
+                    style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),
+                    onChanged: (level)async{
+                      if(level != null) {
+                        await AppSettings.setVolumeLevel(level.name);
+                        setState(() {
+                          volumeLevel = level;
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ),
+              //Maker sign.
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 25),
+                child: HelperFunctions.makerSign(),
               ),
             ],
           ),
           if(MediaQuery.of(context).orientation == Orientation.portrait)
-          Positioned(
-            bottom: 70,
-            right: 0,
-            left: 0,
-            child: HelperFunctions.makerSign(),
-          ),
+
           HelperFunctions.collapsedPlayer()
         ],
       ),

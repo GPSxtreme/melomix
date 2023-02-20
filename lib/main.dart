@@ -15,7 +15,6 @@ Future<void> main() async {
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
-  await AppSettings.fetchAppSettings();
   runApp(const MyApp());
 }
 

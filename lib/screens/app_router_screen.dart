@@ -12,6 +12,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+
+import '../services/app_settings.dart';
 //audio player global variable
 late AudioPlayer mainAudioPlayer;
 
@@ -94,7 +96,9 @@ class _AppRouterState extends State<AppRouter> {
       AppRouter.isOnline = false;
     }
   }
-
+  fetchAppSettings()async{
+    await AppSettings.fetchAppSettings();
+  }
   @override
   void initState() {
     super.initState();
@@ -106,6 +110,7 @@ class _AppRouterState extends State<AppRouter> {
       }
     });
     mainAudioPlayer = AudioPlayer();
+    fetchAppSettings();
   }
   @override
   void dispose() {

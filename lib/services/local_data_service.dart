@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:proto_music_player/services/app_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDataService{
@@ -10,6 +11,18 @@ class LocalDataService{
   static Future<void> setSongQualityMd(String quality)async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('songQualityMd', quality);
+  }
+  static Future<void> setDataSaver(bool val)async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("isDataSaver", val);
+  }
+  static Future<void> setAllowExplicit(bool val)async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("allowExplicit", val);
+  }
+  static Future<void> setVolumeLevel(String level)async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("volumeLevel", level);
   }
   ///Replaces the saved languages string with the given string.
   static Future<void> setLanguage(String languageString)async{
@@ -79,5 +92,17 @@ class LocalDataService{
     } else {
       return [];
     }
+  }
+  static Future<bool> getIsDataSaver()async{
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("isDataSaver") ?? false;
+  }
+  static Future<bool> getAllowExplicit()async{
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("allowExplicit") ?? true;
+  }
+  static Future<String> getVolumeLevel()async{
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("volumeLevel") ?? VolumeLevel.normal.name;
   }
 }

@@ -22,17 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18,vertical: 13),
-                child: Row(
-                  children: [
-                    Text("Melomix",style: GoogleFonts.pacifico(fontSize: 27,color: Colors.white,),textAlign: TextAlign.start,),
-                    const Spacer(),
-                    const CircleAvatar(
-                      radius: 23,
-                      backgroundColor: Colors.white24,
-                      child: Icon(Icons.person_rounded,color: Colors.blue,size: 30,),
-                    )
-                  ],
-                ),
+                child: Text("Melomix",style: GoogleFonts.pacifico(fontSize: 27,color: Colors.white,),textAlign: TextAlign.start,),
               ),
               const HomeScreenModule(),
             ],
