@@ -10,10 +10,8 @@ import 'package:proto_music_player/screens/search_page_screen.dart';
 import 'package:proto_music_player/screens/settings_screen.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-
-import '../services/app_settings.dart';
+import 'package:proto_music_player/services/app_settings.dart';
 //audio player global variable
 late AudioPlayer mainAudioPlayer;
 
@@ -78,13 +76,6 @@ class _AppRouterState extends State<AppRouter> {
     ];
   }
 
-  requestPermissions()async{
-    await Permission.storage.request();
-    await Permission.accessMediaLocation.request();
-    await Permission.manageExternalStorage.request();
-    await Permission.accessMediaLocation.request();
-    await Permission.mediaLibrary.request();
-  }
   updateConnectionStatus(ConnectivityResult result){
     if(result == ConnectivityResult.wifi){
       AppRouter.isOnline = true;
@@ -96,21 +87,20 @@ class _AppRouterState extends State<AppRouter> {
       AppRouter.isOnline = false;
     }
   }
-  fetchAppSettings()async{
-    await AppSettings.fetchAppSettings();
-  }
   @override
   void initState() {
     super.initState();
-    requestPermissions();
+    //initialise audio player.
+    mainAudioPlayer = AudioPlayer();
+    //set volume level.
+    AppSettings.setVolumeLevel(AppSettings.volumeLevel);
+    //connection state.
     connectionState = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       updateConnectionStatus(result);
       if(kDebugMode){
         print(result);
       }
     });
-    mainAudioPlayer = AudioPlayer();
-    fetchAppSettings();
   }
   @override
   void dispose() {

@@ -85,6 +85,7 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
         ),
       ),
       trailing: PopupMenuButton(
+        color: HexColor("111111"),
           icon: const Icon(LineIcons.verticalEllipsis,color: Colors.white,) ,
           elevation: 10,
           shape: RoundedRectangleBorder(
@@ -132,10 +133,12 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
           itemBuilder: (context) =>[
             PopupMenuItem(
               value: DropdownItem.queue,
+              textStyle: const TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
               child: Text(addedToQueue ? "In queue" : "Queue" ),
             ),
             const PopupMenuItem(
                 value: DropdownItem.download,
+                textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
                 child: Text("Download")
             ),
           ]

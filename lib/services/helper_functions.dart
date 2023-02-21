@@ -190,7 +190,6 @@ class HelperFunctions{
   }
   static String getStreamUrl(List list){
     String sq = AppSettings.getSongQuality();
-    print("passed in song quality : $sq");
     for(Map qualityMap in list){
       if(qualityMap["quality"] == sq){
         return qualityMap["link"];

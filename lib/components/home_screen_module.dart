@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
@@ -42,8 +41,8 @@ class _HomeScreenModuleState extends State<HomeScreenModule> {
         isLoaded = false;
       });
       String? languages = await LocalDataService.getLanguagesString();
-      if (kDebugMode) {
-        print("selected languages : $languages");
+      if(languages == null){
+        await LocalDataService.addLanguage("english");
       }
       Response response = await get(Uri.parse("${HelperFunctions.apiDomain}modules?language=${languages ?? "english"}"));
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;

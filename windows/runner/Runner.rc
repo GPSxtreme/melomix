@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "app.netlify.prudhvisuraaj" "\0"
-            VALUE "FileDescription", "proton_music_player" "\0"
+            VALUE "FileDescription", "Melomix" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "proton_music_player" "\0"
+            VALUE "InternalName", "Melomix" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 app.netlify.prudhvisuraaj. All rights reserved." "\0"
             VALUE "OriginalFilename", "proton_music_player.exe" "\0"
-            VALUE "ProductName", "proton_music_player" "\0"
+            VALUE "ProductName", "Melomix" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

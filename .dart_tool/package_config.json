@@ -80,6 +80,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "change_app_package_name",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/change_app_package_name-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "characters",
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.2.1",
       "packageUri": "lib/",
@@ -614,7 +620,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-02-19T15:49:37.790214Z",
+  "generated": "2023-02-21T13:57:58.186650Z",
   "generator": "pub",
   "generatorVersion": "2.19.2"
 }

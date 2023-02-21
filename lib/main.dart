@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
-import 'package:proto_music_player/services/app_settings.dart';
+import 'package:proto_music_player/screens/splash_screen.dart';
 
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -25,8 +25,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRouter.id,
+      initialRoute: SplashScreen.id,
       routes: {
+        SplashScreen.id:(context) => const SplashScreen(),
         AppRouter.id:(context) => const AppRouter(),
       },
     );

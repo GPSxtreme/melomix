@@ -41,10 +41,6 @@ class AppSettings{
     isDataSaver = await LocalDataService.getIsDataSaver();
     allowExplicit = await LocalDataService.getAllowExplicit();
     volumeLevel = await LocalDataService.getVolumeLevel();
-
-
-    //call set functions.
-    setVolumeLevel(volumeLevel);
   }
   static Future<void> setSongQualityWifi(SongQuality quality) async{
     qualityObjWifi = quality;

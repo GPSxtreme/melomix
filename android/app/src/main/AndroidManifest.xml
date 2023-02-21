@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="app.netlify.prudhvisuraaj.proto_music_player">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.prudhvisuraaj.melomix">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -7,10 +8,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
    <application
-        android:label="proto_music_player"
+        android:label="Melomix"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
        android:requestLegacyExternalStorage="true"
