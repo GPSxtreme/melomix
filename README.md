@@ -10,6 +10,9 @@ NOTE: I do not own the songs or API used.All rights are owned by jio saavn.
 - [JioSaavn API](https://docs.saavn.me/)
 - [Just_audio](https://pub.dev/packages/just_audio)
 
+## Download apk:
+Download latest release at --> https://github.com/GPSxtreme/melomix/releases
+
 ## Screenshots
 
 
