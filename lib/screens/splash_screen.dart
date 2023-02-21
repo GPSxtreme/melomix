@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //fetch app settings.
     await AppSettings.fetchAppSettings();
     // ignore: use_build_context_synchronously
-    Future.delayed(const Duration(seconds: 2),() => Navigator.popAndPushNamed(context, AppRouter.id));
+    Navigator.popAndPushNamed(context, AppRouter.id);
   }
   @override
   void initState() {
