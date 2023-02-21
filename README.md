@@ -1,4 +1,7 @@
-## Melomix
+## ![icon_light 1](https://user-images.githubusercontent.com/86603322/220397041-c0276dec-bedd-46dc-9a77-9428fd3629ad.png) Melomix 
+
+
+
 
 Melomix is a music streaming app.
 It uses jio saavn api to stream songs.User can also play locally saved songs.
