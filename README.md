@@ -23,9 +23,8 @@ NOTE: I do not own the songs or API used.All rights are owned by jio saavn.
 ![Screenshot_2023-02-21-20-51-58-59_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220391929-24f4c5df-c812-4a60-a437-252ca62ecfec.png)
 ![Screenshot_2023-02-21-20-52-35-59_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220392072-a6b5d349-654a-4913-9bcd-6fbe951516ab.png)
 ![Screenshot_2023-02-21-20-52-28-31_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220392198-4d01db6e-c863-4059-ac83-fc628f926892.png)
-![Screenshot_2023-02-21-20-51-20-40_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220392744-cea2cfda-49ca-4eca-bff0-dbf05430e4e5.png
+![Screenshot_2023-02-21-20-51-20-40_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220392744-cea2cfda-49ca-4eca-bff0-dbf05430e4e5.png)
 ![Screenshot_2023-02-21-20-51-26-87_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220393022-41824ff6-fb33-4625-af31-f658d4e79d75.png)
-)
 ![Screenshot_2023-02-21-20-53-10-62_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220393835-ad98fa87-92cc-419f-8468-ae542f9e8b57.png)
 ![Screenshot_2023-02-21-20-56-13-06_6012fa4d4ddec268fc5c7112cbb265e7](https://user-images.githubusercontent.com/86603322/220393716-2ec7c846-2d46-4e59-ae05-cfe3317dfecd.png)
 ![Screenshot_2023-02-21-20-53-28-92_460344182a877ab0ee96343f7aaadd48](https://user-images.githubusercontent.com/86603322/220392513-8b2f9201-35ba-4ebe-a6a0-046ee517502a.png)
