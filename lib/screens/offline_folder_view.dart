@@ -189,7 +189,6 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
 
   @override
   Widget build(BuildContext context) {
-    Size device = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -261,7 +260,7 @@ class _OfflineFolderViewState extends State<OfflineFolderView> {
                                     children: [
                                       const SizedBox(height: 20,),
                                       Text(
-                                        widget.folderModel.album.trim() ?? "",
+                                        widget.folderModel.album.trim(),
                                         style: const TextStyle(color: Colors.white,fontSize:25,fontWeight: FontWeight.w800),
                                         textAlign: TextAlign.start,
                                         overflow:TextOverflow.ellipsis,
