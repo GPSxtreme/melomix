@@ -79,53 +79,51 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
   );
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            //body
-            !isLoaded ?
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  SpinKitRipple(color: Colors.white,size: 60,),
-                  SizedBox(height: 20,),
-                  Text("Hold tight this might take some time.",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,)
-                ],
-              ),
-            ):
-            allFolders.isNotEmpty ?
-            ListView(
-              children: [
-                const SizedBox(height: 50,),
-                if(foldersWithArt.isNotEmpty) ...[
-                  label("Albums" , fontSize: 40),
-                  label("All Albums on device (${foldersWithArt.length})",fontColor: Colors.white70 , hPadding: 15 , vPadding: 0),
-                  const SizedBox(height: 5,),
-                  gridViewRenderer(foldersWithArt),
-                ],
-                if(foldersWithNoArt.isNotEmpty) ...[
-                   Divider(
-                    color: HexColor("222222"),
-                    thickness: 1,
-                    height: 90,
-                    // endIndent: 30,
-                    // indent: 30,
-                  ),
-                  label("Audio files",fontSize: 40,vPadding: 0),
-                  label("Audio files on device (${foldersWithNoArt.length})",fontSize: 20 , fontColor: Colors.white70),
-                  const SizedBox(height: 20,),
-                  listViewRenderer(foldersWithNoArt),
-                ],
-                const SizedBox(height: 70,)
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          //body
+          !isLoaded ?
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                SpinKitRipple(color: Colors.white,size: 60,),
+                SizedBox(height: 20,),
+                Text("Hold tight this might take some time.",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,)
               ],
-            ):
-            const Center(child: Text("No user playlists/albums found.",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,)),
-            HelperFunctions.collapsedPlayer()
-          ],
-        ),
+            ),
+          ):
+          allFolders.isNotEmpty ?
+          ListView(
+            children: [
+              const SizedBox(height: 50,),
+              if(foldersWithArt.isNotEmpty) ...[
+                label("Albums" , fontSize: 40),
+                label("All Albums on device (${foldersWithArt.length})",fontColor: Colors.white70 , hPadding: 15 , vPadding: 0),
+                const SizedBox(height: 5,),
+                gridViewRenderer(foldersWithArt),
+              ],
+              if(foldersWithNoArt.isNotEmpty) ...[
+                 Divider(
+                  color: HexColor("222222"),
+                  thickness: 1,
+                  height: 90,
+                  // endIndent: 30,
+                  // indent: 30,
+                ),
+                label("Audio files",fontSize: 40,vPadding: 0),
+                label("Audio files on device (${foldersWithNoArt.length})",fontSize: 20 , fontColor: Colors.white70),
+                const SizedBox(height: 20,),
+                listViewRenderer(foldersWithNoArt),
+              ],
+              const SizedBox(height: 70,)
+            ],
+          ):
+          const Center(child: Text("No user playlists/albums found.",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,)),
+          HelperFunctions.collapsedPlayer()
+        ],
       ),
     );
   }

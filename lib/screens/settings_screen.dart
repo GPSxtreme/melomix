@@ -188,30 +188,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               label("Playback",),
               //Explicit content switch.
-              ListTile(
-                title: const Text("Allow explicit content",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
-                subtitle:const Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Text("Turn on to play explicit content\nExplicit content is labeled with 'E' tag.",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
-                ) ,
-                trailing: Switch(
-                  value: allowExplicit,
-                  inactiveTrackColor: HexColor("111111"),
-                  activeColor: Colors.blue[400],
-                  onChanged: (value)async{
-                    await AppSettings.setAllowExplicit(value);
-                    setState(() {
-                      allowExplicit = value;
-                    });
-                  },
-                ),
-              ),
+              // ListTile(
+              //   title: const Text("Allow explicit content",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
+              //   subtitle:const Padding(
+              //     padding: EdgeInsets.only(top: 5),
+              //     child: Text("Turn on to play explicit content\nExplicit content is labeled with 'E' tag.",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
+              //   ) ,
+              //   trailing: Switch(
+              //     value: allowExplicit,
+              //     inactiveTrackColor: HexColor("111111"),
+              //     activeColor: Colors.blue[400],
+              //     onChanged: (value)async{
+              //       await AppSettings.setAllowExplicit(value);
+              //       setState(() {
+              //         allowExplicit = value;
+              //       });
+              //     },
+              //   ),
+              // ),
               //Volume level setting.
               ListTile(
                 title: const Text("Volume level",style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
                 subtitle:const Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: Text("Adjust the volume for your environment.Loud may diminish aoudio quality.No effect on audio quality in Normal or Quiet.",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
+                  child: Text("Adjust the volume for your environment.Loud may diminish audio quality.No effect on audio quality in Normal or Quiet.",style: TextStyle(color: Colors.white70,fontSize: 12,fontWeight: FontWeight.w500),),
                 ) ,
                 trailing: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),

@@ -166,110 +166,108 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: null,
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            if(allSongResultsList.isEmpty && userSearched && !noResults || isProcessing)
-              const Center(
-                  child: SpinKitRipple(color: Colors.white,size: 80,)
-              ),
-            if(noResults)
-              const Center(
-                child: Text("No results found!",style: TextStyle(color: Colors.white,fontSize: 16)),
-              ),
+    return Scaffold(
+      appBar: null,
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          if(allSongResultsList.isEmpty && userSearched && !noResults || isProcessing)
+            const Center(
+                child: SpinKitRipple(color: Colors.white,size: 80,)
+            ),
+          if(noResults)
+            const Center(
+              child: Text("No results found!",style: TextStyle(color: Colors.white,fontSize: 16)),
+            ),
 
-            ListView(
-              children: [
-                const SizedBox(height: 10,),
-                //Search bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                  child: Material(
-                    elevation: 100,
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.transparent,
-                    child: TextField(
-                      controller: searchController,
-                      textAlign: TextAlign.start,
-                      cursorColor: Colors.white,
-                      style: const TextStyle(color: Colors.white),
-                      cursorHeight: 20,
-                      keyboardType: TextInputType.name,
-                      onSubmitted: (query){
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: HexColor("111111"),
-                        hintText: 'What do you want to listen to?',
-                        hintStyle: const TextStyle(color: Colors.white24),
-                        prefixIcon: const Icon(Icons.search,color: Colors.white,),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                            borderRadius: BorderRadius.circular(100)
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                            borderRadius: BorderRadius.circular(100)
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: HexColor("111111"), width: 3),
-                            borderRadius: BorderRadius.circular(100)
-                        ),
-                        suffixIcon:searchController.text.isNotEmpty ?  Material(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(99),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(99),
-                            onTap: () {
-                              searchController.clear();
-                            },
-                            child:const Icon(Icons.close_rounded,size: 20,color: Colors.white,),
-                          ),
-                        ) : null
+          ListView(
+            children: [
+              const SizedBox(height: 10,),
+              //Search bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                child: Material(
+                  elevation: 100,
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.transparent,
+                  child: TextField(
+                    controller: searchController,
+                    textAlign: TextAlign.start,
+                    cursorColor: Colors.white,
+                    style: const TextStyle(color: Colors.white),
+                    cursorHeight: 20,
+                    keyboardType: TextInputType.name,
+                    onSubmitted: (query){
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: HexColor("111111"),
+                      hintText: 'What do you want to listen to?',
+                      hintStyle: const TextStyle(color: Colors.white24),
+                      prefixIcon: const Icon(Icons.search,color: Colors.white,),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                          borderRadius: BorderRadius.circular(100)
                       ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                          borderRadius: BorderRadius.circular(100)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: HexColor("111111"), width: 3),
+                          borderRadius: BorderRadius.circular(100)
+                      ),
+                      suffixIcon:searchController.text.isNotEmpty ?  Material(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(99),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(99),
+                          onTap: () {
+                            searchController.clear();
+                          },
+                          child:const Icon(Icons.close_rounded,size: 20,color: Colors.white,),
+                        ),
+                      ) : null
                     ),
                   ),
                 ),
-                if(!userSearched && !isProcessing && trendingSongs.isNotEmpty) ...[
-                  HelperFunctions.listViewRenderer(trendingSongs,verticalGap: 5),
-                  const SizedBox(height: 70,),
-                ],
-                if(userSearched) ...[
-                  if(topResult != null) ...[
-                    label("Top result"),
-                    topResult
-                  ],
-                  if(topSongsResultsList.isNotEmpty) ...[
-                    label("Top songs"),
-                    HelperFunctions.listViewRenderer(topSongsResultsList,verticalGap: 5),
-                  ],
-                  if(albumsResultsList.isNotEmpty) ...[
-                    label("Albums"),
-                    HelperFunctions.gridViewRenderer(albumsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
-                  ],
-                  if(artistsResultsList.isNotEmpty) ...[
-                    label("Artists"),
-                    HelperFunctions.gridViewRenderer(artistsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
-                  ],
-                  if(playlistsResultsList.isNotEmpty) ...[
-                    label("Playlists"),
-                    HelperFunctions.gridViewRenderer(playlistsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
-                  ],
-                  if(allSongResultsList.isNotEmpty) ...[
-                    label("All song results"),
-                    HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
-                  ],
-                  const SizedBox(height: 70,),
-                ],
+              ),
+              if(!userSearched && !isProcessing && trendingSongs.isNotEmpty) ...[
+                HelperFunctions.listViewRenderer(trendingSongs,verticalGap: 5),
+                const SizedBox(height: 70,),
               ],
-            ),
-            HelperFunctions.collapsedPlayer()
-          ] ,
-        ),
+              if(userSearched) ...[
+                if(topResult != null) ...[
+                  label("Top result"),
+                  topResult
+                ],
+                if(topSongsResultsList.isNotEmpty) ...[
+                  label("Top songs"),
+                  HelperFunctions.listViewRenderer(topSongsResultsList,verticalGap: 5),
+                ],
+                if(albumsResultsList.isNotEmpty) ...[
+                  label("Albums"),
+                  HelperFunctions.gridViewRenderer(albumsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+                ],
+                if(artistsResultsList.isNotEmpty) ...[
+                  label("Artists"),
+                  HelperFunctions.gridViewRenderer(artistsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+                ],
+                if(playlistsResultsList.isNotEmpty) ...[
+                  label("Playlists"),
+                  HelperFunctions.gridViewRenderer(playlistsResultsList, horizontalPadding: 20, verticalPadding: 15, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+                ],
+                if(allSongResultsList.isNotEmpty) ...[
+                  label("All song results"),
+                  HelperFunctions.listViewRenderer(allSongResultsList, verticalGap: 5),
+                ],
+                const SizedBox(height: 70,),
+              ],
+            ],
+          ),
+          HelperFunctions.collapsedPlayer()
+        ] ,
       ),
     );
   }

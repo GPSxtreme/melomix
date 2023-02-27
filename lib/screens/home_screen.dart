@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int totalCardsCount = 5;
   //shows the index of current showing card.
   int currentCardIndex = 0;
-
   fetchData()async{
     if(mounted){
       setState(() {
