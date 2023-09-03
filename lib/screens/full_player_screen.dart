@@ -364,8 +364,7 @@ class _ShowFullPlayerState extends State<ShowFullPlayer> {
                   } ,
                 ),
               );
-            };
-
+            }
             if(songData["isLocal"] != null && songData["isLocal"] ){
               return FutureBuilder(
                 future: HelperFunctions.getLocalSongArtworkImage(songData["intId"]),

@@ -31,7 +31,7 @@ extension StringExtension on String {
 class HelperFunctions{
   //app dir name
   static String appDir = "storage/emulated/0/proto player";
-  static String apiDomain = "https://saavn-api-weld.vercel.app/";
+  static String apiDomain = "https://saavn.me/";
 
   static Future<Map> getSongByName(String query,int limit)async{
     try{
