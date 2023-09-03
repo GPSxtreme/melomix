@@ -225,9 +225,9 @@
     },
     {
       "name": "google_fonts",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/google_fonts-3.0.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/google_fonts-4.0.4",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "hexcolor",
@@ -620,7 +620,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-09-03T17:46:41.909300Z",
+  "generated": "2023-09-03T17:52:13.724793Z",
   "generator": "pub",
   "generatorVersion": "3.0.5"
 }

@@ -40,7 +40,6 @@ dependencies:
   hexcolor: ^3.0.1
   flutter_spinkit: ^5.1.0
   auto_size_text: ^3.0.0
-  google_fonts: ^3.0.1
   shared_preferences: ^2.0.15
   line_icons: ^2.0.1
   cached_network_image: ^3.2.3
@@ -63,6 +62,7 @@ dependencies:
   intl: ^0.18.0
   connectivity_plus: ^3.0.3
   change_app_package_name: ^1.1.0
+  google_fonts: ^4.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
