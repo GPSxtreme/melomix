@@ -3,21 +3,21 @@
   "packages": [
     {
       "name": "args",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/args-2.4.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/args-2.4.2",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "async",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.10.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "audio_service",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/audio_service-0.18.9",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/audio_service-0.18.10",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "audio_service_platform_interface",
@@ -33,9 +33,9 @@
     },
     {
       "name": "audio_session",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/audio_session-0.1.13",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/audio_session-0.1.16",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "audiotagger",
@@ -81,7 +81,7 @@
     },
     {
       "name": "characters",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.2.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -93,13 +93,13 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "connectivity_plus",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity_plus-3.0.3",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity_plus-3.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -111,15 +111,15 @@
     },
     {
       "name": "crypto",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/crypto-3.0.2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/crypto-3.0.3",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.19"
     },
     {
       "name": "csslib",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/csslib-0.17.2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/csslib-1.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.19"
     },
     {
       "name": "cupertino_icons",
@@ -147,7 +147,7 @@
     },
     {
       "name": "ffi",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/ffi-2.0.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/ffi-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -167,7 +167,7 @@
       "name": "flutter",
       "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_blurhash",
@@ -177,15 +177,15 @@
     },
     {
       "name": "flutter_cache_manager",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_cache_manager-3.3.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_cache_manager-3.3.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.18"
     },
     {
       "name": "flutter_media_metadata",
@@ -195,7 +195,7 @@
     },
     {
       "name": "flutter_spinkit",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_spinkit-5.1.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_spinkit-5.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -203,25 +203,29 @@
       "name": "flutter_test",
       "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///D:/flutter%20sdk/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "fluttertoast",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.1.3",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.2.2",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "google_fonts",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/google_fonts-3.0.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/google_fonts-4.0.4",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "hexcolor",
@@ -231,9 +235,9 @@
     },
     {
       "name": "html",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/html-0.15.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/html-0.15.4",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.19"
     },
     {
       "name": "html_unescape",
@@ -243,9 +247,9 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.5",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.19"
     },
     {
       "name": "http_parser",
@@ -261,55 +265,55 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.18.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "js",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.5",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7",
       "packageUri": "lib/",
-      "languageVersion": "2.16"
+      "languageVersion": "2.19"
     },
     {
       "name": "just_audio",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio-0.9.31",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio-0.9.34",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "just_audio_background",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_background-0.0.1-beta.9",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_background-0.0.1-beta.10",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "just_audio_platform_interface",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_platform_interface-4.2.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_platform_interface-4.2.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "just_audio_web",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_web-0.4.7",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/just_audio_web-0.4.8",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "line_icons",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/line_icons-2.0.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/line_icons-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "lints",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.0.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "matcher",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.13",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.15",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -321,7 +325,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -339,51 +343,79 @@
     },
     {
       "name": "on_audio_query",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query-2.6.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query-2.9.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "on_audio_query_android",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query_android-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "on_audio_query_ios",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query_ios-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "on_audio_query_platform_interface",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query_platform_interface-1.4.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query_platform_interface-1.7.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "on_audio_query_web",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query_web-1.3.2+2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/on_audio_query_web-1.6.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "path",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path_provider",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider-2.0.12",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider-2.0.15",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.17"
     },
     {
       "name": "path_provider_android",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.0.22",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.0.27",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.17"
     },
     {
       "name": "path_provider_foundation",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_foundation-2.1.1",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_foundation-2.2.4",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "path_provider_linux",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_linux-2.1.7",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_linux-2.1.11",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "path_provider_platform_interface",
@@ -393,43 +425,41 @@
     },
     {
       "name": "path_provider_windows",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_windows-2.1.3",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_windows-2.1.7",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
-      "name": "pedantic",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/pedantic-1.11.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "permission_handler",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler-10.2.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler-10.4.3",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "permission_handler_android",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_android-10.2.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_android-10.3.2",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "permission_handler_apple",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_apple-9.0.7",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_apple-9.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "permission_handler_platform_interface",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_platform_interface-3.9.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_platform_interface-3.11.3",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "permission_handler_windows",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_windows-0.1.2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_windows-0.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -441,9 +471,9 @@
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/petitparser-5.1.0",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/petitparser-5.4.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "platform",
@@ -458,12 +488,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "process",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/process-4.2.4",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
       "name": "rxdart",
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.27.7",
       "packageUri": "lib/",
@@ -471,51 +495,79 @@
     },
     {
       "name": "shared_preferences",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.0.17",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.2.0",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.18"
     },
     {
       "name": "shared_preferences_android",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.0.15",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.0",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.18"
     },
     {
       "name": "shared_preferences_foundation",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_foundation-2.1.3",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_foundation-2.3.2",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "shared_preferences_linux",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_linux-2.1.3",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_linux-2.3.0",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "shared_preferences_platform_interface",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_platform_interface-2.1.0",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.0",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "shared_preferences_web",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_web-2.0.4",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_web-2.2.0",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "shared_preferences_windows",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_windows-2.1.3",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_windows-2.3.0",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "sky_engine",
       "rootUri": "file:///D:/flutter%20sdk/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "source_span",
@@ -525,13 +577,17 @@
     },
     {
       "name": "sqflite",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.2.4+1",
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.2.8+4",
+>>>>>>> Stashed changes
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "sqflite_common",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.4.2+2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.4.5+1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -555,7 +611,7 @@
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.0.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -567,15 +623,15 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.4.16",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.5.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.1",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "uuid",
@@ -591,21 +647,27 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/win32-3.1.3",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.0.5",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "xdg_directories",
+<<<<<<< Updated upstream
       "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-0.2.0+3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+=======
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+>>>>>>> Stashed changes
     },
     {
       "name": "xml",
-      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.2.2",
+      "rootUri": "file:///C:/Users/prudh/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.3.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "proto_music_player",
@@ -615,10 +677,16 @@
     }
   ],
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   "generated": "2023-02-19T14:07:46.438249Z",
 =======
   "generated": "2023-02-22T03:05:45.491855Z",
 >>>>>>> Stashed changes
   "generator": "pub",
   "generatorVersion": "2.19.1"
+=======
+  "generated": "2023-09-03T17:20:39.069435Z",
+  "generator": "pub",
+  "generatorVersion": "3.0.5"
+>>>>>>> Stashed changes
 }

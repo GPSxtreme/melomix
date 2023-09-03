@@ -10,9 +10,20 @@ import 'package:http/http.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:proto_music_player/models/album_by_id.dart';
+import 'package:proto_music_player/models/artist_albums.dart';
+import 'package:proto_music_player/models/artist_details_by_id.dart';
+import 'package:proto_music_player/models/artist_recommendations.dart';
+import 'package:proto_music_player/models/artist_songs.dart';
+import 'package:proto_music_player/models/download_url.dart';
+import 'package:proto_music_player/models/playlist_by_id.dart';
+import 'package:proto_music_player/models/search_all.dart';
+import 'package:proto_music_player/models/song_by_query.dart';
+import 'package:proto_music_player/models/song_details_by_id.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/player_buttons.dart';
 import '../models/local_song_data.dart';
+import '../models/song.dart';
 import '../screens/full_player_screen.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'dart:io';
@@ -27,164 +38,151 @@ import 'app_settings.dart';
 class HelperFunctions{
   //app dir name
   static String appDir = "storage/emulated/0/proto player";
-  static String apiDomain = "https://saavn-api-weld.vercel.app/";
+  static String apiDomain = "https://saavn.me/";
 
+<<<<<<< Updated upstream
 
   static Future<Map> getSongByName(String query,int limit)async{
+=======
+  static Future<SongByQuery?> getSongByName(String query,int limit)async{
+>>>>>>> Stashed changes
     try{
       String apiEndPoint = "${apiDomain}search/songs?query=${query.replaceAll(" ", "+")}&page=1&limit=$limit";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = songByQueryFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getSongByName method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
 
-  static Future<Map> getSongById(String songId)async{
+  static Future<SongDetailsById?> getSongById(String songId)async{
     try{
       String apiEndPoint = "${apiDomain}songs?id=$songId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = songDetailsByIdFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getSongById method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
 
-  static Future<Map> getPlaylistById(String playlistId)async{
+  static Future<PlaylistById?> getPlaylistById(String playlistId)async{
     try{
       String apiEndPoint = "${apiDomain}playlists?id=$playlistId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = playlistByIdFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getPlaylistById method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
 
-  static Future<Map> getAlbumById(String albumId)async{
+  static Future<AlbumById?> getAlbumById(String albumId)async{
     try{
       String apiEndPoint = "${apiDomain}albums?id=$albumId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = albumByIdFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getAlbumById method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
 
-  static Future<Map> searchAll(String query) async{
+  static Future<SearchAll?> searchAll(String query) async{
     try{
       String apiEndPoint = "${apiDomain}search/all?query=${query.replaceAll(" ", "+")}";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = searchAllFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
-        print("getAlbumById method error: $e");
+        print("search all method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
   ///Returns artist details.
-  static Future<Map> getArtistDetails(String id)async{
+  static Future<ArtistDetailsById?> getArtistDetails(String id)async{
     try{
       String apiEndPoint = "${apiDomain}artists?id=$id";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = artistDetailsByIdFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getArtistDetails method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
 
   ///Returns artist's albums.
-  static Future<Map> getArtistAlbums(String id,String pageNo)async{
+  static Future<ArtistAlbums?> getArtistAlbums(String id,String pageNo)async{
     try{
       String apiEndPoint = "${apiDomain}artists/$id/albums?page=$pageNo";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = artistAlbumsFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getArtistAlbums method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
 
   ///Returns artist's songs.
-  static Future<Map> getArtistSongs(String id,String pageNo)async{
+  static Future<ArtistSongs?> getArtistSongs(String id,String pageNo)async{
     try{
       String apiEndPoint = "${apiDomain}artists/$id/songs?page=$pageNo";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = artistSongsFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getArtistSongs method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
 
   ///Returns artist's recommendations.
-  static Future<Map> getArtistRecommendations(String id,String songId)async{
+  static Future<ArtistRecommendations?> getArtistRecommendations(String id,String songId)async{
     try{
       String apiEndPoint = "${apiDomain}artists/$id/recommendations/$songId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = artistRecommendationsFromJson(response.body);
       return data;
     }catch(e){
       if (kDebugMode) {
         print("getArtistRecommendations method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
     }
+    return null;
   }
+<<<<<<< Updated upstream
   static String returnDownloadUrl(List list){
     for(Map qualityMap in list){
       //if device is connected to wifi return wifi quality.
@@ -200,27 +198,39 @@ class HelperFunctions{
           print("over mobile data : ${AppSettings.qualityMd}");
         }
         return qualityMap["link"];
+=======
+  static String getStreamUrl(List<DownloadUrl> list){
+    String sq = AppSettings.getSongQuality();
+    for(DownloadUrl qualityMap in list){
+      if(qualityMap.quality == sq){
+        return qualityMap.link;
+>>>>>>> Stashed changes
       }
     }
     //user quality not found so return highest quality available.
-    return list[list.length - 1]["link"];
+    return list[list.length - 1].link;
   }
-  static Future<void> playHttpSong(Map song,AudioPlayer player)async{
+
+  static Future<void> playHttpSong(Song song,AudioPlayer player)async{
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
       //check if song already exists in queue
-      if(checkIfAddedInQueue(song["id"])){
-        int existingSongIndex = await getQueueIndexBySongId(song["id"]);
+      if(checkIfAddedInQueue(song.id)){
+        int existingSongIndex = await getQueueIndexBySongId(song.id);
         await player.seek(Duration.zero, index: existingSongIndex);
       }else{
+<<<<<<< Updated upstream
         await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(returnDownloadUrl(song["downloadUrl"])),tag: MediaItem(
+=======
+        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(getStreamUrl(song.downloadUrl)),tag: MediaItem(
+>>>>>>> Stashed changes
           // Specify a unique ID for each media item:
-          id: '${song["id"]}',
+          id: song.id,
           // Metadata to display in the notification:
-          album: htmlDecode.convert(song["album"]["name"]),
-          title: htmlDecode.convert(song["name"]),
-          artUri: Uri.parse(song["image"][1]["link"]),
-          extras: song as Map<String,dynamic>
+          album: htmlDecode.convert(song.album.name),
+          title: htmlDecode.convert(song.name),
+          artUri: Uri.parse(song.image[1].link),
+          extras: song.toJson()
         )));
         if(player.audioSource == null){
           await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
@@ -235,16 +245,20 @@ class HelperFunctions{
       }
     }
   }
-  static Future<void> addSongToQueue(Map song,AudioPlayer player)async{
+  static Future<void> addSongToQueue(Song song,AudioPlayer player)async{
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
+<<<<<<< Updated upstream
       await AppRouter.queue.add(AudioSource.uri(Uri.parse(returnDownloadUrl(song["downloadUrl"])),tag: MediaItem(
+=======
+      await AppRouter.queue.add(AudioSource.uri(Uri.parse(getStreamUrl(song.downloadUrl)),tag: MediaItem(
+>>>>>>> Stashed changes
         // Specify a unique ID for each media item:
-          id: '${song["id"]}',
+          id: song.id,
           // Metadata to display in the notification:
-          album: htmlDecode.convert(song["album"]["name"]),
-          title: htmlDecode.convert(song["name"]),
-          artUri: Uri.parse(song["image"][1]["link"]),
+          album: htmlDecode.convert(song.album.name),
+          title: htmlDecode.convert(song.name),
+          artUri: Uri.parse(song.image[1].link),
           extras: song as Map<String,dynamic>
       )));
       if(AppRouter.queue.length == 1){
@@ -341,20 +355,20 @@ class HelperFunctions{
   }
 
   ///Sets song tags to the given song.
-  static Future<void> setSongTags({required Map songData, required String songPath , required String imgFilePath})async {
+  static Future<void> setSongTags({required Song songData, required String songPath , required String imgFilePath})async {
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
       final tagger = Audiotagger();
       final tags = Tag(
-        title: htmlDecode.convert(songData["name"]),
-        artist: htmlDecode.convert(songData["primaryArtists"]),
-        album: htmlDecode.convert(songData["album"]["name"]),
-        id: songData["id"],
+        title: htmlDecode.convert(songData.name),
+        artist: htmlDecode.convert(songData.primaryArtists),
+        album: htmlDecode.convert(songData.album.name),
+        id: songData.id,
         artwork: imgFilePath,
-        explicitContent: songData["explicitContent"].toString(),
-        hasLyrics: songData["hasLyrics"],
-        copyright: songData["copyright"],
-        year: songData["year"]
+        explicitContent: songData.explicitContent.toString(),
+        hasLyrics: songData.hasLyrics,
+        copyright: songData.copyright,
+        year: songData.year
       );
       final isSuccess = await tagger.writeTags(
         path: songPath,
@@ -385,12 +399,12 @@ class HelperFunctions{
     }
   }
   ///Downloads http songs to device memory with Id3 tags using [setSongTags] function.
-  static Future<void> downloadHttpSong({required Map songData})async{
+  static Future<void> downloadHttpSong({required Song songData})async{
     try{
       HtmlUnescape htmlDecode = HtmlUnescape();
-      String link =  songData["downloadUrl"][3]["link"];
-      String parentDir = htmlDecode.convert(songData["album"]["name"]);
-      String fileName = htmlDecode.convert(songData["name"]);
+      String link =  songData.downloadUrl[songData.downloadUrl.length-1].link;
+      String parentDir = htmlDecode.convert(songData.album.name);
+      String fileName = htmlDecode.convert(songData.name);
       bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
       String filePath = '$appDir/$parentDir/$fileName.mp3';
       String imgFilePath = '$appDir/$parentDir/${fileName}_img.jpg';
@@ -398,7 +412,7 @@ class HelperFunctions{
         await HelperFunctions.createLocalDirInApp(parentDir);
       }
       //download song artwork
-      await downloadSongArtwork(songData["image"][2]["link"], imgFilePath);
+      await downloadSongArtwork(songData.image[songData.image.length-1].link, imgFilePath);
       final downloaderUtils = DownloaderUtils(
         progressCallback: (current, total) {
           final progress = (current / total) * 100;

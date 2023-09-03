@@ -128,10 +128,10 @@ class _MyPlaylistsScreenState extends State<MyPlaylistsScreen> {
         children: [
           //body
           !isLoaded ?
-          Center(
+          const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 SpinKitRipple(color: Colors.white,size: 60,),
                 SizedBox(height: 20,),
                 Text("Hold tight this might take some time.",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),textAlign: TextAlign.center,)

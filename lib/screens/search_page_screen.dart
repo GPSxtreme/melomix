@@ -5,6 +5,11 @@ import 'package:proto_music_player/components/top_result_common_tile.dart';
 import 'package:proto_music_player/components/trending_song_tile.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import '../components/online_song_tile.dart';
+import '../models/playlist_by_id.dart';
+import '../models/search_all.dart';
+import '../models/song.dart';
+import '../models/song_by_query.dart';
+import '../models/song_details_by_id.dart';
 import '../services/helper_functions.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -17,9 +22,9 @@ class SearchPageScreen extends StatefulWidget {
 
 class _SearchPageScreenState extends State<SearchPageScreen> {
   final searchController = TextEditingController();
-  Map allSongResultsData = {};
+  SongByQuery? allSongResultsData;
   List<OnlineSongResultTile> allSongResultsList = [];
-  Map allDataResultsData = {};
+  SearchAll? allDataResultsData;
   List<OnlineSongResultTile> topSongsResultsList = [];
   List<CommonResultTile> playlistsResultsList = [];
   List<CommonResultTile> albumsResultsList = [];
@@ -42,8 +47,8 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   }
   getAllSongResults(String query)async{
     allSongResultsData = await HelperFunctions.getSongByName(query.trim(), 10);
-    if(allSongResultsData["status"] == "SUCCESS" && allSongResultsData["data"]["results"].isNotEmpty){
-      for(Map song in allSongResultsData["data"]["results"]){
+    if(allSongResultsData != null && allSongResultsData!.status == "SUCCESS" && allSongResultsData!.data.results.isNotEmpty){
+      for(Song song in allSongResultsData!.data.results){
         setState(() {
           allSongResultsList.add(OnlineSongResultTile(song: song,player: mainAudioPlayer,));
         });
@@ -54,8 +59,10 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   assignTopResult(Map data)async{
     topResult = null;
     if(data["type"] == "song"){
-      Map fetchedSong = await HelperFunctions.getSongById(data["id"]);
-      topResult = OnlineSongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0]);
+      SongDetailsById? fetchedSong = await HelperFunctions.getSongById(data["id"]);
+      if(fetchedSong != null) {
+        topResult = OnlineSongResultTile(player: mainAudioPlayer, song: fetchedSong.data.first);
+      }
     }else {
       topResult = TopCommonResultTile(data: data);
     }
@@ -68,52 +75,56 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
     });
     resetData();
     allDataResultsData = await HelperFunctions.searchAll(query.trim());
-    if(allDataResultsData["data"]["songs"]["results"].isEmpty){
+    if(allDataResultsData != null){
+      if(allDataResultsData!.data.songs.results.isEmpty){
+        setState(() {
+          noResults = true;
+        });
+        return;
+      }
+      else if(allDataResultsData!.status == "SUCCESS"){
+        if(allDataResultsData!.data.topQuery.results.isNotEmpty){
+          for(TopQueryResult topQuery in allDataResultsData!.data.topQuery.results){
+            await assignTopResult(topQuery.toJson());
+          }
+        }
+        if(allDataResultsData!.data.songs.results.isNotEmpty){
+          for(SongsResult song in allDataResultsData!.data.songs.results){
+            SongDetailsById? fetchedSong = await HelperFunctions.getSongById(song.id);
+            if(fetchedSong != null) {
+              topSongsResultsList.add(OnlineSongResultTile(player: mainAudioPlayer, song: fetchedSong.data.first ));
+            }
+          }
+        }
+        if(allDataResultsData!.data.albums.results.isNotEmpty){
+          for(AlbumsResult album in allDataResultsData!.data.albums.results){
+            albumsResultsList.add(CommonResultTile(data: album.toJson(),));
+          }
+        }
+        if(allDataResultsData!.data.artists.results.isNotEmpty){
+          for(ArtistsResult artist in allDataResultsData!.data.artists.results){
+            artistsResultsList.add(CommonResultTile(data: artist.toJson(),));
+          }
+        }
+        if(allDataResultsData!.data.playlists.results.isNotEmpty){
+          for(PlaylistsResult playlist in allDataResultsData!.data.playlists.results){
+            playlistsResultsList.add(CommonResultTile(data: playlist.toJson(),));
+          }
+        }
+      }
+      await getAllSongResults(query);
       setState(() {
-        noResults = true;
+        isProcessing = false;
       });
-      return;
     }
-    else if(allDataResultsData["status"] == "SUCCESS" && allDataResultsData["data"] != null){
-      if(allDataResultsData["data"]["topQuery"]["results"].isNotEmpty){
-        for(Map topQuery in allDataResultsData["data"]["topQuery"]["results"]){
-          await assignTopResult(topQuery);
-        }
-      }
-      if(allDataResultsData["data"]["songs"]["results"].isNotEmpty){
-        for(Map song in allDataResultsData["data"]["songs"]["results"]){
-          Map fetchedSong = await HelperFunctions.getSongById(song["id"]);
-          topSongsResultsList.add(OnlineSongResultTile(player: mainAudioPlayer, song: fetchedSong["data"][0] ));
-        }
-      }
-      if(allDataResultsData["data"]["albums"]["results"].isNotEmpty){
-        for(Map album in allDataResultsData["data"]["albums"]["results"]){
-          albumsResultsList.add(CommonResultTile(data: album,));
-        }
-      }
-      if(allDataResultsData["data"]["artists"]["results"].isNotEmpty){
-        for(Map artist in allDataResultsData["data"]["artists"]["results"]){
-          artistsResultsList.add(CommonResultTile(data: artist,));
-        }
-      }
-      if(allDataResultsData["data"]["playlists"]["results"].isNotEmpty){
-        for(Map playlist in allDataResultsData["data"]["playlists"]["results"]){
-          playlistsResultsList.add(CommonResultTile(data: playlist,));
-        }
-      }
-    }
-    await getAllSongResults(query);
-    setState(() {
-      isProcessing = false;
-    });
   }
   getTrendingSongs()async{
     setState(() {
       isProcessing = true;
     });
-    Map data = await HelperFunctions.getPlaylistById("110858205");
-    if(data.isNotEmpty && data["data"]["songs"].isNotEmpty){
-      for(Map song in data["data"]["songs"]){
+    PlaylistById? data = await HelperFunctions.getPlaylistById("110858205");
+    if(data != null && data.data.songs.isNotEmpty){
+      for(Song song in data.data.songs){
         trendingSongs.add(TrendingSongTile(songData: song));
       }
     }
@@ -123,14 +134,12 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getTrendingSongs();
     searchController.addListener(searchLogic);
   }
   @override
   void dispose() {
-    // TODO: implement dispose
     searchController.dispose();
     super.dispose();
   }

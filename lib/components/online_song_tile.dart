@@ -8,6 +8,8 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../models/song.dart';
+
 enum DropdownItem{
   queue,
   download
@@ -16,7 +18,7 @@ enum DropdownItem{
 
 class OnlineSongResultTile extends StatefulWidget {
   const OnlineSongResultTile({Key? key, required this.player, required this.song}) : super(key: key);
-  final Map song;
+  final Song song;
   final AudioPlayer player;
   @override
   State<OnlineSongResultTile> createState() => _OnlineSongResultTileState();
@@ -30,7 +32,7 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    addedToQueue = HelperFunctions.checkIfAddedInQueue(widget.song["id"]);
+    addedToQueue = HelperFunctions.checkIfAddedInQueue(widget.song.id);
   }
   @override
   Widget build(BuildContext context) {
@@ -38,13 +40,13 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
       onTap: ()async{
         await HelperFunctions.playHttpSong(widget.song, widget.player);
       },
-      title: Text(htmlDecode.convert(widget.song["name"]),style: const TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),maxLines: 2,overflow: TextOverflow.ellipsis,),
+      title: Text(htmlDecode.convert(widget.song.name),style: const TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),maxLines: 2,overflow: TextOverflow.ellipsis,),
       subtitle:Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Row(
           children: [
             //if has explicit content
-            if(widget.song["explicitContent"] == 1) ...[
+            if(widget.song.explicitContent == 1) ...[
               Container(
                 decoration: BoxDecoration(
                     color: HexColor("4f4f4f"),
@@ -57,14 +59,14 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
               ),
               const SizedBox(width: 5,),
             ],
-            Flexible(child: Text(htmlDecode.convert(widget.song["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+            Flexible(child: Text(htmlDecode.convert(widget.song.primaryArtists),style: const TextStyle(color: Colors.white70,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,)),
           ],
         ),
       ),
       leading: CircleAvatar(
         radius: 30,
         backgroundColor: HexColor("222222"),
-        backgroundImage: NetworkImage(widget.song["image"][1]["link"]),
+        backgroundImage: NetworkImage(widget.song.image[1].link),
         child: StreamBuilder(
           stream: mainAudioPlayer.currentIndexStream,
           builder: (buildContext, AsyncSnapshot<int?> snapshot){
@@ -75,7 +77,7 @@ class _OnlineSongResultTileState extends State<OnlineSongResultTile> {
                   if(isPlaying != null &&
                       isPlaying
                       && snapshot.hasData &&
-                      mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["id"] == widget.song["id"]){
+                      mainAudioPlayer.audioSource?.sequence[snapshot.data!].tag.extras["id"] == widget.song.id){
                     return const SpinKitWave(color: Colors.white70,size: 35,);
                   }
                   return const SizedBox();

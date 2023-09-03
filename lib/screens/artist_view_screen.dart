@@ -7,6 +7,9 @@ import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import '../components/online_song_tile.dart';
 import '../components/top_album_tile.dart';
+import '../models/album.dart';
+import '../models/artist_details_by_id.dart';
+import '../models/song.dart';
 
 class ArtistViewScreen extends StatefulWidget {
   const ArtistViewScreen({Key? key, required this.artistId}) : super(key: key);
@@ -17,7 +20,7 @@ class ArtistViewScreen extends StatefulWidget {
 
 class _ArtistViewScreenState extends State<ArtistViewScreen> {
   bool isLoaded = false;
-  Map artistDetails = {};
+  ArtistDetailsById? artistDetails;
   List<OnlineSongResultTile> songs = [];
   List<TopAlbumTile> albums = [];
   List<OnlineSongResultTile> recommendations = [];
@@ -25,7 +28,6 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
   var formatter = NumberFormat('#,##,000');
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchData();
   }
@@ -35,19 +37,21 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
       final artistSongs = await HelperFunctions.getArtistSongs(widget.artistId, "1");
       final artistAlbums = await HelperFunctions.getArtistAlbums(widget.artistId, "1");
       //put data into tiles.
-      if(artistSongs["data"]["results"].isNotEmpty){
-        for(Map song in artistSongs["data"]["results"]){
+      if(artistSongs != null && artistSongs.data.results.isNotEmpty){
+        for(Song song in artistSongs.data.results){
           songs.add(OnlineSongResultTile(player: mainAudioPlayer, song: song));
         }
         //fetch artist recommendations.
-        final artistRecommendations = await HelperFunctions.getArtistRecommendations(widget.artistId, artistSongs["data"]["results"][0]["id"]);
-        for(Map song in artistRecommendations["data"]){
-          recommendations.add(OnlineSongResultTile(player: mainAudioPlayer, song: song));
+        final artistRecommendations = await HelperFunctions.getArtistRecommendations(widget.artistId, artistSongs.data.results.first.id);
+        if(artistRecommendations != null){
+          for(Song song in artistRecommendations.data){
+            recommendations.add(OnlineSongResultTile(player: mainAudioPlayer, song: song));
+          }
         }
       }
-      if(artistAlbums["data"]["results"].isNotEmpty){
-        for(Map album in artistAlbums["data"]["results"]){
-          albums.add(TopAlbumTile(data: album));
+      if(artistAlbums != null &&  artistAlbums.data.results.isNotEmpty){
+        for(Album album in artistAlbums.data.results){
+          albums.add(TopAlbumTile(data: album.toJson()));
         }
       }
     }
@@ -80,7 +84,7 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(artistDetails["data"]["image"][2]["link"]),
+                      image: NetworkImage(artistDetails!.data.image[2].link),
                       fit: BoxFit.cover,
                       opacity: 1
                     ),
@@ -119,7 +123,7 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
                                     borderRadius: BorderRadius.circular(65),
                                     child: CircleAvatar(
                                       radius: 90,
-                                      backgroundImage: NetworkImage(artistDetails["data"]["image"][2]["link"],),
+                                      backgroundImage: NetworkImage(artistDetails!.data.image[2].link,),
                                       backgroundColor: Colors.transparent,
                                     )
                                 )
@@ -131,14 +135,14 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    htmlDecode.convert(artistDetails["data"]["name"]).trim(),
+                                    htmlDecode.convert(artistDetails!.data.name).trim(),
                                     maxLines: 2,
                                     style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w800),
                                     overflow:TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 15,),
                                   Text(
-                                    "${artistDetails["data"]["dominantType"].trim()} . ${artistDetails["data"]["dominantLanguage"].trim()}",
+                                    "${artistDetails!.data.dominantType.trim()} . ${artistDetails!.data.dominantLanguage.trim()}",
                                     maxLines: 2,
                                     style: const TextStyle(color: Colors.white70,fontSize: 18 ,fontWeight: FontWeight.w700),
                                     overflow:TextOverflow.ellipsis,
@@ -149,7 +153,7 @@ class _ArtistViewScreenState extends State<ArtistViewScreen> {
                                     children: [
                                       const Icon(Icons.people_alt_rounded,color: Colors.white70,size: 25,),
                                       Text(
-                                        " ${formatter.format(int.parse(artistDetails["data"]["fanCount"]))} Listeners",
+                                        " ${formatter.format(int.parse(artistDetails!.data.fanCount))} Listeners",
                                         maxLines: 2,
                                         style: const TextStyle(color: Colors.white70,fontSize: 18 ,fontWeight: FontWeight.w700),
                                         overflow:TextOverflow.ellipsis,

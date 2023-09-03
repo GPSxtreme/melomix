@@ -4,11 +4,12 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 
+import '../models/song.dart';
 import '../services/helper_functions.dart';
 
 class TrendingSongTile extends StatefulWidget {
   const TrendingSongTile({Key? key, required this.songData}) : super(key: key);
-  final Map songData;
+  final Song songData;
   @override
   State<TrendingSongTile> createState() => _TrendingSongTileState();
 }
@@ -22,13 +23,13 @@ class _TrendingSongTileState extends State<TrendingSongTile> {
       onTap: ()async{
         await HelperFunctions.playHttpSong(widget.songData, mainAudioPlayer);
       },
-      title: Text(htmlDecode.convert(widget.songData["name"]),style: const TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),maxLines: 2,overflow: TextOverflow.ellipsis,),
+      title: Text(htmlDecode.convert(widget.songData.name),style: const TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),maxLines: 2,overflow: TextOverflow.ellipsis,),
       subtitle:Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Row(
           children: [
             //if has explicit content
-            if(widget.songData["explicitContent"] == 1) ...[
+            if(widget.songData.explicitContent == 1) ...[
               Container(
                 decoration: BoxDecoration(
                     color: HexColor("4f4f4f"),
@@ -41,14 +42,14 @@ class _TrendingSongTileState extends State<TrendingSongTile> {
               ),
               const SizedBox(width: 5,),
             ],
-            Flexible(child: Text(htmlDecode.convert(widget.songData["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+            Flexible(child: Text(htmlDecode.convert(widget.songData.primaryArtists),style: const TextStyle(color: Colors.white70,fontSize: 13),maxLines: 2,overflow: TextOverflow.ellipsis,)),
           ],
         ),
       ),
       leading: CircleAvatar(
         radius: 30,
         backgroundColor: HexColor("222222"),
-        backgroundImage: NetworkImage(widget.songData["image"][1]["link"]),
+        backgroundImage: NetworkImage(widget.songData.image[1].link),
         child: StreamBuilder(
           stream: mainAudioPlayer.currentIndexStream,
           builder: (buildContext, AsyncSnapshot<int?> snapshot){
@@ -59,7 +60,7 @@ class _TrendingSongTileState extends State<TrendingSongTile> {
                 if(isPlaying != null &&
                     isPlaying
                     && snapshot.hasData &&
-                    mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["id"] == widget.songData["id"]){
+                    mainAudioPlayer.audioSource!.sequence[snapshot.data!].tag.extras["id"] == widget.songData.id){
                   return const SpinKitWave(color: Colors.white70,size: 35,);
                 }
                 return const SizedBox();

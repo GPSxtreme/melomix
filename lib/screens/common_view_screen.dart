@@ -7,6 +7,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:proto_music_player/screens/app_router_screen.dart';
 import 'package:proto_music_player/services/helper_functions.dart';
 import '../components/online_song_tile.dart';
+import '../models/song.dart';
 
 class CommonViewScreen extends StatefulWidget {
   const CommonViewScreen({Key? key, required this.id, required this.type}) : super(key: key);
@@ -17,7 +18,7 @@ class CommonViewScreen extends StatefulWidget {
 }
 
 class _CommonViewScreenState extends State<CommonViewScreen> {
-  Map data = {};
+  dynamic data = {};
   List<OnlineSongResultTile> allSongResultsList = [];
   bool isLoaded = false;
   HtmlUnescape htmlDecode = HtmlUnescape();
@@ -27,9 +28,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
   late bool isAddedToQueue;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //fetch album/playlist details
     fetchData();
   }
   fetchData()async{
@@ -38,13 +37,13 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
     }else{
       data = await HelperFunctions.getPlaylistById(widget.id);
     }
-    if(data["status"] == "SUCCESS" && data["data"]["songs"].length != 0){
+    if(data.status == "SUCCESS" && data.data.songs.length != 0){
       //if in queue returns index != -1
-      firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data["data"]["songs"][0]["id"]);
+      firstSongIndexInQueue = await HelperFunctions.getQueueIndexBySongId(data.data.songs.first.id);
       //put data into list
       int i = 0;
-      for(Map song in data["data"]["songs"]){
-        isAddedToQueue = HelperFunctions.checkIfAddedInQueue(data["data"]["songs"][i]["id"]);
+      for(Song song in data.data.songs){
+        isAddedToQueue = HelperFunctions.checkIfAddedInQueue(data.data.songs[i].id);
         allSongResultsList.add(OnlineSongResultTile(player: mainAudioPlayer,song: song,));
         i++;
       }
@@ -68,7 +67,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
           firstSongIndexInQueue = 0;
           isAddedToQueue = true;
         });
-        await HelperFunctions.playGivenListOfSongs(data["data"]["songs"]);
+        await HelperFunctions.playGivenListOfSongs(data.data.songs);
       }
     }
   }
@@ -79,7 +78,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
        print("online model : current index : ${mainAudioPlayer.currentIndex!} , first song index : $firstSongIndexInQueue , queue len :${AppRouter.queue.length}");
      }
      if(firstSongIndexInQueue != -1 && mainAudioPlayer.currentIndex! >= firstSongIndexInQueue &&
-         data["data"]["songs"][mainAudioPlayer.currentIndex! - firstSongIndexInQueue ]["id"] == mainAudioPlayer.sequence![mainAudioPlayer.currentIndex!].tag.extras["id"]){
+       data.data.songs[mainAudioPlayer.currentIndex! - firstSongIndexInQueue ].id == mainAudioPlayer.sequence![mainAudioPlayer.currentIndex!].tag.extras["id"]){
        //does belong
        return true;
      }
@@ -180,7 +179,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                 Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(data["data"]["image"][2]["link"]),
+                          image: NetworkImage(data.data.image[2].link),
                           fit: BoxFit.cover,
                           opacity: 1
                       )
@@ -214,7 +213,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                             Center(
                                 child: Material(
                                   elevation: 10,
-                                    child: Image.network(data["data"]["image"][2]["link"],height: 220,width: 220,)
+                                    child: Image.network(data.data.image[2].link,height: 220,width: 220,)
                                 )
                             ),
                             Padding(
@@ -225,7 +224,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                 children: [
                                   const SizedBox(height: 20,),
                                   Text(
-                                    htmlDecode.convert(data["data"]["name"]).trim(),
+                                    htmlDecode.convert(data.data.name).trim(),
                                     maxLines: 2,
                                     style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w800),
                                     textAlign: TextAlign.center,
@@ -241,7 +240,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              widget.type == "album" ? htmlDecode.convert(data["data"]["primaryArtists"]).trim():"Saavn",
+                                              widget.type == "album" ? htmlDecode.convert(data.data.primaryArtists).trim():"Saavn",
                                               maxLines: 2,
                                               style: const TextStyle(color: Colors.white60,fontSize: 18,fontWeight: FontWeight.w700),
                                               textAlign: TextAlign.start,
@@ -249,7 +248,7 @@ class _CommonViewScreenState extends State<CommonViewScreen> {
                                             ),
                                             const SizedBox(height: 15,),
                                             Text(
-                                              "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data["data"]["releaseDate"]).toString().split("-")[0]:""}",
+                                              "${widget.type.toUpperCase()} ${widget.type == "album" ? htmlDecode.convert(data.data.releaseDate.toString()).toString().split("-")[0]:""}",
                                               maxLines: 1,
                                               style: const TextStyle(color: Colors.white60,fontSize: 13,fontWeight: FontWeight.w500),
                                               textAlign: TextAlign.start,

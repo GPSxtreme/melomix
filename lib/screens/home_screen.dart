@@ -1,14 +1,18 @@
-import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
 import '../components/home_screen_module.dart';
 import '../services/helper_functions.dart';
 =======
 import '../components/online_song_tile.dart';
+=======
+import 'package:proto_music_player/models/song_details_by_id.dart';
+import '../models/home_page_data.dart';
+>>>>>>> Stashed changes
 import '../services/helper_functions.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'app_router_screen.dart';
@@ -60,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if(languages == null){
         await LocalDataService.addLanguage("english");
       }
+<<<<<<< Updated upstream
       Response response = await get(Uri.parse("${HelperFunctions.apiDomain}modules?language=${languages ?? "english"}"));
       final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
       if(data["status"] == "SUCCESS"){
@@ -67,32 +72,43 @@ class _HomeScreenState extends State<HomeScreen> {
           for(Map rawSong in data["data"]["trending"]["songs"]){
             Map song = await HelperFunctions.getSongById(rawSong["id"]);
             trendingSongs.add(OnlineSongResultTile(player: mainAudioPlayer, song: song["data"][0]));
+=======
+      Response response = await get(Uri.parse("${HelperFunctions.apiDomain}modules?language=$languages"));
+      final homePageData = homePageDataFromJson(response.body);
+      if(homePageData.status == "SUCCESS"){
+        if(homePageData.data.trending.songs.isNotEmpty){
+          for(Song rawSong in homePageData.data.trending.songs){
+            SongDetailsById? song = await HelperFunctions.getSongById(rawSong.id);
+            if(song != null) {
+              trendingSongs.add(OnlineSongResultTile(player: mainAudioPlayer, song: song!.data.first));
+            }
+>>>>>>> Stashed changes
           }
-          if(data["data"]["trending"]["albums"].isNotEmpty){
+          if(homePageData.data.trending.albums.isNotEmpty){
             int count = totalCardsCount;
-            for(Map album in data["data"]["trending"]["albums"]){
+            for(TrendingAlbum album in homePageData.data.trending.albums){
               count--;
               if(count >= 0){
-                displayCards.add(TopCarouselCard(data: album));
+                displayCards.add(TopCarouselCard(data: album.toJson()));
               }else{
-                trendingAlbums.add(TopAlbumTile(data: album));
+                trendingAlbums.add(TopAlbumTile(data: album.toJson()));
               }
             }
           }
         }
-        if(data["data"]["charts"].isNotEmpty){
-          for(Map chart in data["data"]["charts"]){
-            charts.add(CommonResultTile(data: chart));
+        if(homePageData.data.charts.isNotEmpty){
+          for(Chart chart in homePageData.data.charts){
+            charts.add(CommonResultTile(data: chart.toJson()));
           }
         }
-        if(data["data"]["playlists"].isNotEmpty){
-          for(Map playlist in data["data"]["playlists"]){
-            playlists.add(CommonResultTile(data: playlist));
+        if(homePageData.data.playlists.isNotEmpty){
+          for(Playlist playlist in homePageData.data.playlists){
+            playlists.add(CommonResultTile(data: playlist.toJson()));
           }
         }
-        if(data["data"]["albums"].isNotEmpty){
-          for(Map album in data["data"]["albums"]){
-            albums.add(CommonResultTile(data: album));
+        if(homePageData.data.albums.isNotEmpty){
+          for(DataAlbum dataAlbum in homePageData.data.albums){
+            albums.add(CommonResultTile(data: dataAlbum.toJson()));
           }
         }
       }
