@@ -28,273 +28,269 @@ extension StringExtension on String {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }
-class HelperFunctions{
+
+class HelperFunctions {
   //app dir name
   static String appDir = "storage/emulated/0/proto player";
-  static String apiDomain = "https://saavn.me/";
+  static String apiDomain = "https://saavn-api-weld.vercel.app/";
 
-  static Future<Map> getSongByName(String query,int limit)async{
-    try{
-      String apiEndPoint = "${apiDomain}search/songs?query=${query.replaceAll(" ", "+")}&page=1&limit=$limit";
+  static Future<Map> getSongByName(String query, int limit) async {
+    try {
+      String apiEndPoint =
+          "${apiDomain}search/songs?query=${query.replaceAll(" ", "+")}&page=1&limit=$limit";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getSongByName method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
 
-  static Future<Map> getSongById(String songId)async{
-    try{
+  static Future<Map> getSongById(String songId) async {
+    try {
       String apiEndPoint = "${apiDomain}songs?id=$songId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getSongById method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
 
-  static Future<Map> getPlaylistById(String playlistId)async{
-    try{
+  static Future<Map> getPlaylistById(String playlistId) async {
+    try {
       String apiEndPoint = "${apiDomain}playlists?id=$playlistId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getPlaylistById method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
 
-  static Future<Map> getAlbumById(String albumId)async{
-    try{
+  static Future<Map> getAlbumById(String albumId) async {
+    try {
       String apiEndPoint = "${apiDomain}albums?id=$albumId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getAlbumById method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
 
-  static Future<Map> searchAll(String query) async{
-    try{
-      String apiEndPoint = "${apiDomain}search/all?query=${query.replaceAll(" ", "+")}";
+  static Future<Map> searchAll(String query) async {
+    try {
+      String apiEndPoint =
+          "${apiDomain}search/all?query=${query.replaceAll(" ", "+")}";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getAlbumById method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
+
   ///Returns artist details.
-  static Future<Map> getArtistDetails(String id)async{
-    try{
+  static Future<Map> getArtistDetails(String id) async {
+    try {
       String apiEndPoint = "${apiDomain}artists?id=$id";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getArtistDetails method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
 
   ///Returns artist's albums.
-  static Future<Map> getArtistAlbums(String id,String pageNo)async{
-    try{
+  static Future<Map> getArtistAlbums(String id, String pageNo) async {
+    try {
       String apiEndPoint = "${apiDomain}artists/$id/albums?page=$pageNo";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getArtistAlbums method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
 
   ///Returns artist's songs.
-  static Future<Map> getArtistSongs(String id,String pageNo)async{
-    try{
+  static Future<Map> getArtistSongs(String id, String pageNo) async {
+    try {
       String apiEndPoint = "${apiDomain}artists/$id/songs?page=$pageNo";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getArtistSongs method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
 
   ///Returns artist's recommendations.
-  static Future<Map> getArtistRecommendations(String id,String songId)async{
-    try{
+  static Future<Map> getArtistRecommendations(String id, String songId) async {
+    try {
       String apiEndPoint = "${apiDomain}artists/$id/recommendations/$songId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("getArtistRecommendations method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
-  static String getStreamUrl(List list){
+
+  static String getStreamUrl(List list) {
     String sq = AppSettings.getSongQuality();
-    for(Map qualityMap in list){
-      if(qualityMap["quality"] == sq){
+    for (Map qualityMap in list) {
+      if (qualityMap["quality"] == sq) {
         return qualityMap["link"];
       }
     }
     //user quality not found so return highest quality available.
     return list[list.length - 1]["link"];
   }
-  static Future<void> playHttpSong(Map song,AudioPlayer player)async{
-    try{
+
+  static Future<void> playHttpSong(Map song, AudioPlayer player) async {
+    try {
       HtmlUnescape htmlDecode = HtmlUnescape();
       //check if song already exists in queue
-      if(checkIfAddedInQueue(song["id"])){
+      if (checkIfAddedInQueue(song["id"])) {
         int existingSongIndex = await getQueueIndexBySongId(song["id"]);
         await player.seek(Duration.zero, index: existingSongIndex);
-      }else{
-        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(getStreamUrl(song["downloadUrl"])),tag: MediaItem(
-          // Specify a unique ID for each media item:
-          id: '${song["id"]}',
-          // Metadata to display in the notification:
-          album: htmlDecode.convert(song["album"]["name"]),
-          title: htmlDecode.convert(song["name"]),
-          artUri: Uri.parse(song["image"][1]["link"]),
-          extras: song as Map<String,dynamic>
-        )));
-        if(player.audioSource == null){
-          await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
-        }else {
+      } else {
+        await AppRouter.queue.insert(
+            0,
+            AudioSource.uri(Uri.parse(getStreamUrl(song["downloadUrl"])),
+                tag: MediaItem(
+                    // Specify a unique ID for each media item:
+                    id: '${song["id"]}',
+                    // Metadata to display in the notification:
+                    album: htmlDecode.convert(song["album"]["name"]),
+                    title: htmlDecode.convert(song["name"]),
+                    artUri: Uri.parse(song["image"][1]["link"]),
+                    extras: song as Map<String, dynamic>)));
+        if (player.audioSource == null) {
+          await player.setAudioSource(AppRouter.queue,
+              initialIndex: 0, initialPosition: Duration.zero);
+        } else {
           await player.seek(Duration.zero, index: 0);
         }
         await player.play();
       }
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("playHttpSong method error: $e");
       }
     }
   }
-  static Future<void> addSongToQueue(Map song,AudioPlayer player)async{
-    try{
+
+  static Future<void> addSongToQueue(Map song, AudioPlayer player) async {
+    try {
       HtmlUnescape htmlDecode = HtmlUnescape();
-      await AppRouter.queue.add(AudioSource.uri(Uri.parse(getStreamUrl(song["downloadUrl"])),tag: MediaItem(
-        // Specify a unique ID for each media item:
-          id: '${song["id"]}',
-          // Metadata to display in the notification:
-          album: htmlDecode.convert(song["album"]["name"]),
-          title: htmlDecode.convert(song["name"]),
-          artUri: Uri.parse(song["image"][1]["link"]),
-          extras: song as Map<String,dynamic>
-      )));
-      if(AppRouter.queue.length == 1){
-        await player.setAudioSource(AppRouter.queue , initialIndex: 0);
+      await AppRouter.queue
+          .add(AudioSource.uri(Uri.parse(getStreamUrl(song["downloadUrl"])),
+              tag: MediaItem(
+                  // Specify a unique ID for each media item:
+                  id: '${song["id"]}',
+                  // Metadata to display in the notification:
+                  album: htmlDecode.convert(song["album"]["name"]),
+                  title: htmlDecode.convert(song["name"]),
+                  artUri: Uri.parse(song["image"][1]["link"]),
+                  extras: song as Map<String, dynamic>)));
+      if (AppRouter.queue.length == 1) {
+        await player.setAudioSource(AppRouter.queue, initialIndex: 0);
         await player.play();
       }
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("addSongToQueue method error: $e");
       }
     }
   }
 
-  static Future<void> playGivenListOfSongs(List songs)async{
-    try{
+  static Future<void> playGivenListOfSongs(List songs) async {
+    try {
       HtmlUnescape htmlDecode = HtmlUnescape();
       List<AudioSource> givenList = [];
       List givenSongsData = [];
-      for(Map song in songs){
-        givenList.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"]),tag: MediaItem(
-          // Specify a unique ID for each media item:
-            id: '${song["id"]}',
-            // Metadata to display in the notification:
-            album: htmlDecode.convert(song["album"]["name"]),
-            title: htmlDecode.convert(song["name"]),
-            artUri: Uri.parse(song["image"][1]["link"]),
-            extras: song as Map<String,dynamic>
-        )));
+      for (Map song in songs) {
+        givenList.add(AudioSource.uri(Uri.parse(song["downloadUrl"][3]["link"]),
+            tag: MediaItem(
+                // Specify a unique ID for each media item:
+                id: '${song["id"]}',
+                // Metadata to display in the notification:
+                album: htmlDecode.convert(song["album"]["name"]),
+                title: htmlDecode.convert(song["name"]),
+                artUri: Uri.parse(song["image"][1]["link"]),
+                extras: song as Map<String, dynamic>)));
         givenSongsData.add(song);
       }
-      await AppRouter.queue.insertAll(0,givenList);
-      if(AppRouter.queue.length == songs.length){
-        await mainAudioPlayer.setAudioSource(AppRouter.queue , initialIndex: 0);
+      await AppRouter.queue.insertAll(0, givenList);
+      if (AppRouter.queue.length == songs.length) {
+        await mainAudioPlayer.setAudioSource(AppRouter.queue, initialIndex: 0);
         await mainAudioPlayer.play();
       }
-      mainAudioPlayer.seek(Duration.zero,index: 0);
+      mainAudioPlayer.seek(Duration.zero, index: 0);
       mainAudioPlayer.play();
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("playGivenListOfSongs method error : $e");
       }
     }
   }
-  static Future<bool> checkIfLocalDirExistsInApp(String path)async{
+
+  static Future<bool> checkIfLocalDirExistsInApp(String path) async {
     // final appDocDir = await getApplicationDocumentsDirectory();
     Directory fileDir = Directory('$appDir/$path/');
     final doesDirExist = await fileDir.exists();
     return doesDirExist;
   }
-  static Future<void> createLocalDirInApp(String path)async{
+
+  static Future<void> createLocalDirInApp(String path) async {
     // final appDocDir = await getApplicationDocumentsDirectory();
     Directory fileDir = Directory('$appDir/$path/');
     await fileDir.create(recursive: true);
   }
+
   ///Downloads songs artwork
-  static Future<void> downloadSongArtwork(String link , String filePath)async{
-    try{
+  static Future<void> downloadSongArtwork(String link, String filePath) async {
+    try {
       final downloaderUtils = DownloaderUtils(
         progressCallback: (current, total) {
           final progress = (current / total) * 100;
@@ -304,90 +300,90 @@ class HelperFunctions{
         },
         file: File(filePath),
         progress: ProgressImplementation(),
-        onDone: () async{
+        onDone: () async {
           if (kDebugMode) {
             print('online song artwork downloaded');
           }
         },
       );
-      await Flowder.download(
-          link,
-          downloaderUtils
-      );
-    }catch(e){
-      if(kDebugMode){
+      await Flowder.download(link, downloaderUtils);
+    } catch (e) {
+      if (kDebugMode) {
         print('downloadSongArtwork method error : $e');
       }
     }
   }
+
   ///get song tags of the given song.
-  static Future<Map> getSongTags({required songPath})async{
+  static Future<Map> getSongTags({required songPath}) async {
     final tagger = Audiotagger();
-    final Map? tags = await tagger.readTagsAsMap(
-        path: songPath
-    );
-    if(tags != null) {
+    final Map? tags = await tagger.readTagsAsMap(path: songPath);
+    if (tags != null) {
       return tags;
-    } else{
+    } else {
       return {};
     }
   }
 
   ///Sets song tags to the given song.
-  static Future<void> setSongTags({required Map songData, required String songPath , required String imgFilePath})async {
-    try{
+  static Future<void> setSongTags(
+      {required Map songData,
+      required String songPath,
+      required String imgFilePath}) async {
+    try {
       HtmlUnescape htmlDecode = HtmlUnescape();
       final tagger = Audiotagger();
       final tags = Tag(
-        title: htmlDecode.convert(songData["name"]),
-        artist: htmlDecode.convert(songData["primaryArtists"]),
-        album: htmlDecode.convert(songData["album"]["name"]),
-        id: songData["id"],
-        artwork: imgFilePath,
-        explicitContent: songData["explicitContent"].toString(),
-        hasLyrics: songData["hasLyrics"],
-        copyright: songData["copyright"],
-        year: songData["year"]
-      );
+          title: htmlDecode.convert(songData["name"]),
+          artist: htmlDecode.convert(songData["primaryArtists"]),
+          album: htmlDecode.convert(songData["album"]["name"]),
+          id: songData["id"],
+          artwork: imgFilePath,
+          explicitContent: songData["explicitContent"].toString(),
+          hasLyrics: songData["hasLyrics"],
+          copyright: songData["copyright"],
+          year: songData["year"]);
       final isSuccess = await tagger.writeTags(
         path: songPath,
         tag: tags,
       );
       Map songTags = await getSongTags(songPath: songPath);
-      if(kDebugMode){
+      if (kDebugMode) {
         print(tags.toMap());
         print("isSuccess : $isSuccess");
         print(songTags);
       }
-      Future.delayed(const Duration(seconds: 5),()async{
-        if(!isSuccess!){
+      Future.delayed(const Duration(seconds: 5), () async {
+        if (!isSuccess!) {
           File song = File(songPath);
           await song.delete();
           // delete artwork file
           File artworkFile = File(imgFilePath);
           await artworkFile.delete();
-          if(kDebugMode){
+          if (kDebugMode) {
             print("failed and deleted");
           }
         }
       });
-    }catch(e){
-      if(kDebugMode){
+    } catch (e) {
+      if (kDebugMode) {
         print('setSongTags method error : $e');
       }
     }
   }
+
   ///Downloads http songs to device memory with Id3 tags using [setSongTags] function.
-  static Future<void> downloadHttpSong({required Map songData})async{
-    try{
+  static Future<void> downloadHttpSong({required Map songData}) async {
+    try {
       HtmlUnescape htmlDecode = HtmlUnescape();
-      String link =  songData["downloadUrl"][3]["link"];
+      String link = songData["downloadUrl"][3]["link"];
       String parentDir = htmlDecode.convert(songData["album"]["name"]);
       String fileName = htmlDecode.convert(songData["name"]);
-      bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp('downloaded songs/$parentDir');
+      bool dirExists = await HelperFunctions.checkIfLocalDirExistsInApp(
+          'downloaded songs/$parentDir');
       String filePath = '$appDir/$parentDir/$fileName.mp3';
       String imgFilePath = '$appDir/$parentDir/${fileName}_img.jpg';
-      if(!dirExists){
+      if (!dirExists) {
         await HelperFunctions.createLocalDirInApp(parentDir);
       }
       //download song artwork
@@ -401,68 +397,76 @@ class HelperFunctions{
         },
         file: File(filePath),
         progress: ProgressImplementation(),
-        onDone: () async{
-            if (kDebugMode) {
-              print('Download done');
-              await setSongTags(songData: songData, songPath: filePath , imgFilePath : imgFilePath);
-            }
-          },
+        onDone: () async {
+          if (kDebugMode) {
+            print('Download done');
+            await setSongTags(
+                songData: songData,
+                songPath: filePath,
+                imgFilePath: imgFilePath);
+          }
+        },
         deleteOnCancel: true,
       );
 
-      await Flowder.download(
-          link,
-          downloaderUtils
-      );
-    }catch(e){
-      if(kDebugMode){
+      await Flowder.download(link, downloaderUtils);
+    } catch (e) {
+      if (kDebugMode) {
         print('downloadHttpSong method error : $e');
       }
     }
   }
+
   ///Returns song index in queue.
-  static Future<int> getQueueIndexBySongId(String songId)async{
-    if(mainAudioPlayer.sequence != null){
-      for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
-        if(mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == songId) return i;
+  static Future<int> getQueueIndexBySongId(String songId) async {
+    if (mainAudioPlayer.sequence != null) {
+      for (int i = 0; i < mainAudioPlayer.sequence!.length; i++) {
+        if (mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == songId)
+          return i;
       }
     }
     return -1;
   }
+
   ///Fetches song lyrics.
-  static Future<Map> fetchLyrics (String songId)async{
-    try{
+  static Future<Map> fetchLyrics(String songId) async {
+    try {
       String apiEndPoint = "${apiDomain}lyrics?id=$songId";
       Uri url = Uri.parse(apiEndPoint);
       Response response = await get(url);
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
       return data;
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("fetchLyrics method error: $e");
       }
-      return {
-        "error":"unable to fetch data"
-      };
+      return {"error": "unable to fetch data"};
     }
   }
+
   ///Checks if the given [songId] exists in queue.
-  static bool checkIfAddedInQueue(String songId){
-    if( mainAudioPlayer.sequence != null && mainAudioPlayer.sequence!.isNotEmpty && mainAudioPlayer.audioSource != null){
-      for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
-        if(mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == songId) return true;
+  static bool checkIfAddedInQueue(String songId) {
+    if (mainAudioPlayer.sequence != null &&
+        mainAudioPlayer.sequence!.isNotEmpty &&
+        mainAudioPlayer.audioSource != null) {
+      for (int i = 0; i < mainAudioPlayer.sequence!.length; i++) {
+        if (mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == songId)
+          return true;
       }
     }
     return false;
   }
+
   ///Removes the given song from queue.
-  static Future<void> removeFromQueue(Map song)async{
+  static Future<void> removeFromQueue(Map song) async {
     int index = 0;
-    for(int i = 0 ; i < mainAudioPlayer.sequence!.length ; i++){
-      if(mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] == song["id"]) break;
+    for (int i = 0; i < mainAudioPlayer.sequence!.length; i++) {
+      if (mainAudioPlayer.audioSource!.sequence[i].tag.extras["id"] ==
+          song["id"]) break;
     }
     await AppRouter.queue.removeAt(index);
   }
+
   ///Formats given [Duration] into a readable song duration.
   static String printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -470,162 +474,239 @@ class HelperFunctions{
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "$twoDigitMinutes:$twoDigitSeconds";
   }
+
   ///Returns a mini audio player attached to [BottomNavigationBar].
-  static Widget collapsedPlayer(){
+  static Widget collapsedPlayer() {
     HtmlUnescape htmlDecode = HtmlUnescape();
     return StreamBuilder<PlayerState>(
       stream: mainAudioPlayer.playerStateStream,
       builder: (_, snapshot) {
         final playerState = snapshot.data;
-        if(playerState != null) {
+        if (playerState != null) {
           return Positioned(
             bottom: 0,
             child: StreamBuilder(
               stream: mainAudioPlayer.currentIndexStream,
-              builder:(context,AsyncSnapshot<int?> currentIndex){
-                if(currentIndex.data != null && AppRouter.queue.length != 0){
-                  Map songData = mainAudioPlayer.audioSource!.sequence[currentIndex.data!].tag.extras;
+              builder: (context, AsyncSnapshot<int?> currentIndex) {
+                if (currentIndex.data != null && AppRouter.queue.length != 0) {
+                  Map songData = mainAudioPlayer
+                      .audioSource!.sequence[currentIndex.data!].tag.extras;
                   return GestureDetector(
-                      onPanUpdate:  (details) {
+                      onPanUpdate: (details) {
                         int sensitivity = 8;
                         if (details.delta.dy > sensitivity) {
                           // Down Swipe
-                        } else if(details.delta.dy < -sensitivity){
+                        } else if (details.delta.dy < -sensitivity) {
                           // Up Swipe
                           showModalBottomSheet(
                               context: context,
                               elevation: 0,
                               barrierColor: Colors.transparent,
                               isScrollControlled: true,
-                              builder: (context) => const ShowFullPlayer()
-                          );
+                              builder: (context) => const ShowFullPlayer());
                         }
                       },
-                      child : Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(18),topRight: Radius.circular(18)),
-                            color: HexColor("111111")
-                          ),
-                          child:Row(
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(18),
+                                  topRight: Radius.circular(18)),
+                              color: HexColor("111111")),
+                          child: Row(
                             children: [
                               //song artwork.
                               GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   showModalBottomSheet(
                                       context: context,
                                       elevation: 0,
                                       barrierColor: Colors.transparent,
                                       isScrollControlled: true,
-                                      builder: (context) => const ShowFullPlayer()
-                                  );
+                                      builder: (context) =>
+                                          const ShowFullPlayer());
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  child: songData["isLocal"] != null && songData["isLocal"] ?
-                                      (
-                                          songData["artworkBytes"] != null ?
-                                      Image.memory(songData["artworkBytes"] , height: 55,width: 55,) :
-                                          CircleAvatar(
-                                            backgroundColor:Colors.accents.elementAt(songData["intId"] % Colors.accents.length).withOpacity(0.8),
-                                            child: const Icon(Icons.music_note,color: Colors.white,),
-                                          )
-                                      )
-                                  :
-                                  Image.network(songData["image"][1]["link"],height: 55,width: 55,),
+                                  child: songData["isLocal"] != null &&
+                                          songData["isLocal"]
+                                      ? (songData["artworkBytes"] != null
+                                          ? Image.memory(
+                                              songData["artworkBytes"],
+                                              height: 55,
+                                              width: 55,
+                                            )
+                                          : CircleAvatar(
+                                              backgroundColor: Colors.accents
+                                                  .elementAt(songData["intId"] %
+                                                      Colors.accents.length)
+                                                  .withOpacity(0.8),
+                                              child: const Icon(
+                                                Icons.music_note,
+                                                color: Colors.white,
+                                              ),
+                                            ))
+                                      : Image.network(
+                                          songData["image"][1]["link"],
+                                          height: 55,
+                                          width: 55,
+                                        ),
                                 ),
                               ),
-                              const SizedBox(width: 10,),
+                              const SizedBox(
+                                width: 10,
+                              ),
                               //song title,song artists.
                               Expanded(
                                 child: GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     showModalBottomSheet(
                                         context: context,
                                         elevation: 0,
                                         barrierColor: Colors.transparent,
                                         isScrollControlled: true,
-                                        builder: (context) => const ShowFullPlayer()
-                                    );
+                                        builder: (context) =>
+                                            const ShowFullPlayer());
                                   },
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(htmlDecode.convert(songData["name"]),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 1,),
-                                      const SizedBox(height: 5,),
-                                      Text(htmlDecode.convert(songData["primaryArtists"]),style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 11),textAlign: TextAlign.start,overflow: TextOverflow.ellipsis,maxLines: 2,)
+                                      Text(
+                                        htmlDecode.convert(songData["name"]),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18),
+                                        textAlign: TextAlign.start,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        htmlDecode.convert(
+                                            songData["primaryArtists"]),
+                                        style: const TextStyle(
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 11),
+                                        textAlign: TextAlign.start,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      )
                                     ],
                                   ),
                                 ),
                               ),
                               //player controller buttons.
-                              PlayerController(mainAudioPlayer, isFullScreen: false,nextBtnSize: 20,playPauseBtnSize: 40,prevBtnSize: 20,repeatBtnSize: 20,shuffleBtnSize: 20,),
+                              PlayerController(
+                                mainAudioPlayer,
+                                isFullScreen: false,
+                                nextBtnSize: 20,
+                                playPauseBtnSize: 40,
+                                prevBtnSize: 20,
+                                repeatBtnSize: 20,
+                                shuffleBtnSize: 20,
+                              ),
                             ],
-                          )
-                      )
-                  );
+                          )));
                 } else {
-                  return const SizedBox(height: 0,);
+                  return const SizedBox(
+                    height: 0,
+                  );
                 }
               },
             ),
           );
-        }else {
-          return const SizedBox(height: 0,width: 0,);
+        } else {
+          return const SizedBox(
+            height: 0,
+            width: 0,
+          );
         }
       },
     );
   }
+
   ///A standard ListViewRenderer.
-  static Widget listViewRenderer(List list,{required double verticalGap}){
-    if(list.isNotEmpty){
+  static Widget listViewRenderer(List list, {required double verticalGap}) {
+    if (list.isNotEmpty) {
       return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: list.length,
-        itemBuilder: (context,index){
+        itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: verticalGap),
             child: list[index],
           );
         },
       );
-    }else{
-      return const Text("no results",style: TextStyle(color: Colors.white),);
+    } else {
+      return const Text(
+        "no results",
+        style: TextStyle(color: Colors.white),
+      );
     }
   }
+
   ///A standard GridViewRenderer.
-  static Widget gridViewRenderer(List list,{required double horizontalPadding ,
-    required double verticalPadding , required int crossAxisCount ,
-    required double crossAxisSpacing , required double mainAxisSpacing
-  }){
-    if(list.isNotEmpty){
+  static Widget gridViewRenderer(List list,
+      {required double horizontalPadding,
+      required double verticalPadding,
+      required int crossAxisCount,
+      required double crossAxisSpacing,
+      required double mainAxisSpacing}) {
+    if (list.isNotEmpty) {
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding,vertical: verticalPadding),
+        padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding, vertical: verticalPadding),
         child: GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: list.length,
-          itemBuilder: (context,index){
+          itemBuilder: (context, index) {
             return list[index];
-          }, gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: crossAxisCount,crossAxisSpacing: crossAxisSpacing,mainAxisSpacing: mainAxisSpacing),
+          },
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: crossAxisSpacing,
+              mainAxisSpacing: mainAxisSpacing),
         ),
       );
-    }else{
-      return const Text("no results",style: TextStyle(color: Colors.white),);
+    } else {
+      return const Text(
+        "no results",
+        style: TextStyle(color: Colors.white),
+      );
     }
   }
+
   ///returns a label widget.
-  static Widget label(String name , {required double horizontalPadding , required verticalPadding , double? fontSize}){
+  static Widget label(String name,
+      {required double horizontalPadding,
+      required verticalPadding,
+      double? fontSize}) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ,vertical: verticalPadding),
+      padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding, vertical: verticalPadding),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children:  [
-              Text(name,style:TextStyle(fontSize: fontSize ?? 18,fontWeight: FontWeight.w500,color: Colors.white),textAlign: TextAlign.start,),
+            children: [
+              Text(
+                name,
+                style: TextStyle(
+                    fontSize: fontSize ?? 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white),
+                textAlign: TextAlign.start,
+              ),
             ],
           ),
         ],
@@ -633,37 +714,48 @@ class HelperFunctions{
     );
   }
 
-
   ///get song meta data by its path.
   static Future<Map> getMetadata(String songPath) async {
     final metadata = await MetadataRetriever.fromFile(File(songPath));
     return metadata.toJson();
   }
+
   //Local media songs methods
   ///get local media art work uri by [songId].
-  static Future<Uint8List?> getLocalSongArtworkUri(int songId)async{
+  static Future<Uint8List?> getLocalSongArtworkUri(int songId) async {
     final audioQuery = OnAudioQuery();
-    Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO);
+    Uint8List? bytes = await audioQuery.queryArtwork(songId, ArtworkType.AUDIO);
     return bytes;
   }
+
   ///get local media art work image by [songId].
-  static Future<dynamic> getLocalSongArtworkImage(int songId)async{
+  static Future<dynamic> getLocalSongArtworkImage(int songId) async {
     final audioQuery = OnAudioQuery();
-    Uint8List? bytes =  await  audioQuery.queryArtwork(songId, ArtworkType.AUDIO,quality: 400,format: ArtworkFormat.JPEG,size: 1000);
-    if(bytes != null){
-      return Image.memory(bytes,filterQuality: FilterQuality.high,).image;
+    Uint8List? bytes = await audioQuery.queryArtwork(songId, ArtworkType.AUDIO,
+        quality: 400, format: ArtworkFormat.JPEG, size: 1000);
+    if (bytes != null) {
+      return Image.memory(
+        bytes,
+        filterQuality: FilterQuality.high,
+      ).image;
     }
     return false;
   }
+
   ///get local media art work image by [songId].
-  static Future<dynamic> getLocalAlbumArtworkImage(int albumId)async{
+  static Future<dynamic> getLocalAlbumArtworkImage(int albumId) async {
     final audioQuery = OnAudioQuery();
-    Uint8List? bytes =  await  audioQuery.queryArtwork(albumId, ArtworkType.ALBUM,quality: 400,format: ArtworkFormat.JPEG,size: 1000);
-    if(bytes != null){
-      return Image.memory(bytes,filterQuality: FilterQuality.medium,).image;
+    Uint8List? bytes = await audioQuery.queryArtwork(albumId, ArtworkType.ALBUM,
+        quality: 400, format: ArtworkFormat.JPEG, size: 1000);
+    if (bytes != null) {
+      return Image.memory(
+        bytes,
+        filterQuality: FilterQuality.medium,
+      ).image;
     }
     return null;
   }
+
   ///Get the mp3 artwork uri from UInt8List.
   static Future<Uri> getSongArtworkUri(Uint8List artwork) async {
     String base64Image = base64Encode(artwork);
@@ -671,107 +763,123 @@ class HelperFunctions{
     Uri imageUri = Uri.parse(dataUri);
     return imageUri;
   }
+
   ///Temporarily save artwork image in app dir(cache).
   static Future<Uri?> saveTempFile(Uint8List data, String filename) async {
-    try{
+    try {
       Directory tempDir = await getTemporaryDirectory();
       File file = File('${tempDir.path}/$filename');
       //check if file already exists.
-      if(file.existsSync()){
+      if (file.existsSync()) {
         return file.uri;
       }
       await file.writeAsBytes(data);
       return file.uri;
-    }catch(e){
-      if(kDebugMode){
+    } catch (e) {
+      if (kDebugMode) {
         print("saveTempFile method error: $e");
       }
       return null;
     }
   }
+
   ///check if the given album has artwork
-  static Future<bool> hasAlbumArtwork(int albumId)async{
+  static Future<bool> hasAlbumArtwork(int albumId) async {
     final audioQuery = OnAudioQuery();
-    Uint8List? bytes =  await  audioQuery.queryArtwork(albumId, ArtworkType.ALBUM,quality: 1,format: ArtworkFormat.JPEG,size: 1);
-    if(bytes != null){
+    Uint8List? bytes = await audioQuery.queryArtwork(albumId, ArtworkType.ALBUM,
+        quality: 1, format: ArtworkFormat.JPEG, size: 1);
+    if (bytes != null) {
       return true;
     }
     return false;
   }
+
   ///plays local media song by taking [LocalSongData] as input.
-  static Future<void> playLocalSong(LocalSongData song,AudioPlayer player)async{
-    try{
+  static Future<void> playLocalSong(
+      LocalSongData song, AudioPlayer player) async {
+    try {
       // check if song already exists in queue
-      if(checkIfAddedInQueue(song.id)){
+      if (checkIfAddedInQueue(song.id)) {
         int existingSongIndex = await getQueueIndexBySongId(song.id);
         await player.seek(Duration.zero, index: existingSongIndex);
-      }
-      else{
+      } else {
         Uri? artUri;
-        if(song.artworkBytes != null){
+        if (song.artworkBytes != null) {
           //return temporary path for artwork image file.
           artUri = await saveTempFile(song.artworkBytes!, "${song.name}.jpeg");
         }
-        await AppRouter.queue.insert(0,AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
-            id: song.id,
-            album: song.albumName,
-            title: song.name,
-            artUri: artUri,
-            extras: song.getMap
-        )));
-        if(player.audioSource == null){
-          await player.setAudioSource(AppRouter.queue , initialIndex: 0,initialPosition: Duration.zero);
-        }else {
+        await AppRouter.queue.insert(
+            0,
+            AudioSource.uri(Uri.parse(song.songUri!),
+                tag: MediaItem(
+                    id: song.id,
+                    album: song.albumName,
+                    title: song.name,
+                    artUri: artUri,
+                    extras: song.getMap)));
+        if (player.audioSource == null) {
+          await player.setAudioSource(AppRouter.queue,
+              initialIndex: 0, initialPosition: Duration.zero);
+        } else {
           await player.seek(Duration.zero, index: 0);
         }
       }
       await player.play();
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("playLocalSong method error: $e");
       }
     }
   }
+
   ///Plays a given list of type [LocalSongData] and adds them to queue.
-  static Future<void> playGivenListOfLocalSongs(List<LocalSongData> songs)async{
-    try{
+  static Future<void> playGivenListOfLocalSongs(
+      List<LocalSongData> songs) async {
+    try {
       List<AudioSource> givenList = [];
       List givenSongsData = [];
-      for(LocalSongData song in songs){
+      for (LocalSongData song in songs) {
         Uri? artUri;
-        if(song.artworkBytes != null){
+        if (song.artworkBytes != null) {
           //return temporary path for artwork image file.
           artUri = await saveTempFile(song.artworkBytes!, "${song.name}.jpeg");
         }
-        givenList.add(AudioSource.uri(Uri.parse(song.songUri!),tag: MediaItem(
-          // Specify a unique ID for each media item:
-            id: song.id,
-            // Metadata to display in the notification:
-            album: song.albumName,
-            title: song.name ,
-            artUri: artUri,
-            extras: song.getMap
-        )));
+        givenList.add(AudioSource.uri(Uri.parse(song.songUri!),
+            tag: MediaItem(
+                // Specify a unique ID for each media item:
+                id: song.id,
+                // Metadata to display in the notification:
+                album: song.albumName,
+                title: song.name,
+                artUri: artUri,
+                extras: song.getMap)));
         givenSongsData.add(song);
       }
-      await AppRouter.queue.insertAll(0,givenList);
-      if(AppRouter.queue.length == songs.length){
-        await mainAudioPlayer.setAudioSource(AppRouter.queue , initialIndex: 0);
+      await AppRouter.queue.insertAll(0, givenList);
+      if (AppRouter.queue.length == songs.length) {
+        await mainAudioPlayer.setAudioSource(AppRouter.queue, initialIndex: 0);
         await mainAudioPlayer.play();
       }
-      mainAudioPlayer.seek(Duration.zero,index: 0);
+      mainAudioPlayer.seek(Duration.zero, index: 0);
       mainAudioPlayer.play();
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print("playGivenListOfLocalSongs method error : $e");
       }
     }
   }
-  static Widget makerSign(){
+
+  static Widget makerSign() {
     return Column(
       children: [
-        Text("By\nGPSxtreme",style: GoogleFonts.mansalva(color: Colors.white54),textAlign: TextAlign.center,),
-        const SizedBox(height: 10,)
+        Text(
+          "By\nGPSxtreme",
+          style: GoogleFonts.mansalva(color: Colors.white54),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(
+          height: 10,
+        )
       ],
     );
   }
