@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int totalCardsCount = 5;
   //shows the index of current showing card.
   int currentCardIndex = 0;
-  fetchData()async{
-    if(mounted){
+  fetchData() async {
+    if (mounted) {
       setState(() {
         isLoaded = false;
       });
@@ -44,42 +44,44 @@ class _HomeScreenState extends State<HomeScreen> {
       playlists.clear();
       albums.clear();
       String? languages = await LocalDataService.getLanguagesString();
-      if(languages == null){
+      if (languages == null) {
         await LocalDataService.addLanguage("english");
         languages = "english";
       }
-      Response response = await get(Uri.parse("${HelperFunctions.apiDomain}modules?language=$languages"));
-      final data = jsonDecode(response.body) as Map<dynamic,dynamic>;
-      if(data["status"] == "SUCCESS"){
-        if(data["data"]["trending"]["songs"].isNotEmpty){
-          for(Map rawSong in data["data"]["trending"]["songs"]){
+      Response response = await get(
+          Uri.parse("${HelperFunctions.apiDomain}modules?language=$languages"));
+      final data = jsonDecode(response.body) as Map<dynamic, dynamic>;
+      if (data["status"] == "SUCCESS") {
+        if (data["data"]["trending"]["songs"].isNotEmpty) {
+          for (Map rawSong in data["data"]["trending"]["songs"]) {
             Map song = await HelperFunctions.getSongById(rawSong["id"]);
-            trendingSongs.add(OnlineSongResultTile(player: mainAudioPlayer, song: song["data"][0]));
+            trendingSongs.add(OnlineSongResultTile(
+                player: mainAudioPlayer, song: song["data"][0]));
           }
-          if(data["data"]["trending"]["albums"].isNotEmpty){
+          if (data["data"]["trending"]["albums"].isNotEmpty) {
             int count = totalCardsCount;
-            for(Map album in data["data"]["trending"]["albums"]){
+            for (Map album in data["data"]["trending"]["albums"]) {
               count--;
-              if(count >= 0){
+              if (count >= 0) {
                 displayCards.add(TopCarouselCard(data: album));
-              }else{
+              } else {
                 trendingAlbums.add(TopAlbumTile(data: album));
               }
             }
           }
         }
-        if(data["data"]["charts"].isNotEmpty){
-          for(Map chart in data["data"]["charts"]){
+        if (data["data"]["charts"].isNotEmpty) {
+          for (Map chart in data["data"]["charts"]) {
             charts.add(CommonResultTile(data: chart));
           }
         }
-        if(data["data"]["playlists"].isNotEmpty){
-          for(Map playlist in data["data"]["playlists"]){
+        if (data["data"]["playlists"].isNotEmpty) {
+          for (Map playlist in data["data"]["playlists"]) {
             playlists.add(CommonResultTile(data: playlist));
           }
         }
-        if(data["data"]["albums"].isNotEmpty){
-          for(Map album in data["data"]["albums"]){
+        if (data["data"]["albums"].isNotEmpty) {
+          for (Map album in data["data"]["albums"]) {
             albums.add(CommonResultTile(data: album));
           }
         }
@@ -90,28 +92,33 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget label(String name) =>  Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-    child: Text(name,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: Colors.white),textAlign: TextAlign.start,),
-  );
+  Widget label(String name) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        child: Text(
+          name,
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white),
+          textAlign: TextAlign.start,
+        ),
+      );
 
-  Future<void> onRefresh()async{
+  Future<void> onRefresh() async {
     await fetchData();
   }
 
-  Widget contents(){
-    if(isLoaded){
+  Widget contents() {
+    if (isLoaded) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if(trendingAlbums.isNotEmpty) ...[
+          if (trendingAlbums.isNotEmpty) ...[
             Container(
-              margin: const EdgeInsets.only(left: 15,right: 15,top: 0),
-              padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 10),
+              margin: const EdgeInsets.only(left: 15, right: 15, top: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
               child: CarouselSlider(
                 items: displayCards,
                 options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height*0.27,
+                  height: MediaQuery.of(context).size.height * 0.27,
                   viewportFraction: 1,
                   autoPlay: true,
                   autoPlayInterval: const Duration(seconds: 3),
@@ -127,44 +134,67 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )
           ],
-          if(trendingSongs.isNotEmpty) ...[
+          if (trendingSongs.isNotEmpty) ...[
             label("Top songs"),
-            HelperFunctions.listViewRenderer(trendingSongs,verticalGap: 5),
+            HelperFunctions.listViewRenderer(trendingSongs, verticalGap: 5),
           ],
-          if(trendingAlbums.isNotEmpty) ...[
+          if (trendingAlbums.isNotEmpty) ...[
             label("Top albums"),
-            HelperFunctions.gridViewRenderer(trendingAlbums,horizontalPadding: 20, verticalPadding: 8, crossAxisCount: 2, crossAxisSpacing: 15,mainAxisSpacing: 10),
+            HelperFunctions.gridViewRenderer(trendingAlbums,
+                horizontalPadding: 20,
+                verticalPadding: 8,
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 10),
           ],
-          if(trendingAlbums.isNotEmpty) ...[
+          if (trendingAlbums.isNotEmpty) ...[
             label("Top charts"),
-            HelperFunctions.gridViewRenderer(charts,horizontalPadding: 20, verticalPadding: 8, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+            HelperFunctions.gridViewRenderer(charts,
+                horizontalPadding: 20,
+                verticalPadding: 8,
+                crossAxisCount: 3,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 10),
           ],
-
-          if(albums.isNotEmpty) ...[
+          if (albums.isNotEmpty) ...[
             label("Discover albums"),
-            HelperFunctions.gridViewRenderer(albums,horizontalPadding: 20, verticalPadding: 8, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+            HelperFunctions.gridViewRenderer(albums,
+                horizontalPadding: 20,
+                verticalPadding: 8,
+                crossAxisCount: 3,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 10),
           ],
-          if(playlists.isNotEmpty) ...[
+          if (playlists.isNotEmpty) ...[
             label("Discover playlists"),
-            HelperFunctions.gridViewRenderer(playlists,horizontalPadding: 20, verticalPadding: 8, crossAxisCount: 3, crossAxisSpacing: 15,mainAxisSpacing: 10),
+            HelperFunctions.gridViewRenderer(playlists,
+                horizontalPadding: 20,
+                verticalPadding: 8,
+                crossAxisCount: 3,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 10),
           ],
-          const SizedBox(height: 70,)
+          const SizedBox(
+            height: 70,
+          )
         ],
       );
-    }else{
+    } else {
       return const Center(
           heightFactor: 7,
-          child: SpinKitRipple(color: Colors.white,size: 80,)
-      );
+          child: SpinKitRipple(
+            color: Colors.white,
+            size: 80,
+          ));
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchData();
   }
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 1.1; // Will slow down animations by a factor of 1.1
@@ -179,8 +209,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18,vertical: 13),
-                  child: Hero( tag:'logo',child: Text("Melomix",style: GoogleFonts.pacifico(fontSize: 27,color: Colors.white,),textAlign: TextAlign.start,)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
+                  child: Hero(
+                      tag: 'logo',
+                      child: Text(
+                        "Melomix",
+                        style: GoogleFonts.pacifico(
+                          fontSize: 27,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.start,
+                      )),
                 ),
                 contents()
               ],

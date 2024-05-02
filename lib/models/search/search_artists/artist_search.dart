@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import '../../details/image.dart';
+import 'package:proto_music_player/models/details/image.dart';
 
 ArtistSearch artistSearchFromJson(String str) =>
     ArtistSearch.fromJson(json.decode(str));

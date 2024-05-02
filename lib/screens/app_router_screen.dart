@@ -12,6 +12,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:proto_music_player/services/app_settings.dart';
+
 //audio player global variable
 late AudioPlayer mainAudioPlayer;
 
@@ -19,7 +20,8 @@ class AppRouter extends StatefulWidget {
   static String id = "app_router";
   static bool isOnline = false;
   static late bool isOverWifi;
-  static ConcatenatingAudioSource queue = ConcatenatingAudioSource(children: [],useLazyPreparation: true);
+  static ConcatenatingAudioSource queue =
+      ConcatenatingAudioSource(children: [], useLazyPreparation: true);
   const AppRouter({Key? key}) : super(key: key);
   @override
   State<AppRouter> createState() => _AppRouterState();
@@ -29,8 +31,15 @@ class _AppRouterState extends State<AppRouter> {
   HtmlUnescape htmlDecode = HtmlUnescape();
   late StreamSubscription<ConnectivityResult> connectionState;
   String currentScreen = "Home";
-  final List<String> screenKeys = [HomeScreen.id, MyPlaylistsScreen.id, SearchPageScreen.id,SettingsScreen.id,DownloadsScreen.id];
-  final PersistentTabController controller = PersistentTabController(initialIndex: 0);
+  final List<String> screenKeys = [
+    HomeScreen.id,
+    MyPlaylistsScreen.id,
+    SearchPageScreen.id,
+    SettingsScreen.id,
+    DownloadsScreen.id
+  ];
+  final PersistentTabController controller =
+      PersistentTabController(initialIndex: 0);
   List<Widget> buildScreens() {
     return [
       const HomeScreen(),
@@ -67,26 +76,22 @@ class _AppRouterState extends State<AppRouter> {
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.white,
       ),
-      // PersistentBottomNavBarItem(
-      //   icon: const Icon(Icons.download_rounded),
-      //   title: ("Downloads"),
-      //   activeColorPrimary: Colors.blue,
-      //   inactiveColorPrimary: Colors.white,
-      // ),
     ];
   }
 
-  updateConnectionStatus(ConnectivityResult result){
-    if(result == ConnectivityResult.wifi){
+  updateConnectionStatus(ConnectivityResult result) {
+    if (result == ConnectivityResult.wifi) {
       AppRouter.isOnline = true;
       AppRouter.isOverWifi = true;
-    }else if(result == ConnectivityResult.mobile || result == ConnectivityResult.vpn){
+    } else if (result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.vpn) {
       AppRouter.isOnline = true;
       AppRouter.isOverWifi = false;
-    }else if(result == ConnectivityResult.none){
+    } else if (result == ConnectivityResult.none) {
       AppRouter.isOnline = false;
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -95,13 +100,16 @@ class _AppRouterState extends State<AppRouter> {
     //set volume level.
     AppSettings.setVolumeLevel(AppSettings.volumeLevel);
     //connection state.
-    connectionState = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    connectionState = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
       updateConnectionStatus(result);
-      if(kDebugMode){
+      if (kDebugMode) {
         print(result);
       }
     });
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -111,31 +119,32 @@ class _AppRouterState extends State<AppRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
-      context,
-      controller: controller,
-      screens: buildScreens(),
-      items: _navBarsItems(),
-      confineInSafeArea: true,
-      backgroundColor: HexColor("111111"), // Default is Colors.white.
-      handleAndroidBackButtonPress: true, // Default is true.
-      resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-      stateManagement: true, // Default is true.
-      hideNavigationBarWhenKeyboardShows: true,
-      popAllScreensOnTapOfSelectedTab: true,
-      popActionScreens: PopActionScreensType.all,
-      itemAnimationProperties: const ItemAnimationProperties( // Navigation Bar's items animation properties.
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-      ),
-      screenTransitionAnimation: const ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
-        animateTabTransition: true,
-        curve: Curves.easeInCubic,
-        duration: Duration(milliseconds: 200),
-      ),
-      navBarStyle: NavBarStyle.style13 // Choose the nav bar style with this property.(bangers :[1,9,13,14])
-    );
+    return PersistentTabView(context,
+        controller: controller,
+        screens: buildScreens(),
+        items: _navBarsItems(),
+        confineInSafeArea: true,
+        backgroundColor: HexColor("111111"), // Default is Colors.white.
+        handleAndroidBackButtonPress: true, // Default is true.
+        resizeToAvoidBottomInset:
+            true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+        stateManagement: true, // Default is true.
+        hideNavigationBarWhenKeyboardShows: true,
+        popAllScreensOnTapOfSelectedTab: true,
+        popActionScreens: PopActionScreensType.all,
+        itemAnimationProperties: const ItemAnimationProperties(
+          // Navigation Bar's items animation properties.
+          duration: Duration(milliseconds: 200),
+          curve: Curves.ease,
+        ),
+        screenTransitionAnimation: const ScreenTransitionAnimation(
+          // Screen transition animation on change of selected tab.
+          animateTabTransition: true,
+          curve: Curves.easeInCubic,
+          duration: Duration(milliseconds: 200),
+        ),
+        navBarStyle: NavBarStyle
+            .style13 // Choose the nav bar style with this property.(bangers :[1,9,13,14])
+        );
   }
-
 }
-
